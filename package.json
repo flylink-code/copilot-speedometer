@@ -5,6 +5,13 @@
   "version": "0.2.3",
   "publisher": "local",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flylink-code/copilot-speedometer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/flylink-code/copilot-speedometer/issues"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
