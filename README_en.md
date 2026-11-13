@@ -8,7 +8,7 @@ Works with **official models** and with **third-party / BYOK models** (Custom En
 
 Everything comes from local files: no network calls, no upload, no private Copilot APIs.
 
-![dashboard](docs/preview.png)
+![dashboard](https://github.com/flylink-code/copilot-speedometer/raw/HEAD/docs/preview.png)
 
 ## Why
 
@@ -55,7 +55,7 @@ When both sources describe the same call, the A record wins because it carries T
 **Option A: VSIX (recommended)**
 
 ```bash
-code --install-extension copilot-speedometer-0.3.1.vsix
+code --install-extension dist/copilot-speedometer-0.4.0.vsix
 ```
 
 **Option B: from source**: open this folder in VS Code and press <kbd>F5</kbd> (Run Extension).
@@ -103,7 +103,7 @@ Also: reasoning tokens count as output, tokenizers differ per vendor, and **tok/
 
 ## Settings
 
-![settings](docs/preview-settings.png)
+![settings](https://github.com/flylink-code/copilot-speedometer/raw/HEAD/docs/preview-settings.png)
 
 The **Settings** tab edits these values directly; `settings.json` still works:
 

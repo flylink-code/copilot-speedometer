@@ -115,7 +115,7 @@ code --install-extension dist\copilot-speedometer-0.4.0.vsix --force
 ## 8. 踩过的坑（别再踩）
 
 1. **"只有 t/s 没有数据"**：VS Code 还跑着旧版本，同时存在两个扩展目录 → 删旧目录 + `Developer: Reload Window`。装新版后务必确认只有一个 `local.copilot-speedometer-*` 目录。
-2. `vsce package` 必须带 `--allow-missing-repository --no-rewrite-relative-links`（README 里有相对图片路径），且 `--no-dependencies`。
+2. `vsce package` 必须带 `--allow-missing-repository --no-dependencies`，**不要**加 `--no-rewrite-relative-links`：Marketplace 不会解析 vsix 内的相对图片路径，会显示 alt 文本（曾表现为“只有 dashboard / settings 字样”）。让 vsce 把 README 相对链接改写成 GitHub raw 绝对地址。
 3. `.vscodeignore` 必须排除 `dist/**`、`docs/preview*.html`、`tools/**`、`test/**`、`*.vsix`；`media/icon.png` 要**打进去**。
 4. 本机 `edit`/`write` 工具偶尔报 `ReplaceFileW EIO (Win32 1175)`（文件被占用）：等 2–3 秒重试，或改用 `pwsh` + Node 脚本写文件。
 5. PowerShell `Set-Content` 会写成 CRLF；仓库 `.gitattributes` 是 `* text=auto eol=lf`，git 会归一化，但别惊讶于 warning。

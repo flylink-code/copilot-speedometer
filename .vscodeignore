@@ -4,7 +4,11 @@ test/**
 tools/**
 *.vsix
 node_modules/**
-docs/preview.html
 dist/**
-docs/preview*.html
+docs/**
+agent/**
+doc/**
+.claude/**
+AGENTS.md
 HANDOFF.md
+task.md

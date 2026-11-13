@@ -153,7 +153,7 @@
   "scripts": {
     "test": "node test/parser.test.js && node test/usage.test.js && node test/settings.test.js && node test/i18n.test.js",
     "preview": "node tools/preview.js",
-    "package": "npx --yes @vscode/vsce@latest package --no-dependencies --allow-missing-repository --no-rewrite-relative-links --out dist"
+    "package": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && npx --yes @vscode/vsce@latest package --no-dependencies --allow-missing-repository --out dist"
   },
   "icon": "media/icon.png"
 }

@@ -55,7 +55,7 @@ B 的字段：
 **方式 A：VSIX（推荐）**
 
 ```bash
-code --install-extension copilot-speedometer-0.3.1.vsix
+code --install-extension dist/copilot-speedometer-0.4.0.vsix
 ```
 
 **方式 B：源码调试**：用 VS Code 打开本目录，按 <kbd>F5</kbd>（Run Extension）。
