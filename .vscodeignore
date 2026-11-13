@@ -7,3 +7,4 @@ node_modules/**
 docs/preview.html
 dist/**
 docs/preview*.html
+HANDOFF.md
