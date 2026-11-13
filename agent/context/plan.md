@@ -20,19 +20,19 @@ updated: 2026-11-13
 
 | 事项 | 状态 | 阻塞点 | 负责人 |
 | --- | --- | --- | --- |
-| Marketplace 介绍图 / 设置图显示异常 | 待定位 | 未复现，需确认是相对路径、尺寸还是缓存问题 | 用户 + Agent |
 | 功能扩展①：Copilot 会话管理 hub | 待讨论 | 需调研会话是否可按工作目录聚合、能否稳定读取 | 用户 + Agent |
 | 功能扩展②：token 费用统计 | 待讨论 | 需确认 usage record 的 `cost` 字段口径与模型价目来源 | 用户 + Agent |
 | 发布 0.4.0 到 Marketplace | 阻塞 | 需用户提供真实 publisher id（现为 `local`） | 用户 |
 
 ## 下一步（按优先级）
 
-1. 复现 Marketplace 图片问题：对比 `.vscodeignore` / README 相对路径 / 图片尺寸，给出修复方案（判定：README 在 Marketplace 渲染出图，或明确说明平台限制）。
-2. 按 `agent/playbooks/10-create.md` 对两个功能扩展做调研与方案对比，先给结论再动手（判定：每个功能给出“做/不做/怎么做 + 代价”）。
-3. 用户确认 publisher id 后跑 `npm run package` 并发布 0.4.0（判定：Marketplace 页面版本 = 0.4.0，状态栏与面板可用）。
+1. 按 `agent/playbooks/10-create.md` 对两个功能扩展做调研与方案对比，先给结论再动手（判定：每个功能给出“做/不做/怎么做 + 代价”）。
+2. 用户确认 publisher id 后跑 `npm run package` 并发布 0.4.0，安装 `dist/copilot-speedometer-0.4.0.vsix` 复核图片与面板（判定：Marketplace 页面版本 = 0.4.0，介绍图正常显示）。
+3. 发布后检查 Marketplace 的 README 图片实际渲染（判定：无 alt 文本占位）。
 
 ## 已完成（只留最近 10 条，更早的走归档）
 
+- Marketplace 图片修复：去掉 `--no-rewrite-relative-links`，包装脚本先建 `dist/`；vsix 从 72 文件/670 KB 降到 17 文件/73 KB（2026-11-13）。
 - 0.4.0：状态栏空闲自动隐藏（`autoHideMinutes`）、图标、改名（提交 `e9f3a9a`）。
 - 0.3.1：中英文跟随 VS Code 显示语言（`591d0bb`）。
 - 0.3.0：面板内 Settings 页、`statusBarFormat`、写入作用域修复（`26baecc`、`fc19f6a`、`37d4798`）。

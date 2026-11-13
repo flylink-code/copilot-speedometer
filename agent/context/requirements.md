@@ -32,7 +32,7 @@ updated: 2026-11-13
 - 功能扩展是否做、怎么做（用户要求先讨论 + 联网调研）：① Copilot 会话管理 hub；② 读取 token 数据做模型费用统计。见 `task.md`「功能扩展」。
 - 状态栏是否要更严格的“仅本窗口”语义（失焦即隐藏）——需用户拍板，见 `HANDOFF.md` §9 限制 1。
 - 发布前 publisher id（现为 `local`）由用户提供。
-- Marketplace 介绍图显示异常（`task.md`「问题修复」）尚未定位。
+- ~~Marketplace 介绍图显示异常~~ → 已定位并修复（`--no-rewrite-relative-links` 导致），见 `ARCHIVE_INDEX.md`。
 
 ## 最后更新
 

@@ -5,6 +5,7 @@
 
 | 主题 | 结论一句话 | 状态 | 失效条件 | 详情 |
 | --- | --- | --- | --- | --- |
+| Marketplace 介绍图只显示 dashboard/settings | 打包时 `--no-rewrite-relative-links` 保留了相对路径；去掉该 flag，让 vsce 改写成 GitHub raw 绝对地址 | resolved | 仓库转私有 / 更换图片托管 | `HANDOFF.md` §8 坑 2 |
 | VS Code 同时存在两个扩展目录 | 症状是“只有 t/s 没有数据”；删旧目录 + Reload Window 解决 | resolved | 扩展安装目录命名规则改变 | `HANDOFF.md` §8 坑 1 |
 | 早期“decode rate 永远不可用” | 当时 569 条 BYOK 记录 `duration−TTFT` 中位数 18 ms；**现已部分失效**，Claude Sonnet 5.5 等有真实 TTFT 与 decode rate | superseded | 出现流式 BYOK 记录（已发生，**不要再当现状引用**） | `HANDOFF.md` §3 |
 | 深回填只返回浅层数据 | 目录缓存 key 未含 `backfillDays`，已修复并加测试 | resolved | 目录缓存实现重写 | `HANDOFF.md` §4、`CHANGELOG.md` 0.2.2 |

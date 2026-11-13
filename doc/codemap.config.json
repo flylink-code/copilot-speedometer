@@ -1,0 +1,26 @@
+{
+  "roots": ["src", "test", "tools"],
+  "extensions": [".js"],
+  "excludeSegments": [
+    ".git",
+    ".github",
+    "node_modules",
+    "dist",
+    "docs",
+    "doc",
+    "media",
+    ".vscode-test"
+  ],
+  "excludePatterns": [],
+  "outputDir": "doc/codemap",
+  "indexFile": "doc/CODE_MAP_INDEX.md",
+  "cacheFile": "doc/.codemap-cache.json",
+  "pageRows": 100,
+  "hubCount": 40,
+  "defaultModule": "tooling",
+  "modules": {
+    "src/": "src",
+    "test/": "test",
+    "tools/": "tools"
+  }
+}

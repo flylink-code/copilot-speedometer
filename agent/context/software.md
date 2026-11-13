@@ -40,7 +40,7 @@ updated: 2026-11-13
 - `UsageScanner.readNew` 依赖偏移前一字节为 `0x0a`；目录缓存 key 必须含 `backfillDays`（曾因此漏数据）。
 - 非流式端点 `duration − TTFT ≈ 0`，decode rate 判定为不可用是设计行为，不是 bug。
 - 面板 CSS 的每个 `--vscode-*` 变量都要有暗色兜底，否则预览/未定义主题下控件隐形。
-- 打包必须 `--no-dependencies --allow-missing-repository --no-rewrite-relative-links`。
+- 打包：`npm run package`（先 `mkdirSync('dist')`，再 vsce 到 `--out dist`）。**不要**加 `--no-rewrite-relative-links`：vsce 需要把 README 相对图片改写成 GitHub 绝对地址，否则 Marketplace 只显示 alt 文本。`.vscodeignore` 已排除 `agent/`、`doc/`、`docs/`、`task.md` 等内部文件。
 
 ## 未决项
 
