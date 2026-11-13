@@ -1,16 +1,17 @@
 'use strict';
 
 /**
- * Renders the dashboard webview to a standalone HTML file with synthetic data,
- * so the UI can be previewed in a browser (and screenshotted) without VS Code.
+ * Renders the webview to standalone HTML files with synthetic data, so the UI
+ * can be previewed in a browser (and screenshotted) without VS Code.
  *
- *   node tools/preview.js  ->  docs/preview.html
+ *   node tools/preview.js  ->  docs/preview.html, docs/preview-settings.html
  */
 
 const fs = require('fs');
 const path = require('path');
 
 const { summarize, groupByModel } = require('../src/stats');
+const settings = require('../src/settings');
 const webview = require('../src/webview');
 
 const now = Date.now();
@@ -76,17 +77,62 @@ const payload = {
   },
 };
 
+/** Stand-in for WorkspaceConfiguration; one value differs so the reset affordance shows. */
+function fakeConfig(values) {
+  return {
+    own: {
+      get(key, dflt) {
+        return key in values ? values[key] : dflt;
+      },
+      update() {},
+    },
+    copilot: {
+      inspect() {
+        return { defaultValue: false, globalValue: false, workspaceValue: undefined };
+      },
+      update() {},
+    },
+  };
+}
+
+const settingsPayload = Object.assign(
+  settings.describe(fakeConfig({ pollIntervalMs: 3000, statusBarFormat: 'rate-model' })),
+  {
+    sources: {
+      usage: {
+        root: 'C:\\Users\\you\\.copilot\\session-state',
+        exists: true,
+        files: 96,
+      },
+      logs: {
+        roots: ['C:\\Users\\you\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debug-logs'],
+        files: 1,
+        enabled: false,
+      },
+      captured: { total: records.length, usage: records.length, byok: records.filter((r) => r.byok).length },
+    },
+  }
+);
+
 const nonce = 'previewnonce';
-let html = webview.html(nonce, '');
-const stub =
-  'window.acquireVsCodeApi=function(){return{postMessage:function(){}}};' +
-  'setTimeout(function(){window.postMessage({type:"data",payload:' +
-  JSON.stringify(payload) +
-  '},"*")},0);';
-html = html.replace(`<script nonce="${nonce}">`, `<script nonce="${nonce}">${stub}</script><script nonce="${nonce}">`);
+const base = webview.html(nonce, '');
+
+function render(target, initialView) {
+  const stub =
+    'window.acquireVsCodeApi=function(){return{postMessage:function(){}}};' +
+    'setTimeout(function(){' +
+    'window.postMessage({type:"data",payload:' + JSON.stringify(payload) + '},"*");' +
+    'window.postMessage({type:"settings",payload:' + JSON.stringify(settingsPayload) + '},"*");' +
+    (initialView === 'settings'
+      ? 'document.querySelector(".tab[data-view=settings]").click();'
+      : '') +
+    '},0);';
+  const html = base.replace(`<script nonce="${nonce}">`, `<script nonce="${nonce}">${stub}</script><script nonce="${nonce}">`);
+  fs.writeFileSync(target, html, 'utf8');
+  console.log(target);
+}
 
 const outDir = path.join(__dirname, '..', 'docs');
 fs.mkdirSync(outDir, { recursive: true });
-const out = path.join(outDir, 'preview.html');
-fs.writeFileSync(out, html, 'utf8');
-console.log(out);
+render(path.join(outDir, 'preview.html'), 'dashboard');
+render(path.join(outDir, 'preview-settings.html'), 'settings');

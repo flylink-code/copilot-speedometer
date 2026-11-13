@@ -8,6 +8,7 @@ const { LogScanner, parseEventLine } = require('./parser');
 const { UsageScanner, parseUsageLine } = require('./usage-events');
 const { summarize, groupByModel, fmtRate, fmtTokens, fmtDur } = require('./stats');
 const webview = require('./webview');
+const settings = require('./settings');
 
 const P = 'copilotSpeedometer';
 const COPILOT_CONFIG = 'github.copilot.chat';
@@ -38,14 +39,7 @@ function activate(context) {
     }),
     vscode.commands.registerCommand(`${P}.enableLogging`, () => enableLogging(context)),
     vscode.commands.registerCommand(`${P}.exportJson`, () => exportJson()),
-    vscode.commands.registerCommand(`${P}.clearHistory`, () => {
-      records = [];
-      seen.clear();
-      deepLoaded = false;
-      demoMode = false;
-      updateStatusBar();
-      pushData();
-    }),
+    vscode.commands.registerCommand(`${P}.clearHistory`, () => clearHistory()),
     vscode.commands.registerCommand(`${P}.seedDemo`, () => seedDemo()),
     vscode.commands.registerCommand(`${P}.diagnostics`, () => showDiagnostics())
   );
@@ -59,10 +53,19 @@ function activate(context) {
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration(P)) {
         dirCacheInvalidate();
-        restartLoop();
+        const rescan = ['enabled', 'usageEvents', 'usageEventsRoot', 'logPath', 'includeLegacyWorkspaceLogs', 'pollIntervalMs', 'historySize', 'backfillDays']
+          .some((key) => e.affectsConfiguration(`${P}.${key}`));
+        if (rescan) {
+          restartLoop();
+        } else {
+          updateStatusBar();
+          pushData();
+        }
+        pushSettings();
       }
       if (e.affectsConfiguration(`${COPILOT_CONFIG}.${FILE_LOGGING_KEY}`)) {
         pushData();
+        pushSettings();
       }
     }),
     { dispose: () => { if (timer) clearInterval(timer); } }
@@ -185,6 +188,140 @@ function usageOptions() {
 
 function usageEnabled() {
   return config().get('usageEvents', true) !== false;
+}
+
+function configBundle() {
+  return { own: config(), copilot: vscode.workspace.getConfiguration(COPILOT_CONFIG) };
+}
+
+/**
+ * Everything the Settings tab renders: the field model (value, default,
+ * modified flag) plus a live health snapshot of both data sources, so the
+ * panel can say "96 session files" instead of asking the user to believe it.
+ */
+function buildSettingsPayload() {
+  const desc = settings.describe(configBundle());
+  const uopts = usageOptions();
+
+  let files = [];
+  let usageRoot = '';
+  let usageExists = false;
+  try {
+    if (usageScanner) {
+      usageRoot = usageScanner.root(uopts);
+      usageExists = usageScanner.existingRoots(uopts).length > 0;
+      files = usageScanner.scan(uopts);
+    }
+  } catch {
+    files = [];
+  }
+
+  let logRoots = [];
+  try {
+    if (scanner) logRoots = scanner.existingRoots(scannerOptions()).map((r) => r.root);
+  } catch {
+    logRoots = [];
+  }
+
+  const logState = loggingState();
+  let latest = 0;
+  for (const f of files) {
+    if (f.mtimeMs > latest) latest = f.mtimeMs;
+  }
+
+  return Object.assign(desc, {
+    sources: {
+      usage: {
+        root: usageRoot,
+        exists: usageExists,
+        files: files.length,
+        latest: latest || null,
+      },
+      logs: { roots: logRoots, files: logRoots.length, enabled: !!logState.enabled },
+      captured: {
+        total: records.length,
+        usage: records.filter((r) => r.source === 'usage').length,
+        byok: records.filter((r) => r.byok).length,
+      },
+    },
+  });
+}
+
+function pushSettings() {
+  if (!panel) return;
+  panel.webview.postMessage({ type: 'settings', payload: buildSettingsPayload() });
+}
+
+function postConfigResult(result) {
+  if (!panel) return;
+  panel.webview.postMessage(Object.assign({ type: 'configResult' }, result));
+}
+
+async function applySetting(key, value, reset) {
+  try {
+    const result = await settings.apply(configBundle(), key, value, reset);
+    postConfigResult(result);
+    if (result.ok) {
+      dirCacheInvalidate();
+      pushSettings();
+      updateStatusBar();
+    }
+  } catch (err) {
+    postConfigResult({ ok: false, key, message: err.message });
+  }
+}
+
+async function browseSetting(key) {
+  const field = settings.fieldByKey(key);
+  if (!field || field.type !== 'path') return;
+  const current = config().get(key, '') || '';
+  const picked = await vscode.window.showOpenDialog({
+    canSelectFiles: false,
+    canSelectFolders: true,
+    canSelectMany: false,
+    openLabel: 'Use this folder',
+    defaultUri: current && fs.existsSync(current) ? vscode.Uri.file(current) : undefined,
+  });
+  if (!picked || !picked.length) return;
+  await applySetting(key, picked[0].fsPath, false);
+}
+
+function revealFolder(target) {
+  if (!target || !fs.existsSync(target)) {
+    vscode.window.showInformationMessage(`Folder not found: ${target || '(not set)'}`);
+    return;
+  }
+  vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(target));
+}
+
+function openSettingsJson() {
+  vscode.commands.executeCommand('workbench.action.openSettings', 'copilotSpeedometer');
+}
+
+async function clearHistory() {
+  if (!records.length) {
+    vscode.window.showInformationMessage('No captured requests to clear.');
+    return;
+  }
+  const pick = await vscode.window.showWarningMessage(
+    `Clear all ${records.length} captured Copilot requests? The status bar keeps working; history restarts from the next request.`,
+    { modal: true },
+    'Clear'
+  );
+  if (pick !== 'Clear') return;
+  records = [];
+  seen.clear();
+  deepLoaded = false;
+  demoMode = false;
+  updateStatusBar();
+  pushData();
+  pushSettings();
+}
+
+/** Short, status-bar-friendly model label: last path segment, trimmed. */
+function shortModel(model) {
+  const name = String(model || '').split('/').filter(Boolean).pop() || String(model || '');
+  return name.length > 26 ? `${name.slice(0, 25)}…` : name;
 }
 
 function restartLoop() {
@@ -358,7 +495,11 @@ function updateStatusBar() {
     return;
   }
 
-  statusBar.text = `$(pulse) ${fmtRate(last.rate)} tok/s`;
+  const format = config().get('statusBarFormat', 'rate');
+  let text = `$(pulse) ${fmtRate(last.rate)} tok/s`;
+  if (format === 'rate-model') text += ` · ${shortModel(last.model)}`;
+  else if (format === 'rate-ttft' && last.ttftMs) text += ` · TTFT ${fmtDur(last.ttftMs)}`;
+  statusBar.text = text;
   statusBar.color = undefined;
 
   const recent = records.slice(-20);
@@ -483,6 +624,9 @@ function showDashboard(context) {
       if (typeof msg.window === 'string') currentWindow = msg.window;
       if (currentWindow !== 'today') deepBackfill();
       pushData();
+      pushSettings();
+    } else if (msg.type === 'tab') {
+      if (msg.view === 'settings') pushSettings();
     } else if (msg.type === 'filter') {
       currentWindow = ['today', '7d', 'all'].includes(msg.window) ? msg.window : 'today';
       if (currentWindow !== 'today') deepBackfill();
@@ -491,8 +635,25 @@ function showDashboard(context) {
       dirCacheInvalidate();
       tick(true);
       pushData();
+      pushSettings();
     } else if (msg.type === 'enableLogging') {
       enableLogging(context);
+    } else if (msg.type === 'setConfig') {
+      applySetting(msg.key, msg.value, false);
+    } else if (msg.type === 'resetConfig') {
+      applySetting(msg.key, null, true);
+    } else if (msg.type === 'browse') {
+      browseSetting(msg.key);
+    } else if (msg.type === 'revealUsageRoot') {
+      revealFolder(usageScanner ? usageScanner.root(usageOptions()) : '');
+    } else if (msg.type === 'diagnostics') {
+      showDiagnostics();
+    } else if (msg.type === 'exportJson') {
+      exportJson();
+    } else if (msg.type === 'clearHistory') {
+      clearHistory();
+    } else if (msg.type === 'openVsCodeSettings') {
+      openSettingsJson();
     }
   });
 

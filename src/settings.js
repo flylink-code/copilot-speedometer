@@ -1,0 +1,216 @@
+'use strict';
+
+/**
+ * Settings model for the dashboard's Settings tab.
+ *
+ * The webview never writes settings itself and never sees a raw
+ * `WorkspaceConfiguration`: every field is described here (type, default,
+ * range, unit, which section it belongs to), read back through `describe()`,
+ * and written through `apply()` after `coerce()` has validated the value.
+ * That keeps the panel honest - what it shows is what VS Code will report,
+ * including whether the value is still the default.
+ */
+
+const P = 'copilotSpeedometer';
+const COPILOT = 'github.copilot.chat';
+const FILE_LOGGING_KEY = 'agentDebugLog.fileLogging.enabled';
+
+/**
+ * `copilot: true` marks a field that lives in the Copilot extension's own
+ * namespace (the debug-log switch). It is displayed with the others because
+ * it is a data-source setting, but it is written through a different
+ * configuration section.
+ */
+const FIELDS = [
+  { key: 'enabled', section: 'general', type: 'boolean', default: true },
+  { key: 'usageEvents', section: 'sources', type: 'boolean', default: true },
+  { key: 'usageEventsRoot', section: 'sources', type: 'path', default: '' },
+  { key: 'logPath', section: 'sources', type: 'path', default: '' },
+  { key: 'includeLegacyWorkspaceLogs', section: 'sources', type: 'boolean', default: true },
+  {
+    key: 'copilotDebugLogging',
+    section: 'sources',
+    type: 'boolean',
+    copilot: true,
+    default: false,
+  },
+  {
+    key: 'pollIntervalMs',
+    section: 'collection',
+    type: 'number',
+    default: 2000,
+    min: 500,
+    max: 60000,
+    step: 500,
+    unit: 'ms',
+  },
+  {
+    key: 'historySize',
+    section: 'collection',
+    type: 'number',
+    default: 3000,
+    min: 100,
+    max: 50000,
+    step: 100,
+    unit: 'records',
+  },
+  {
+    key: 'backfillDays',
+    section: 'collection',
+    type: 'number',
+    default: 2,
+    min: 0,
+    max: 365,
+    step: 1,
+    unit: 'days',
+  },
+  { key: 'statusBar', section: 'display', type: 'boolean', default: true },
+  {
+    key: 'statusBarFormat',
+    section: 'display',
+    type: 'enum',
+    default: 'rate',
+    options: ['rate', 'rate-model', 'rate-ttft'],
+  },
+];
+
+function fieldByKey(key) {
+  return FIELDS.find((f) => f.key === key) || null;
+}
+
+/** The effective value VS Code would hand the extension. */
+function readValue(config, field) {
+  if (field.copilot) {
+    const info = config.copilot.inspect(FILE_LOGGING_KEY);
+    if (!info) return false;
+    const raw =
+      info.globalValue !== undefined
+        ? info.globalValue
+        : info.workspaceValue !== undefined
+          ? info.workspaceValue
+          : info.defaultValue;
+    return !!raw;
+  }
+  return config.own.get(field.key, field.default);
+}
+
+/** True while the value differs from the packaged default. */
+function isModified(config, field) {
+  if (field.copilot) {
+    const info = config.copilot.inspect(FILE_LOGGING_KEY);
+    if (!info) return false;
+    return info.globalValue !== undefined || info.workspaceValue !== undefined;
+  }
+  return config.own.get(field.key, field.default) !== field.default;
+}
+
+/**
+ * Ordered, serialisable description of every setting. `sections` carries the
+ * presentation metadata (title + blurb) so the webview never hardcodes copy
+ * that the host already knows.
+ */
+function describe(config) {
+  return {
+    sections: [
+      {
+        id: 'sources',
+        title: 'Data sources',
+        blurb: 'Where token counts come from. Usage records cover every agent session, including BYOK and custom endpoints.',
+      },
+      {
+        id: 'collection',
+        title: 'Collection',
+        blurb: 'How often the session files are tailed and how much history is kept in memory.',
+      },
+      {
+        id: 'display',
+        title: 'Status bar',
+        blurb: 'What the status-bar item shows after each response.',
+      },
+      {
+        id: 'general',
+        title: 'General',
+        blurb: '',
+      },
+    ],
+    fields: FIELDS.map((f) => ({
+      key: f.key,
+      section: f.section,
+      type: f.type,
+      default: f.default,
+      min: f.min,
+      max: f.max,
+      step: f.step,
+      unit: f.unit,
+      options: f.options,
+      value: readValue(config, f),
+      modified: isModified(config, f),
+    })),
+  };
+}
+
+/**
+ * Convert whatever the input produced into the type the setting expects.
+ * Returns `{ value }` on success or `{ error }` with a message the panel can
+ * show next to the field.
+ */
+function coerce(field, raw) {
+  if (field.type === 'boolean') {
+    return { value: raw === true || raw === 'true' };
+  }
+  if (field.type === 'enum') {
+    return field.options.includes(raw)
+      ? { value: raw }
+      : { error: `Unknown option "${raw}".` };
+  }
+  if (field.type === 'number') {
+    const n = Number(raw);
+    if (!isFinite(n)) return { error: 'Enter a number.' };
+    if (field.min !== undefined && n < field.min) {
+      return { error: `Minimum is ${field.min}.` };
+    }
+    if (field.max !== undefined && n > field.max) {
+      return { error: `Maximum is ${field.max}.` };
+    }
+    return { value: Math.round(n) };
+  }
+  if (field.type === 'path') {
+    const value = String(raw === undefined || raw === null ? '' : raw).trim();
+    return { value };
+  }
+  return { value: raw };
+}
+
+/**
+ * Write one setting. `reset` removes the override so the packaged default
+ * applies again (which is exactly what VS Code's own "reset" affordance does).
+ */
+async function apply(config, key, value, reset) {
+  const field = fieldByKey(key);
+  if (!field) return { ok: false, message: `Unknown setting "${key}".` };
+
+  const target = field.copilot ? config.copilot : config.own;
+  const name = field.copilot ? FILE_LOGGING_KEY : field.key;
+
+  if (reset) {
+    await target.update(name, undefined, 1 /* ConfigurationTarget.Global */);
+    return { ok: true, key, value: field.default, reset: true };
+  }
+
+  const result = coerce(field, value);
+  if (result.error) return { ok: false, key, message: result.error };
+
+  await target.update(name, result.value, 1 /* ConfigurationTarget.Global */);
+  return { ok: true, key, value: result.value };
+}
+
+module.exports = {
+  P,
+  COPILOT,
+  FILE_LOGGING_KEY,
+  FIELDS,
+  fieldByKey,
+  describe,
+  coerce,
+  apply,
+};

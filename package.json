@@ -2,7 +2,7 @@
   "name": "copilot-speedometer",
   "displayName": "Copilot Speedometer - tok/s for Copilot Chat",
   "description": "Status bar and dashboard showing tokens/second, latency and token usage for every GitHub Copilot Chat request, parsed from the local Copilot debug logs.",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "publisher": "local",
   "license": "MIT",
   "repository": {
@@ -84,6 +84,21 @@
           "default": true,
           "description": "Show the tokens/sec item in the status bar."
         },
+        "copilotSpeedometer.statusBarFormat": {
+          "type": "string",
+          "enum": [
+            "rate",
+            "rate-model",
+            "rate-ttft"
+          ],
+          "enumDescriptions": [
+            "Just the throughput, e.g. \"12.4 tok/s\".",
+            "Throughput plus the model that produced it.",
+            "Throughput plus the time to first token."
+          ],
+          "default": "rate",
+          "description": "What the status-bar item shows after each captured response."
+        },
         "copilotSpeedometer.logPath": {
           "type": "string",
           "default": "",
@@ -93,18 +108,21 @@
           "type": "number",
           "default": 2000,
           "minimum": 500,
+          "maximum": 60000,
           "description": "How often to check the log files for new requests, in milliseconds."
         },
         "copilotSpeedometer.historySize": {
           "type": "number",
           "default": 3000,
           "minimum": 100,
+          "maximum": 50000,
           "description": "Maximum number of requests kept in memory."
         },
         "copilotSpeedometer.backfillDays": {
           "type": "number",
           "default": 2,
           "minimum": 0,
+          "maximum": 365,
           "description": "On startup, load requests from log files modified within this many days (0 disables backfill)."
         },
         "copilotSpeedometer.includeLegacyWorkspaceLogs": {
@@ -126,7 +144,8 @@
     }
   },
   "scripts": {
-    "test": "node test/parser.test.js && node test/usage.test.js",
+    "test": "node test/parser.test.js && node test/usage.test.js && node test/settings.test.js",
+    "preview": "node tools/preview.js",
     "package": "npx --yes @vscode/vsce@latest package --no-dependencies --allow-missing-repository --no-rewrite-relative-links"
   }
 }

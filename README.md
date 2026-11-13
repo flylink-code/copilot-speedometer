@@ -53,7 +53,7 @@ B 的字段：
 **方式 A：VSIX（推荐）**
 
 ```bash
-code --install-extension copilot-speedometer-0.2.3.vsix
+code --install-extension copilot-speedometer-0.3.0.vsix
 ```
 
 **方式 B：源码调试**：用 VS Code 打开本目录，按 <kbd>F5</kbd>（Run Extension）。
@@ -94,23 +94,31 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 
 - 状态栏实时显示**上一次回答**的 tok/s，悬停看模型、BYOK 标记、输出 token、耗时、TTFT、最近 20 次加权平均与中位数。
 - 面板：卡片（最近一次 / 加权平均 / 中位数 / p90 / 请求数 / TTFT / decode rate）、每次回答的 tok/s 柱状图、按模型汇总、最近 200 条请求明细。
+- **面板内的 Settings 页**：不用去 VS Code 设置里翻 JSON —— 开关、数字、路径（带 Browse）和状态下拉都在面板里，改完立即生效，被改过的项旁边有 ↻ 可一键恢复默认。
 - 时间窗口：今天 / 近 7 天 / 全部。切到「近 7 天」或「全部」时会做一次更深的回填（每个文件读尾部、总量有上限，首次约 1 秒），所以历史会话也能看到。
 - 命令：`Show Dashboard`、`Refresh`、`Enable Copilot Debug Logging`、`Export Captured Requests as JSON`、`Clear Captured History`、`Preview With Demo Data`、`Show Diagnostics`。
 - 历史在内存里（默认 3000 条），启动时回填最近 2 天。
 
 ## 设置
 
+![settings](docs/preview-settings.png)
+
+面板里的 **Settings** 标签页直接改这些值，也可以照旧在 `settings.json` 里写：
+
 | 设置 | 默认 | 说明 |
 |---|---|---|
 | `copilotSpeedometer.enabled` | `true` | 总开关 |
 | `copilotSpeedometer.statusBar` | `true` | 是否显示状态栏 |
+| `copilotSpeedometer.statusBarFormat` | `"rate"` | 状态栏内容：`rate` 只有数字 / `rate-model` 加模型名 / `rate-ttft` 加 TTFT |
 | `copilotSpeedometer.usageEvents` | `true` | 读 agent usage records（BYOK + TTFT 来源） |
 | `copilotSpeedometer.usageEventsRoot` | `""` | 覆盖 `~/.copilot/session-state` |
 | `copilotSpeedometer.logPath` | `""` | 手动指定 debug-logs 根目录 |
-| `copilotSpeedometer.pollIntervalMs` | `2000` | 轮询间隔（ms） |
-| `copilotSpeedometer.historySize` | `3000` | 内存中保留的请求条数 |
-| `copilotSpeedometer.backfillDays` | `2` | 启动时回填几天 |
+| `copilotSpeedometer.pollIntervalMs` | `2000` | 轮询间隔（500–60000 ms） |
+| `copilotSpeedometer.historySize` | `3000` | 内存中保留的请求条数（100–50000） |
+| `copilotSpeedometer.backfillDays` | `2` | 启动时回填几天（0–365） |
 | `copilotSpeedometer.includeLegacyWorkspaceLogs` | `true` | 是否扫旧版 workspaceStorage 布局 |
+
+`github.copilot.chat.agentDebugLog.fileLogging.enabled` 也在 Settings 页的 Data sources 里，切换后会在下面的 Live status 里显示当前是开还是关。
 
 ## 常见问题
 
@@ -136,9 +144,9 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 ## 开发
 
 ```bash
-npm test                       # 两个数据源的解析 + 统计聚合单测（22 项）
+npm test                       # 解析 / 统计 / 设置模型单测（33 项）
 node tools/smoke-activate.js    # 用 stub 的 vscode API 真跑一遍 activate / tick / 面板 payload
-node tools/preview.js          # 生成 docs/preview.html，浏览器直接看 UI
+node tools/preview.js          # 生成 docs/preview.html 与 docs/preview-settings.html，浏览器直接看 UI
 npm run package                # 打包 .vsix（vsce 参数已内置）
 ```
 
@@ -148,7 +156,8 @@ npm run package                # 打包 .vsix（vsce 参数已内置）
 src/usage-events.js  A 源：session-state 扫描 + 增量 tail + 记录映射
 src/parser.js        B 源：debug-logs 扫描 + 增量 tail + 记录映射
 src/stats.js         聚合与格式化（纯函数，可单测）
-src/webview.js       面板 HTML（CSP nonce，主题跟随 VS Code）
+src/settings.js      面板设置模型：字段表、校验、写入/恢复默认（host 侧，无 vscode 依赖）
+src/webview.js       面板 HTML（Dashboard + Settings 两个视图，CSP nonce，主题跟随 VS Code）
 src/extension.js     状态栏、轮询、双源合并去重、命令、面板消息
 ```
 

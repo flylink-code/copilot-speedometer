@@ -1,5 +1,6 @@
 node_modules/
 *.vsix
 docs/preview.html
+docs/preview-settings.html
 .vscode-test/
 *.log
