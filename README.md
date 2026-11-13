@@ -52,13 +52,17 @@ B 的字段：
 
 ## 安装
 
-**方式 A：VSIX（推荐）**
+**方式 A：Marketplace（推荐）**
+
+在 VS Code 扩展视图搜索 **Copilot Speedometer**，或：
 
 ```bash
-code --install-extension dist/copilot-speedometer-0.4.0.vsix
+code --install-extension copilot-speedometer.copilot-speedometer
 ```
 
-**方式 B：源码调试**：用 VS Code 打开本目录，按 <kbd>F5</kbd>（Run Extension）。
+**方式 B：本地 VSIX**（离线安装）：`dist/copilot-speedometer-0.1.0.vsix`。
+
+**方式 C：源码调试**：用 VS Code 打开本目录，按 <kbd>F5</kbd>（Run Extension）。
 
 安装后右下角状态栏出现 `⚡ 42.3 tok/s`，点击打开面板。
 

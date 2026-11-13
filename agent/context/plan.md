@@ -10,11 +10,11 @@ updated: 2026-11-13
 
 ## 当前阶段
 
-- 创建 / 实现 / 调试 / [x] 优化 / 归档 —— 当前：**优化**（0.4.0 已提交并本地安装，等待发布）
+- 创建 / 实现 / 调试 / [x] 优化 / 归档 —— 当前：**优化 / 首次发布准备**（0.1.0 已打包，等待用户手动上传）
 
 ## 当前目标
 
-- 完成 `task.md` 剩余两项（Marketplace 图片问题、功能扩展讨论），产出 0.5.0 的明确范围。
+- 上传 `dist/copilot-speedometer-0.1.0.vsix` 到 Marketplace，确认介绍图与面板正常。
 
 ## 进行中
 
@@ -22,13 +22,13 @@ updated: 2026-11-13
 | --- | --- | --- | --- |
 | 功能扩展①：Copilot 会话管理 hub | 待讨论 | 需调研会话是否可按工作目录聚合、能否稳定读取 | 用户 + Agent |
 | 功能扩展②：token 费用统计 | 待讨论 | 需确认 usage record 的 `cost` 字段口径与模型价目来源 | 用户 + Agent |
-| 发布 0.4.0 到 Marketplace | 阻塞 | 需用户提供真实 publisher id（现为 `local`） | 用户 |
+| 发布 0.1.0 到 Marketplace | 待上传 | 用户手动上传 `dist/copilot-speedometer-0.1.0.vsix` | 用户 |
 
 ## 下一步（按优先级）
 
-1. 按 `agent/playbooks/10-create.md` 对两个功能扩展做调研与方案对比，先给结论再动手（判定：每个功能给出“做/不做/怎么做 + 代价”）。
-2. 用户确认 publisher id 后跑 `npm run package` 并发布 0.4.0，安装 `dist/copilot-speedometer-0.4.0.vsix` 复核图片与面板（判定：Marketplace 页面版本 = 0.4.0，介绍图正常显示）。
-3. 发布后检查 Marketplace 的 README 图片实际渲染（判定：无 alt 文本占位）。
+1. 用户在 Marketplace 上传 0.1.0（判定：页面版本显示 0.1.0，publisher 为 `copilot-speedometer`）。
+2. 上传后复核介绍图（判定：无 `dashboard` / `settings` alt 文本占位）。
+3. 按 `agent/playbooks/10-create.md` 对两个功能扩展做调研与方案对比（判定：每个功能给出“做/不做/怎么做 + 代价”）。
 
 ## 已完成（只留最近 10 条，更早的走归档）
 

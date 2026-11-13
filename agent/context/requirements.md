@@ -12,7 +12,7 @@ updated: 2026-11-13
 | 版本 | 路径 | 状态 |
 | --- | --- | --- |
 | 用户待办（当前） | `task.md` | 有效（优化 1–4 已实现；问题修复与功能扩展未完成） |
-| 交接说明（当前） | `HANDOFF.md` | 有效（对应 0.4.0） |
+| 交接说明（当前） | `HANDOFF.md` | 有效（对应首个公开发布 0.1.0） |
 | 用户 / 安装说明 | `README.md`、`README_en.md` | 有效 |
 | 版本变更 | `CHANGELOG.md` | 有效（用户要求每版必记） |
 
@@ -31,7 +31,7 @@ updated: 2026-11-13
 
 - 功能扩展是否做、怎么做（用户要求先讨论 + 联网调研）：① Copilot 会话管理 hub；② 读取 token 数据做模型费用统计。见 `task.md`「功能扩展」。
 - 状态栏是否要更严格的“仅本窗口”语义（失焦即隐藏）——需用户拍板，见 `HANDOFF.md` §9 限制 1。
-- 发布前 publisher id（现为 `local`）由用户提供。
+- 发布：publisher 已确认 `copilot-speedometer`，首版 0.1.0 待用户手动上传。
 - ~~Marketplace 介绍图显示异常~~ → 已定位并修复（`--no-rewrite-relative-links` 导致），见 `ARCHIVE_INDEX.md`。
 
 ## 最后更新

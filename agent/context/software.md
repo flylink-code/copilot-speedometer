@@ -11,14 +11,14 @@ updated: 2026-11-13
 
 | 内容 | 路径 | 状态 |
 | --- | --- | --- |
-| 架构 / 数据源 / 坑 | `HANDOFF.md` §3–§8 | 有效（0.4.0） |
+| 架构 / 数据源 / 坑 | `HANDOFF.md` §3–§8 | 有效（0.1.0，沿用内部 0.2.x–0.4.0 实现） |
 | 面向用户的功能说明 | `README.md` | 有效 |
-| 清单与设置定义 | `package.json` | 有效（v0.4.0，`engines.vscode ^1.85.0`） |
+| 清单与设置定义 | `package.json` | 有效（v0.1.0，`engines.vscode ^1.85.0`） |
 
 ## 关键事实
 
 - 技术栈：纯 CommonJS，**无构建、无运行时依赖**；`main = src/extension.js`；`activationEvents = onStartupFinished`。
-- 模块（行数为 0.4.0 实测）：
+- 模块（行数为内部 0.4.0 实测；代码与 0.1.0 相同）：
   - `src/extension.js` 824 —— 状态栏、轮询、双源合并、命令、面板消息
   - `src/webview.js` 688 —— Dashboard + Settings 两视图，内联 CSS/JS，CSP nonce
   - `src/i18n.js` 428 —— en/zh 扁平字典（171 键）

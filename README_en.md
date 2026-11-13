@@ -52,13 +52,17 @@ When both sources describe the same call, the A record wins because it carries T
 
 ## Install
 
-**Option A: VSIX (recommended)**
+**Option A: Marketplace (recommended)**
+
+Search for **Copilot Speedometer** in the Extensions view, or:
 
 ```bash
-code --install-extension dist/copilot-speedometer-0.4.0.vsix
+code --install-extension copilot-speedometer.copilot-speedometer
 ```
 
-**Option B: from source**: open this folder in VS Code and press <kbd>F5</kbd> (Run Extension).
+**Option B: local VSIX** (offline): `dist/copilot-speedometer-0.1.0.vsix`.
+
+**Option C: from source**: open this folder in VS Code and press <kbd>F5</kbd> (Run Extension).
 
 After installing, the status bar shows `⚡ 42.3 tok/s`; click it to open the panel.
 

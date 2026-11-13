@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.0 — first public release
+
+The first Marketplace release. It bundles everything built in the internal 0.2.x–0.4.0
+iterations:
+
+- Status bar and dashboard showing tokens/second, TTFT, token usage and per-request
+  duration for GitHub Copilot Chat, including BYOK / custom-endpoint models.
+- Two local data sources merged: agent usage records (TTFT + BYOK) and Copilot Chat
+  debug logs. Nothing leaves the machine.
+- In-panel Settings, English / Simplified Chinese UI, auto-hide when idle, extension
+  icon, diagnostics, export / clear history and a demo preview.
+- `npm run package` writes `dist/copilot-speedometer-0.1.0.vsix`.
+
+> 0.2.2–0.4.0 were internal builds only (never published). Their notes are kept
+> below as history; the public version line starts at 0.1.0.
+
 ## 0.4.0
 
 - The status-bar item now hides itself when no new Copilot response has arrived for

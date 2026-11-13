@@ -1,7 +1,7 @@
 # 交接文档 / Handoff — Copilot Speedometer
 
 > 写给下一个接手的 agent（或未来的我）。读完这份就能继续干活，不需要翻旧对话。
-> 最后更新：2026-11-13，对应版本 **0.4.0**，分支 `main`，HEAD `56161e1`。
+> 最后更新：2026-11-13，对应**首个公开发布 0.1.0**（内部 0.2.x–0.4.0 为预发布版本），分支 `main`。
 
 ---
 
@@ -19,9 +19,9 @@
 |---|---|
 | 仓库 | `git@github.com:flylink-code/copilot-speedometer.git`（分支 `main`） |
 | 本地工作区 | `E:\W-AI_WorkSpace\copilot-speedometer` |
-| 版本 | `package.json` → **0.4.0**，publisher `local`（**发布前必须换成用户自己的 Marketplace publisher id**） |
-| 安装方式 | `code --install-extension dist/copilot-speedometer-0.4.0.vsix --force` |
-| 已装实例 | `%USERPROFILE%\.vscode\extensions\local.copilot-speedometer-0.4.0`（旧版本目录已删除） |
+| 版本 | `package.json` → **0.1.0**（首个公开发布），publisher `copilot-speedometer` |
+| 安装方式 | `code --install-extension dist/copilot-speedometer-0.1.0.vsix --force` |
+| 已装实例 | 发布后为 `%USERPROFILE%\.vscode\extensions\copilot-speedometer.copilot-speedometer-0.1.0` |
 | 未跟踪文件 | `task.md`（用户自己的待办，**不要提交**，四条已全部实现） |
 | 最近提交 | `56161e1` 清临时脚本 / `e9f3a9a` 0.4.0 / `591d0bb` 0.3.1 / `37d4798` 0.3.0 收尾 |
 
@@ -100,7 +100,7 @@ npm test                        # 44 项单测：parser 13 + usage 10 + settings
 node tools/smoke-activate.js    # stub 的 vscode API 跑 activate/tick/面板；SMOKE_DUMP=1 打诊断全文
 node tools/preview.js           # 生成 docs/preview*.html（4 个）
 npm run package                 # 打包到 dist/copilot-speedometer-<ver>.vsix
-code --install-extension dist\copilot-speedometer-0.4.0.vsix --force
+code --install-extension dist\copilot-speedometer-0.1.0.vsix --force
 ```
 
 截图（headless Chrome，PNG 约 10 s 后才出现，要轮询）：
@@ -125,7 +125,7 @@ code --install-extension dist\copilot-speedometer-0.4.0.vsix --force
 ## 9. 已知限制 / 待办
 
 1. **状态栏不是严格"本窗口"的**：usage 记录里没有窗口标识，只能按"多久没有新回答"隐藏（`autoHideMinutes`）。多窗口时，别的窗口在聊天，这个窗口也会亮。可选更严格的语义：窗口失焦即隐藏（需用户确认要不要）。
-2. **发布前**：`publisher: "local"` 要换成真实 publisher id；`repository`/`bugs` 已指向 GitHub；截图 4 张在 `docs/`；图标 256×256 已就位；`CHANGELOG.md` 逐版本记录（用户明确要求"每次版本更新需要记录更新内容"）。
+2. **发布**：publisher 已设为 `copilot-speedometer`，首版 `0.1.0` 已打包为 `dist/copilot-speedometer-0.1.0.vsix`；`repository`/`bugs` 指向 GitHub；截图 4 张在 `docs/`；图标 256×256 已就位；`CHANGELOG.md` 逐版本记录（用户明确要求"每次版本更新需要记录更新内容"）。
 3. 可选增强：marketplace 用的 GIF 演示、远程/WSL 场景提示、p90 之外的时序图（按天趋势）、把 `task.md` 内容转进 GitHub Issues。
 4. 精度口径（README 已写，别再混）：大上下文时"平均吞吐"≈ prefill 速度；非流式端点 TTFT≈总时长；reasoning token 计入 output；跨厂商 tokenizer 不同，tok/s 不完全可比。
 
