@@ -1,0 +1,422 @@
+'use strict';
+
+/**
+ * Two-language string table (English + Simplified Chinese).
+ *
+ * Nothing here imports `vscode`: the host passes `vscode.env.language` in, and
+ * the webview gets the resolved dictionary as JSON, so both sides read the same
+ * keys and a missing translation fails a unit test rather than showing English
+ * in the middle of a Chinese panel. Command titles and setting descriptions are
+ * localised separately by VS Code itself through package.nls*.json.
+ */
+
+const en = {
+  /* ── Status bar ──────────────────────────────────────────────────────── */
+  'status.name': 'Copilot tok/s',
+  'status.rate': '$(pulse) {0} tok/s',
+  'status.idle.text': '$(pulse) Copilot t/s',
+  'status.idle.tooltip': 'No Copilot request captured yet - click for setup steps.',
+  'status.md.last': 'Last response',
+  'status.md.model': 'Model',
+  'status.md.output': 'Output tokens',
+  'status.md.duration': 'Duration',
+  'status.md.ttft': 'TTFT',
+  'status.md.decode': 'Decode rate',
+  'status.md.provider': 'Provider',
+  'status.md.byok': 'BYOK custom endpoint',
+  'status.md.io': 'Input / cached',
+  'status.md.recent': 'Last {0} responses: **{1} tok/s** weighted, median {2} tok/s, {3} output tokens.',
+  'status.md.click': 'Click to open the dashboard.',
+
+  /* ── Diagnostics output channel ──────────────────────────────────────── */
+  'diag.settings': 'settings',
+  'diag.useUsage': 'use usage records',
+  'diag.usageRoot': 'usage root override',
+  'diag.logPath': 'logPath override',
+  'diag.backfill': 'backfill days',
+  'diag.logging': 'Copilot debug logging',
+  'diag.usageTitle': 'usage records (BYOK + official agent sessions)',
+  'diag.usageDisabled': 'disabled by copilotSpeedometer.usageEvents',
+  'diag.root': 'root',
+  'diag.exists': 'exists',
+  'diag.scanError': 'scan error',
+  'diag.files7d': 'files (7d)',
+  'diag.logsTitle': 'chat debug logs',
+  'diag.discoveryError': 'discovery error',
+  'diag.rootsFound': 'roots found',
+  'diag.noRoots': '(none - Copilot writes these only when the debug-log setting is on)',
+  'diag.capturedTitle': 'captured',
+  'diag.totalRecords': 'total records',
+  'diag.lastRequest': 'last request',
+  'diag.noneYet': '(none yet)',
+  'diag.hint': 'If usage records exist but nothing was captured, run "Copilot Speedometer: Refresh" and check the Developer Tools console for stack traces.',
+  'diag.on': 'on',
+  'diag.off': 'off',
+  'diag.unknown': 'unknown',
+  'diag.default': '(default)',
+  'diag.autoDiscover': '(auto-discover)',
+
+  /* ── Host notifications ──────────────────────────────────────────────── */
+  'msg.pickFolder': 'Use this folder',
+  'msg.folderMissing': 'Folder not found: {0}',
+  'msg.nothingToClear': 'No captured requests to clear.',
+  'msg.clearConfirm': 'Clear all {0} captured Copilot requests? The status bar keeps working; history restarts from the next request.',
+  'msg.clear': 'Clear',
+  'msg.loggingEnabled': 'Copilot debug logging enabled. Send a message in Copilot Chat, then the status bar will pick it up.',
+  'msg.loggingFailed': 'Could not enable {0}: {1}',
+  'msg.setupAsk': 'Copilot Speedometer needs Copilot debug logs to measure tok/s. Enable them now?',
+  'msg.setupEnable': 'Enable logging',
+  'msg.setupLater': 'Not now',
+  'msg.nothingToExport': 'No Copilot requests captured yet - nothing to export.',
+  'msg.exportLabel': 'Export',
+  'msg.exported': 'Exported {0} requests to {1}.',
+  'msg.demoOnlyEmpty': 'Demo data is only available when the history is empty (run "Clear Captured History" first).',
+  'msg.demoLoaded': 'Demo data loaded - this is synthetic, not real Copilot traffic.',
+
+  /* ── Panel shell ─────────────────────────────────────────────────────── */
+  'ui.tab.dashboard': 'Dashboard',
+  'ui.tab.settings': 'Settings',
+  'ui.filter.title': 'Time window',
+  'ui.filter.today': 'Today',
+  'ui.filter.7d': 'Last 7 days',
+  'ui.filter.all': 'All captured',
+  'ui.refresh': 'Refresh',
+  'ui.chart.peak': 'peak {0} tok/s',
+  'ui.chart.last': 'last {0} responses',
+  'ui.empty.samples': 'No samples in this window.',
+  'ui.empty.data': 'No data.',
+
+  /* ── Dashboard cards ─────────────────────────────────────────────────── */
+  'ui.card.last': 'Last response',
+  'ui.card.avg': 'Average (weighted)',
+  'ui.card.median': 'Median / p90',
+  'ui.card.requests': 'Requests',
+  'ui.card.ttft': 'TTFT (avg)',
+  'ui.card.decode': 'Decode rate',
+  'ui.card.ttftSub': 'first token latency',
+  'ui.card.decodeSub': 'TTFT {0} excluded',
+  'ui.card.perResponse': 'per-response tok/s',
+  'ui.card.tokens': 'tokens',
+  'ui.card.out': 'out',
+  'ui.card.cached': 'cached',
+  'ui.card.in': 'in',
+
+  /* ── Dashboard sections and tables ───────────────────────────────────── */
+  'ui.block.series': 'tok/s per response',
+  'ui.block.models': 'By model',
+  'ui.block.recent': 'Recent requests',
+  'ui.th.model': 'Model',
+  'ui.th.req': 'Req',
+  'ui.th.rate': 'tok/s',
+  'ui.th.median': 'median',
+  'ui.th.p90': 'p90',
+  'ui.th.out': 'out',
+  'ui.th.in': 'in',
+  'ui.th.avgDur': 'avg dur',
+  'ui.th.time': 'Time',
+  'ui.th.cached': 'cached',
+  'ui.th.duration': 'duration',
+  'ui.th.ttft': 'ttft',
+
+  /* ── Empty state ─────────────────────────────────────────────────────── */
+  'ui.setup.title': 'No model calls captured yet',
+  'ui.setup.watching': 'Watching the Copilot agent usage records - one is written as soon as a request finishes. Send a message in Copilot Chat, then press Refresh.',
+  'ui.setup.loggingOff': 'Copilot debug logging is <b>off</b>. It is optional but adds per-call token counts for models whose endpoint reports no usage.',
+  'ui.setup.enable': 'Enable Copilot debug logging',
+  'ui.setup.roots': 'Watched debug-log roots:',
+  'ui.setup.noRoots': 'No Copilot debug-log directory found. Expected something like:',
+  'ui.setup.usageRoots': 'Watched usage-event roots:',
+  'ui.setup.note': 'tok/s = outputTokens / (duration / 1000). Usage records from the agent also carry TTFT, so BYOK / custom-endpoint models show up there even when debug logs are off.',
+  'ui.setup.settings': 'Settings',
+
+  /* ── Settings page ───────────────────────────────────────────────────── */
+  'ui.settings.title': 'Settings',
+  'ui.settings.sub': 'Changes are written to your user settings and apply immediately.',
+  'ui.settings.saved': 'Saved',
+  'ui.settings.notSaved': 'Not saved',
+  'ui.settings.rejected': 'Rejected.',
+  'ui.settings.reset': 'Reset to default',
+  'ui.settings.browse': 'Browse',
+  'ui.settings.placeholder': '(auto-discover)',
+  'ui.settings.liveStatus': 'Live status',
+  'ui.settings.maintenance': 'Maintenance',
+  'ui.settings.maintenanceHint': '{0} request(s) in memory (usage {1} · BYOK {2}).',
+  'ui.settings.refreshNow': 'Refresh now',
+  'ui.settings.diagnostics': 'Diagnostics',
+  'ui.settings.export': 'Export JSON',
+  'ui.settings.clear': 'Clear captured history',
+  'ui.settings.openVsCode': 'Open VS Code settings',
+  'ui.settings.footnote': 'tok/s = output tokens / duration. Settings are stored under copilotSpeedometer.* in your global settings.json.',
+  'ui.settings.usageCard': 'Agent usage records',
+  'ui.settings.logsCard': 'Chat debug logs',
+  'ui.settings.usageFiles': '{0} session file(s) · {1} records captured',
+  'ui.settings.usageMissing': 'Folder not found - runs are only recorded while Copilot agent sessions exist',
+  'ui.settings.logRoots': '{0} root(s) · logging {1}',
+  'ui.settings.noLogRoots': 'Optional source - enable Copilot debug logging below',
+  'ui.settings.logOn': 'on',
+  'ui.settings.logOff': 'off',
+  'ui.settings.reveal': 'Reveal',
+  'ui.settings.notSet': '(not set)',
+  'ui.settings.noneFound': '(none found)',
+  'ui.seg.rate': 'value',
+  'ui.seg.rateModel': 'value + model',
+  'ui.seg.rateTtft': 'value + TTFT',
+  'ui.unit.records': 'records',
+  'ui.unit.days': 'days',
+  'ui.unit.ms': 'ms',
+
+  /* ── Settings sections and fields ────────────────────────────────────── */
+  'section.general.title': 'General',
+  'section.general.blurb': 'Master switch for background collection and the status-bar item.',
+  'section.sources.title': 'Data sources',
+  'section.sources.blurb': 'Where token counts come from. Usage records cover every agent session, including BYOK and custom endpoints.',
+  'section.collection.title': 'Collection',
+  'section.collection.blurb': 'How often the session files are tailed and how much history is kept in memory.',
+  'section.display.title': 'Status bar',
+  'section.display.blurb': 'What the status-bar item shows after each response.',
+  'field.enabled.label': 'Enable Copilot Speedometer',
+  'field.enabled.hint': 'Turn collection and the status-bar item off without uninstalling the extension.',
+  'field.usageEvents.label': 'Read agent usage records',
+  'field.usageEvents.hint': 'Per-request token counts from Copilot agent sessions. Covers BYOK and custom endpoints with no extra setup.',
+  'field.usageEventsRoot.label': 'Usage records folder',
+  'field.usageEventsRoot.hint': 'Leave empty to auto-discover. Override only if Copilot stores sessions elsewhere.',
+  'field.logPath.label': 'Chat debug-log folder',
+  'field.logPath.hint': 'Optional. Leave empty to search the usual Visual Studio Code globalStorage paths.',
+  'field.includeLegacyWorkspaceLogs.label': 'Scan legacy workspace logs',
+  'field.includeLegacyWorkspaceLogs.hint': 'Older Copilot builds wrote debug logs per workspace instead of per user.',
+  'field.copilotDebugLogging.label': 'Copilot chat debug logging',
+  'field.copilotDebugLogging.hint': 'Writes one llm_request line per call. Useful for models whose endpoint reports no token usage.',
+  'field.pollIntervalMs.label': 'Poll interval',
+  'field.pollIntervalMs.hint': 'How often the session files are tailed for new records.',
+  'field.historySize.label': 'History size',
+  'field.historySize.hint': 'Requests kept in memory. Older records are dropped first.',
+  'field.backfillDays.label': 'Startup backfill',
+  'field.backfillDays.hint': 'Days of history read on activation. The All window always triggers a deep scan.',
+  'field.statusBar.label': 'Show status-bar item',
+  'field.statusBar.hint': 'Live tok/s next to the clock, refreshed after every captured response.',
+  'field.statusBarFormat.label': 'Status-bar content',
+  'field.statusBarFormat.hint': 'How much context the status-bar item carries.',
+};
+
+const zh = {
+  /* ── 状态栏 ──────────────────────────────────────────────────────────── */
+  'status.name': 'Copilot tok/s',
+  'status.rate': '$(pulse) {0} tok/s',
+  'status.idle.text': '$(pulse) Copilot t/s',
+  'status.idle.tooltip': '还没有抓到 Copilot 请求 —— 点这里看怎么配置。',
+  'status.md.last': '最近一次回答',
+  'status.md.model': '模型',
+  'status.md.output': '输出 token',
+  'status.md.duration': '总耗时',
+  'status.md.ttft': 'TTFT',
+  'status.md.decode': '解码速度',
+  'status.md.provider': '接入方式',
+  'status.md.byok': 'BYOK 自定义端点',
+  'status.md.io': '输入 / 缓存命中',
+  'status.md.recent': '最近 {0} 次：加权 **{1} tok/s**，中位数 {2} tok/s，输出 {3} token。',
+  'status.md.click': '点击打开仪表盘。',
+
+  /* ── 诊断输出 ────────────────────────────────────────────────────────── */
+  'diag.settings': '设置',
+  'diag.useUsage': '读取 usage 记录',
+  'diag.usageRoot': 'usage 目录覆盖',
+  'diag.logPath': 'logPath 覆盖',
+  'diag.backfill': '回填天数',
+  'diag.logging': 'Copilot 调试日志',
+  'diag.usageTitle': 'usage 记录（BYOK + 官方 agent 会话）',
+  'diag.usageDisabled': '已被 copilotSpeedometer.usageEvents 关闭',
+  'diag.root': '目录',
+  'diag.exists': '是否存在',
+  'diag.scanError': '扫描出错',
+  'diag.files7d': '文件数（7 天）',
+  'diag.logsTitle': 'Chat 调试日志',
+  'diag.discoveryError': '查找出错',
+  'diag.rootsFound': '找到的目录',
+  'diag.noRoots': '（没有 —— 只有调试日志开关打开时 Copilot 才会写）',
+  'diag.capturedTitle': '已抓取',
+  'diag.totalRecords': '记录总数',
+  'diag.lastRequest': '最近一次请求',
+  'diag.noneYet': '（还没有）',
+  'diag.hint': '如果有 usage 记录但一条都没抓到，运行 “Copilot Speedometer: Refresh”，并到开发者工具控制台看调用堆栈。',
+  'diag.on': '开',
+  'diag.off': '关',
+  'diag.unknown': '未知',
+  'diag.default': '（默认）',
+  'diag.autoDiscover': '（自动发现）',
+
+  /* ── 主进程提示 ──────────────────────────────────────────────────────── */
+  'msg.pickFolder': '使用这个文件夹',
+  'msg.folderMissing': '找不到文件夹：{0}',
+  'msg.nothingToClear': '还没有抓到请求，无需清空。',
+  'msg.clearConfirm': '清空已抓到的 {0} 条 Copilot 请求？状态栏会继续工作，历史从下一次请求重新开始。',
+  'msg.clear': '清空',
+  'msg.loggingEnabled': '已开启 Copilot 调试日志。在 Copilot Chat 里发一条消息，状态栏就会更新。',
+  'msg.loggingFailed': '无法开启 {0}：{1}',
+  'msg.setupAsk': 'Copilot Speedometer 需要 Copilot 调试日志才能算出 tok/s，现在开启吗？',
+  'msg.setupEnable': '开启日志',
+  'msg.setupLater': '暂不',
+  'msg.nothingToExport': '还没有抓到 Copilot 请求，没有可导出的内容。',
+  'msg.exportLabel': '导出',
+  'msg.exported': '已导出 {0} 条请求到 {1}。',
+  'msg.demoOnlyEmpty': '只有历史为空时才能载入演示数据（先运行 “Clear Captured History”）。',
+  'msg.demoLoaded': '已载入演示数据 —— 这是合成数据，不是真实的 Copilot 流量。',
+
+  /* ── 面板外壳 ────────────────────────────────────────────────────────── */
+  'ui.tab.dashboard': '仪表盘',
+  'ui.tab.settings': '设置',
+  'ui.filter.title': '时间范围',
+  'ui.filter.today': '今天',
+  'ui.filter.7d': '近 7 天',
+  'ui.filter.all': '全部已抓取',
+  'ui.refresh': '刷新',
+  'ui.chart.peak': '峰值 {0} tok/s',
+  'ui.chart.last': '最近 {0} 次回答',
+  'ui.empty.samples': '这个时间范围内没有样本。',
+  'ui.empty.data': '暂无数据。',
+
+  /* ── 仪表盘卡片 ──────────────────────────────────────────────────────── */
+  'ui.card.last': '最近一次',
+  'ui.card.avg': '平均（加权）',
+  'ui.card.median': '中位数 / p90',
+  'ui.card.requests': '请求数',
+  'ui.card.ttft': 'TTFT（平均）',
+  'ui.card.decode': '解码速度',
+  'ui.card.ttftSub': '首 token 延迟',
+  'ui.card.decodeSub': '已扣除 TTFT {0}',
+  'ui.card.perResponse': '单次请求 tok/s',
+  'ui.card.tokens': 'token',
+  'ui.card.out': '输出',
+  'ui.card.cached': '缓存',
+  'ui.card.in': '输入',
+
+  /* ── 仪表盘区块与表格 ────────────────────────────────────────────────── */
+  'ui.block.series': '每次回答的 tok/s',
+  'ui.block.models': '按模型',
+  'ui.block.recent': '最近请求',
+  'ui.th.model': '模型',
+  'ui.th.req': '次数',
+  'ui.th.rate': 'tok/s',
+  'ui.th.median': '中位数',
+  'ui.th.p90': 'p90',
+  'ui.th.out': '输出',
+  'ui.th.in': '输入',
+  'ui.th.avgDur': '平均耗时',
+  'ui.th.time': '时间',
+  'ui.th.cached': '缓存',
+  'ui.th.duration': '耗时',
+  'ui.th.ttft': 'ttft',
+
+  /* ── 空状态 ──────────────────────────────────────────────────────────── */
+  'ui.setup.title': '还没有抓到模型调用',
+  'ui.setup.watching': '正在监听 Copilot agent 的 usage 记录 —— 每次请求一结束就会写一条。在 Copilot Chat 里发一条消息，然后点刷新。',
+  'ui.setup.loggingOff': 'Copilot 调试日志<b>未开启</b>。它是可选的，但能为那些不返回 usage 的模型补上每次调用的 token 数。',
+  'ui.setup.enable': '开启 Copilot 调试日志',
+  'ui.setup.roots': '正在监听的调试日志目录：',
+  'ui.setup.noRoots': '没找到 Copilot 调试日志目录，通常长这样：',
+  'ui.setup.usageRoots': '正在监听的 usage 目录：',
+  'ui.setup.note': 'tok/s = outputTokens / (duration / 1000)。agent 的 usage 记录还带 TTFT，所以即使调试日志关着，BYOK / 自定义端点的模型也能在这里显示。',
+  'ui.setup.settings': '设置',
+
+  /* ── 设置页 ──────────────────────────────────────────────────────────── */
+  'ui.settings.title': '设置',
+  'ui.settings.sub': '修改会写入你的用户设置，立即生效。',
+  'ui.settings.saved': '已保存',
+  'ui.settings.notSaved': '未保存',
+  'ui.settings.rejected': '被拒绝。',
+  'ui.settings.reset': '恢复默认',
+  'ui.settings.browse': '浏览',
+  'ui.settings.placeholder': '（自动发现）',
+  'ui.settings.liveStatus': '实时状态',
+  'ui.settings.maintenance': '维护',
+  'ui.settings.maintenanceHint': '内存中 {0} 条请求（usage {1} · BYOK {2}）。',
+  'ui.settings.refreshNow': '立即刷新',
+  'ui.settings.diagnostics': '诊断',
+  'ui.settings.export': '导出 JSON',
+  'ui.settings.clear': '清空已抓取历史',
+  'ui.settings.openVsCode': '打开 VS Code 设置',
+  'ui.settings.footnote': 'tok/s = 输出 token / 耗时。设置保存在全局 settings.json 的 copilotSpeedometer.* 下。',
+  'ui.settings.usageCard': 'Agent usage 记录',
+  'ui.settings.logsCard': 'Chat 调试日志',
+  'ui.settings.usageFiles': '{0} 个会话文件 · 已抓取 {1} 条记录',
+  'ui.settings.usageMissing': '目录不存在 —— 只有 Copilot agent 会话运行过才会写入',
+  'ui.settings.logRoots': '{0} 个目录 · 日志{1}',
+  'ui.settings.noLogRoots': '可选来源 —— 在下方开启 Copilot 调试日志',
+  'ui.settings.logOn': '已开启',
+  'ui.settings.logOff': '已关闭',
+  'ui.settings.reveal': '打开目录',
+  'ui.settings.notSet': '（未设置）',
+  'ui.settings.noneFound': '（未找到）',
+  'ui.seg.rate': '数值',
+  'ui.seg.rateModel': '数值 + 模型',
+  'ui.seg.rateTtft': '数值 + TTFT',
+  'ui.unit.records': '条',
+  'ui.unit.days': '天',
+  'ui.unit.ms': 'ms',
+
+  /* ── 设置分组与字段 ──────────────────────────────────────────────────── */
+  'section.general.title': '常规',
+  'section.general.blurb': '后台采集与状态栏的总开关。',
+  'section.sources.title': '数据来源',
+  'section.sources.blurb': 'token 数从哪来。usage 记录覆盖所有 agent 会话，包括 BYOK 和自定义端点。',
+  'section.collection.title': '采集',
+  'section.collection.blurb': '多久读一次会话文件，以及内存里保留多少历史。',
+  'section.display.title': '状态栏',
+  'section.display.blurb': '状态栏在每次回答后显示什么。',
+  'field.enabled.label': '启用 Copilot Speedometer',
+  'field.enabled.hint': '关掉采集和状态栏，不用卸载扩展。',
+  'field.usageEvents.label': '读取 agent usage 记录',
+  'field.usageEvents.hint': '来自 Copilot agent 会话的逐次 token 数，覆盖 BYOK 和自定义端点，无需额外配置。',
+  'field.usageEventsRoot.label': 'usage 记录目录',
+  'field.usageEventsRoot.hint': '留空则自动发现。只有 Copilot 把会话存在别处时才需要指定。',
+  'field.logPath.label': 'Chat 调试日志目录',
+  'field.logPath.hint': '可选。留空则搜索 VS Code 常规的 globalStorage 路径。',
+  'field.includeLegacyWorkspaceLogs.label': '扫描旧版工作区日志',
+  'field.includeLegacyWorkspaceLogs.hint': '旧版 Copilot 按工作区而不是按用户写调试日志。',
+  'field.copilotDebugLogging.label': 'Copilot Chat 调试日志',
+  'field.copilotDebugLogging.hint': '每次调用写一行 llm_request，适合端点不返回 usage 的模型。',
+  'field.pollIntervalMs.label': '轮询间隔',
+  'field.pollIntervalMs.hint': '多久读一次会话文件的新记录。',
+  'field.historySize.label': '历史条数',
+  'field.historySize.hint': '内存中保留的请求数，超出后先丢最旧的。',
+  'field.backfillDays.label': '启动回填',
+  'field.backfillDays.hint': '启动时读取几天的历史。「全部」窗口总会触发一次深扫。',
+  'field.statusBar.label': '显示状态栏',
+  'field.statusBar.hint': '在时钟旁实时显示 tok/s，每次抓到回答就刷新。',
+  'field.statusBarFormat.label': '状态栏内容',
+  'field.statusBarFormat.hint': '状态栏上除了数值还带上什么。',
+};
+
+const DICTS = { en, zh };
+const DEFAULT = 'en';
+
+/** 'zh-cn', 'zh-Hans', 'ZH' -> 'zh'; anything else -> 'en'. */
+function resolve(language) {
+  const value = String(language || '').toLowerCase();
+  return value.startsWith('zh') ? 'zh' : DEFAULT;
+}
+
+function format(template, args) {
+  let out = template;
+  args.forEach((arg, index) => {
+    out = out.split(`{${index}}`).join(String(arg === undefined || arg === null ? '' : arg));
+  });
+  return out;
+}
+
+/**
+ * `t('key')` returns the string for the resolved language. A key missing from
+ * the active dictionary falls back to English, then to the key itself, so a
+ * half-finished translation shows English rather than `undefined`.
+ */
+function create(language) {
+  const locale = resolve(language);
+  const dict = DICTS[locale];
+  function t(key) {
+    const template = dict[key] !== undefined ? dict[key] : en[key] !== undefined ? en[key] : key;
+    const args = Array.prototype.slice.call(arguments, 1);
+    return args.length ? format(template, args) : template;
+  }
+  return { locale, dict, t };
+}
+
+module.exports = { DICTS, DEFAULT, resolve, create };

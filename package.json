@@ -2,7 +2,7 @@
   "name": "copilot-speedometer",
   "displayName": "Copilot Speedometer - tok/s for Copilot Chat",
   "description": "Status bar and dashboard showing tokens/second, latency and token usage for every GitHub Copilot Chat request, parsed from the local Copilot debug logs.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "local",
   "license": "MIT",
   "repository": {
@@ -37,37 +37,37 @@
     "commands": [
       {
         "command": "copilotSpeedometer.showDashboard",
-        "title": "Show Dashboard",
+        "title": "%command.showDashboard.title%",
         "category": "Copilot Speedometer"
       },
       {
         "command": "copilotSpeedometer.refresh",
-        "title": "Refresh",
+        "title": "%command.refresh.title%",
         "category": "Copilot Speedometer"
       },
       {
         "command": "copilotSpeedometer.enableLogging",
-        "title": "Enable Copilot Debug Logging",
+        "title": "%command.enableLogging.title%",
         "category": "Copilot Speedometer"
       },
       {
         "command": "copilotSpeedometer.exportJson",
-        "title": "Export Captured Requests as JSON",
+        "title": "%command.exportJson.title%",
         "category": "Copilot Speedometer"
       },
       {
         "command": "copilotSpeedometer.clearHistory",
-        "title": "Clear Captured History",
+        "title": "%command.clearHistory.title%",
         "category": "Copilot Speedometer"
       },
       {
         "command": "copilotSpeedometer.seedDemo",
-        "title": "Preview With Demo Data",
+        "title": "%command.seedDemo.title%",
         "category": "Copilot Speedometer"
       },
       {
         "command": "copilotSpeedometer.diagnostics",
-        "title": "Show Diagnostics (why is it empty?)",
+        "title": "%command.diagnostics.title%",
         "category": "Copilot Speedometer"
       }
     ],
@@ -77,12 +77,12 @@
         "copilotSpeedometer.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Scan Copilot debug logs in the background and show the tokens/sec status bar item."
+          "description": "%config.enabled.description%"
         },
         "copilotSpeedometer.statusBar": {
           "type": "boolean",
           "default": true,
-          "description": "Show the tokens/sec item in the status bar."
+          "description": "%config.statusBar.description%"
         },
         "copilotSpeedometer.statusBarFormat": {
           "type": "string",
@@ -92,60 +92,60 @@
             "rate-ttft"
           ],
           "enumDescriptions": [
-            "Just the throughput, e.g. \"12.4 tok/s\".",
-            "Throughput plus the model that produced it.",
-            "Throughput plus the time to first token."
+            "%config.statusBarFormat.rate%",
+            "%config.statusBarFormat.rateModel%",
+            "%config.statusBarFormat.rateTtft%"
           ],
           "default": "rate",
-          "description": "What the status-bar item shows after each captured response."
+          "description": "%config.statusBarFormat.description%"
         },
         "copilotSpeedometer.logPath": {
           "type": "string",
           "default": "",
-          "description": "Override the Copilot debug-logs root directory (the folder that contains the per-session subfolders with main.jsonl). Leave empty to auto-detect VS Code / Insiders / VSCodium / Cursor."
+          "description": "%config.logPath.description%"
         },
         "copilotSpeedometer.pollIntervalMs": {
           "type": "number",
           "default": 2000,
           "minimum": 500,
           "maximum": 60000,
-          "description": "How often to check the log files for new requests, in milliseconds."
+          "description": "%config.pollIntervalMs.description%"
         },
         "copilotSpeedometer.historySize": {
           "type": "number",
           "default": 3000,
           "minimum": 100,
           "maximum": 50000,
-          "description": "Maximum number of requests kept in memory."
+          "description": "%config.historySize.description%"
         },
         "copilotSpeedometer.backfillDays": {
           "type": "number",
           "default": 2,
           "minimum": 0,
           "maximum": 365,
-          "description": "On startup, load requests from log files modified within this many days (0 disables backfill)."
+          "description": "%config.backfillDays.description%"
         },
         "copilotSpeedometer.includeLegacyWorkspaceLogs": {
           "type": "boolean",
           "default": true,
-          "description": "Also scan the legacy workspaceStorage/<hash>/GitHub.copilot-chat/debug-logs layout used by older VS Code versions."
+          "description": "%config.includeLegacyWorkspaceLogs.description%"
         },
         "copilotSpeedometer.usageEvents": {
           "type": "boolean",
           "default": true,
-          "description": "Also read the Copilot agent usage records (~/.copilot/session-state/*/events.jsonl). These cover BYOK / custom-endpoint models and carry TTFT, and do not require debug logging."
+          "description": "%config.usageEvents.description%"
         },
         "copilotSpeedometer.usageEventsRoot": {
           "type": "string",
           "default": "",
-          "description": "Override the Copilot agent session-state directory. Leave empty to use ~/.copilot/session-state."
+          "description": "%config.usageEventsRoot.description%"
         }
       }
     }
   },
   "scripts": {
-    "test": "node test/parser.test.js && node test/usage.test.js && node test/settings.test.js",
+    "test": "node test/parser.test.js && node test/usage.test.js && node test/settings.test.js && node test/i18n.test.js",
     "preview": "node tools/preview.js",
-    "package": "npx --yes @vscode/vsce@latest package --no-dependencies --allow-missing-repository --no-rewrite-relative-links"
+    "package": "npx --yes @vscode/vsce@latest package --no-dependencies --allow-missing-repository --no-rewrite-relative-links --out dist"
   }
 }

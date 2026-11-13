@@ -2,9 +2,13 @@
 
 /**
  * Renders the webview to standalone HTML files with synthetic data, so the UI
- * can be previewed in a browser (and screenshotted) without VS Code.
+ * can be previewed in a browser (and screenshotted) without VS Code. Both
+ * languages are emitted because the panel copy comes from the same dictionary
+ * the extension host uses.
  *
- *   node tools/preview.js  ->  docs/preview.html, docs/preview-settings.html
+ *   node tools/preview.js
+ *     -> docs/preview.html, docs/preview-settings.html          (English)
+ *     -> docs/preview-zh.html, docs/preview-settings-zh.html    (Chinese)
  */
 
 const fs = require('fs');
@@ -13,6 +17,7 @@ const path = require('path');
 const { summarize, groupByModel } = require('../src/stats');
 const settings = require('../src/settings');
 const webview = require('../src/webview');
+const i18n = require('../src/i18n');
 
 const now = Date.now();
 // BYOK / custom-endpoint flavoured sample: large contexts make TTFT dominate,
@@ -95,29 +100,28 @@ function fakeConfig(values) {
   };
 }
 
-const settingsPayload = Object.assign(
-  settings.describe(fakeConfig({ pollIntervalMs: 3000, statusBarFormat: 'rate-model' })),
-  {
-    sources: {
-      usage: {
-        root: 'C:\\Users\\you\\.copilot\\session-state',
-        exists: true,
-        files: 96,
-      },
-      logs: {
-        roots: ['C:\\Users\\you\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debug-logs'],
-        files: 1,
-        enabled: false,
-      },
-      captured: { total: records.length, usage: records.length, byok: records.filter((r) => r.byok).length },
-    },
-  }
-);
+const config = fakeConfig({ pollIntervalMs: 3000, statusBarFormat: 'rate-model' });
+const sources = {
+  usage: {
+    root: 'C:\\Users\\you\\.copilot\\session-state',
+    exists: true,
+    files: 96,
+  },
+  logs: {
+    roots: ['C:\\Users\\you\\AppData\\Roaming\\Code\\User\\globalStorage\\github.copilot-chat\\debug-logs'],
+    files: 1,
+    enabled: false,
+  },
+  captured: { total: records.length, usage: records.length, byok: records.filter((r) => r.byok).length },
+};
 
 const nonce = 'previewnonce';
-const base = webview.html(nonce, '');
 
-function render(target, initialView) {
+function render(target, initialView, locale) {
+  const translator = i18n.create(locale);
+  const settingsPayload = Object.assign(settings.describe(config, translator.t), { sources });
+  const base = webview.html(nonce, '', { locale: translator.locale, dict: translator.dict });
+
   const stub =
     'window.acquireVsCodeApi=function(){return{postMessage:function(){}}};' +
     'setTimeout(function(){' +
@@ -134,5 +138,8 @@ function render(target, initialView) {
 
 const outDir = path.join(__dirname, '..', 'docs');
 fs.mkdirSync(outDir, { recursive: true });
-render(path.join(outDir, 'preview.html'), 'dashboard');
-render(path.join(outDir, 'preview-settings.html'), 'settings');
+
+render(path.join(outDir, 'preview.html'), 'dashboard', 'en');
+render(path.join(outDir, 'preview-settings.html'), 'settings', 'en');
+render(path.join(outDir, 'preview-zh.html'), 'dashboard', 'zh');
+render(path.join(outDir, 'preview-settings-zh.html'), 'settings', 'zh');

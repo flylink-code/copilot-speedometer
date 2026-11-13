@@ -5,3 +5,5 @@ tools/**
 *.vsix
 node_modules/**
 docs/preview.html
+dist/**
+docs/preview*.html

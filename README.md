@@ -1,12 +1,14 @@
 # Copilot Speedometer
 
+**中文** | [English](README_en.md)
+
 看 GitHub Copilot Chat 的 **tokens/second**、TTFT、token 用量和每次请求的耗时。
 
 支持**官方模型**和**第三方 / BYOK 模型**（Custom Endpoint、自定义 base URL 那些 `customendpoint/...` 模型）——只要 Copilot 自己记录了这次调用，本扩展就能读到。
 
 数据全部来自本地文件：不联网、不上传、不调用任何 Copilot 内部 API。
 
-![dashboard](docs/preview.png)
+![dashboard](docs/preview-zh.png)
 
 ## 为什么需要它
 
@@ -53,7 +55,7 @@ B 的字段：
 **方式 A：VSIX（推荐）**
 
 ```bash
-code --install-extension copilot-speedometer-0.3.0.vsix
+code --install-extension copilot-speedometer-0.3.1.vsix
 ```
 
 **方式 B：源码调试**：用 VS Code 打开本目录，按 <kbd>F5</kbd>（Run Extension）。
@@ -101,7 +103,7 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 
 ## 设置
 
-![settings](docs/preview-settings.png)
+![settings](docs/preview-settings-zh.png)
 
 面板里的 **Settings** 标签页直接改这些值，也可以照旧在 `settings.json` 里写：
 
@@ -119,6 +121,8 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 | `copilotSpeedometer.includeLegacyWorkspaceLogs` | `true` | 是否扫旧版 workspaceStorage 布局 |
 
 `github.copilot.chat.agentDebugLog.fileLogging.enabled` 也在 Settings 页的 Data sources 里，切换后会在下面的 Live status 里显示当前是开还是关。
+
+面板与状态栏的文案跟随 VS Code 界面语言（中文 / English），切换界面语言后重载窗口即可。
 
 ## 常见问题
 
@@ -144,9 +148,9 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 ## 开发
 
 ```bash
-npm test                       # 解析 / 统计 / 设置模型单测（33 项）
+npm test                       # 解析 / 统计 / 设置 / 本地化单测（43 项）
 node tools/smoke-activate.js    # 用 stub 的 vscode API 真跑一遍 activate / tick / 面板 payload
-node tools/preview.js          # 生成 docs/preview.html 与 docs/preview-settings.html，浏览器直接看 UI
+node tools/preview.js          # 生成 docs/preview*.html 与中英两套截图，浏览器直接看 UI
 npm run package                # 打包 .vsix（vsce 参数已内置）
 ```
 
@@ -157,6 +161,7 @@ src/usage-events.js  A 源：session-state 扫描 + 增量 tail + 记录映射
 src/parser.js        B 源：debug-logs 扫描 + 增量 tail + 记录映射
 src/stats.js         聚合与格式化（纯函数，可单测）
 src/settings.js      面板设置模型：字段表、校验、写入/恢复默认（host 侧，无 vscode 依赖）
+src/i18n.js          中英字典与翻译函数
 src/webview.js       面板 HTML（Dashboard + Settings 两个视图，CSP nonce，主题跟随 VS Code）
 src/extension.js     状态栏、轮询、双源合并去重、命令、面板消息
 ```

@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.3.1
+
+- The whole extension now follows the VS Code display language: panel, status bar,
+  output channel, notifications and the Command Palette titles are translated in
+  English and Simplified Chinese (new `src/i18n.js`, `package.nls.json`,
+  `package.nls.zh-cn.json`). Switching the display language is enough - no setting.
+- Packaging writes to `dist/` (`npm run package`), and the built `.vsix` is ignored
+  by git and by the package itself.
+- Two READMEs: `README.md` (Chinese, with Chinese screenshots) and `README_en.md`.
+- New `test/i18n.test.js` (dictionary alignment, placeholder parity, every literal
+  key used by the host and the panel, `%key%` coverage in both `package.nls` files).
+
+## 0.3.0
+
+- An in-panel **Settings** page: switches, numbers, paths (with Browse) and the
+  status-bar mode are editable inside the webview, apply immediately, and each
+  overridden row offers a reset button to restore its default. Values are written to
+  the scope that already holds an override, so edits never look ignored.
+- New `copilotSpeedometer.statusBarFormat`: `rate`, `rate-model` or `rate-ttft`.
+- `Clear Captured History` now asks for confirmation; the master switch is also
+  reachable from the Settings page.
+- Panel CSS carries dark fallbacks for every theme variable, so controls stay
+  visible on themes that do not define the optional `--vscode-input-*` colours.
+
 ## 0.2.3
 
 - New `Copilot Speedometer: Show Diagnostics` command: an output channel listing the

@@ -9,6 +9,7 @@ const { UsageScanner, parseUsageLine } = require('./usage-events');
 const { summarize, groupByModel, fmtRate, fmtTokens, fmtDur } = require('./stats');
 const webview = require('./webview');
 const settings = require('./settings');
+const i18n = require('./i18n');
 
 const P = 'copilotSpeedometer';
 const COPILOT_CONFIG = 'github.copilot.chat';
@@ -25,6 +26,22 @@ let statusBar = null;
 let panel = null;
 let demoMode = false;
 let output = null;
+let translator = null;
+
+/** The panel and the notifications follow the VS Code display language. */
+function tr() {
+  if (!translator) {
+    const language = vscode.env && vscode.env.language ? vscode.env.language : i18n.DEFAULT;
+    translator = i18n.create(language);
+  }
+  return translator.t;
+}
+
+/** The flat dictionary the webview renders its own copy from. */
+function panelLocale() {
+  if (!translator) tr();
+  return { locale: translator.locale, dict: translator.dict };
+}
 
 function config() {
   return vscode.workspace.getConfiguration(P);
@@ -46,7 +63,7 @@ function activate(context) {
 
   statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 90);
   statusBar.command = `${P}.showDashboard`;
-  statusBar.name = 'Copilot tok/s';
+  statusBar.name = tr()('status.name');
   context.subscriptions.push(statusBar);
 
   context.subscriptions.push(
@@ -89,34 +106,35 @@ function showDiagnostics() {
   const uopts = usageOptions();
   const lopts = scannerOptions();
   const logState = loggingState();
+  const t = tr();
   const lines = [];
 
   lines.push(`Copilot Speedometer ${require('../package.json').version}`);
   lines.push(`extension host: ${process.platform} / node ${process.versions.node}`);
   lines.push('');
-  lines.push('settings');
-  lines.push(`  use usage records      : ${usageEnabled()}`);
-  lines.push(`  usage root override    : ${uopts.root || '(default)'}`);
-  lines.push(`  logPath override       : ${lopts.logPath || '(auto-discover)'}`);
-  lines.push(`  backfill days          : ${uopts.backfillDays}`);
-  lines.push(`  Copilot debug logging  : ${logState.known ? (logState.enabled ? 'on' : 'off') : 'unknown'}`);
+  lines.push(t('diag.settings'));
+  lines.push(`  ${t('diag.useUsage')}: ${usageEnabled()}`);
+  lines.push(`  ${t('diag.usageRoot')}: ${uopts.root || t('diag.default')}`);
+  lines.push(`  ${t('diag.logPath')}: ${lopts.logPath || t('diag.autoDiscover')}`);
+  lines.push(`  ${t('diag.backfill')}: ${uopts.backfillDays}`);
+  lines.push(`  ${t('diag.logging')}: ${logState.known ? (logState.enabled ? t('diag.on') : t('diag.off')) : t('diag.unknown')}`);
   lines.push('');
 
-  lines.push('usage records (BYOK + official agent sessions)');
+  lines.push(t('diag.usageTitle'));
   if (!usageEnabled()) {
-    lines.push('  disabled by copilotSpeedometer.usageEvents');
+    lines.push(`  ${t('diag.usageDisabled')}`);
   } else if (usageScanner) {
     const roots = usageScanner.existingRoots(uopts);
-    lines.push(`  root      : ${usageScanner.root(uopts)}`);
-    lines.push(`  exists    : ${roots.length > 0}`);
+    lines.push(`  ${t('diag.root')}: ${usageScanner.root(uopts)}`);
+    lines.push(`  ${t('diag.exists')}: ${roots.length > 0}`);
     if (roots.length) {
       let files = [];
       try {
         files = usageScanner.scan(Object.assign({}, uopts, { backfillDays: 7 }));
       } catch (err) {
-        lines.push(`  scan error: ${err.message}`);
+        lines.push(`  ${t('diag.scanError')}: ${err.message}`);
       }
-      lines.push(`  files (7d): ${files.length}`);
+      lines.push(`  ${t('diag.files7d')}: ${files.length}`);
       for (const f of files.slice(0, 10)) {
         lines.push(`    ${f.file}  ${(f.size / 1048576).toFixed(1)} MB`);
       }
@@ -124,18 +142,18 @@ function showDiagnostics() {
   }
   lines.push('');
 
-  lines.push('chat debug logs');
+  lines.push(t('diag.logsTitle'));
   if (scanner) {
     let roots = [];
     try {
       roots = scanner.existingRoots(lopts);
     } catch (err) {
-      lines.push(`  discovery error: ${err.message}`);
+      lines.push(`  ${t('diag.discoveryError')}: ${err.message}`);
     }
-    lines.push(`  roots found: ${roots.length}`);
+    lines.push(`  ${t('diag.rootsFound')}: ${roots.length}`);
     for (const r of roots.slice(0, 10)) lines.push(`    ${r.root || r}`);
     if (!roots.length) {
-      lines.push('    (none - Copilot writes these only when the debug-log setting is on)');
+      lines.push(`    ${t('diag.noRoots')}`);
     }
   }
   lines.push('');
@@ -144,18 +162,17 @@ function showDiagnostics() {
     acc[r.source || 'log'] = (acc[r.source || 'log'] || 0) + 1;
     return acc;
   }, {});
-  lines.push('captured');
-  lines.push(`  total records : ${records.length}`);
+  lines.push(t('diag.capturedTitle'));
+  lines.push(`  ${t('diag.totalRecords')}: ${records.length}`);
   for (const [k, v] of Object.entries(bySource)) lines.push(`    ${k}: ${v}`);
   const last = records[records.length - 1];
   if (last) {
-    lines.push(`  last request  : ${last.model} - ${fmtRate(last.rate)} tok/s, ${last.output} tokens, ${fmtDur(last.durMs)}` +
+    lines.push(`  ${t('diag.lastRequest')}: ${last.model} - ${fmtRate(last.rate)} tok/s, ${last.output} tokens, ${fmtDur(last.durMs)}` +
       (last.ttftMs ? `, TTFT ${fmtDur(last.ttftMs)}` : ''));
   } else {
-    lines.push('  last request  : (none yet)');
+    lines.push(`  ${t('diag.lastRequest')}: ${t('diag.noneYet')}`);
     lines.push('');
-    lines.push('If usage records exist but nothing was captured, run "Copilot Speedometer: Refresh"');
-    lines.push('and check the Developer Tools console for stack traces.');
+    lines.push(t('diag.hint'));
   }
 
   output.clear();
@@ -200,7 +217,7 @@ function configBundle() {
  * panel can say "96 session files" instead of asking the user to believe it.
  */
 function buildSettingsPayload() {
-  const desc = settings.describe(configBundle());
+  const desc = settings.describe(configBundle(), tr());
   const uopts = usageOptions();
 
   let files = [];
@@ -279,7 +296,7 @@ async function browseSetting(key) {
     canSelectFiles: false,
     canSelectFolders: true,
     canSelectMany: false,
-    openLabel: 'Use this folder',
+    openLabel: tr()('msg.pickFolder'),
     defaultUri: current && fs.existsSync(current) ? vscode.Uri.file(current) : undefined,
   });
   if (!picked || !picked.length) return;
@@ -288,7 +305,7 @@ async function browseSetting(key) {
 
 function revealFolder(target) {
   if (!target || !fs.existsSync(target)) {
-    vscode.window.showInformationMessage(`Folder not found: ${target || '(not set)'}`);
+    vscode.window.showInformationMessage(tr()('msg.folderMissing', target || tr()('diag.default')));
     return;
   }
   vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(target));
@@ -299,16 +316,18 @@ function openSettingsJson() {
 }
 
 async function clearHistory() {
+  const t = tr();
   if (!records.length) {
-    vscode.window.showInformationMessage('No captured requests to clear.');
+    vscode.window.showInformationMessage(t('msg.nothingToClear'));
     return;
   }
+  const clearLabel = t('msg.clear');
   const pick = await vscode.window.showWarningMessage(
-    `Clear all ${records.length} captured Copilot requests? The status bar keeps working; history restarts from the next request.`,
+    t('msg.clearConfirm', records.length),
     { modal: true },
-    'Clear'
+    clearLabel
   );
-  if (pick !== 'Clear') return;
+  if (pick !== clearLabel) return;
   records = [];
   seen.clear();
   deepLoaded = false;
@@ -487,16 +506,17 @@ function updateStatusBar() {
   }
   statusBar.show();
 
+  const t = tr();
   const last = records[records.length - 1];
   if (!last) {
-    statusBar.text = '$(pulse) Copilot t/s';
-    statusBar.tooltip = 'No Copilot request captured yet - click for setup steps.';
+    statusBar.text = t('status.idle.text');
+    statusBar.tooltip = t('status.idle.tooltip');
     statusBar.color = undefined;
     return;
   }
 
   const format = config().get('statusBarFormat', 'rate');
-  let text = `$(pulse) ${fmtRate(last.rate)} tok/s`;
+  let text = t('status.rate', fmtRate(last.rate));
   if (format === 'rate-model') text += ` · ${shortModel(last.model)}`;
   else if (format === 'rate-ttft' && last.ttftMs) text += ` · TTFT ${fmtDur(last.ttftMs)}`;
   statusBar.text = text;
@@ -506,18 +526,17 @@ function updateStatusBar() {
   const agg = summarize(recent);
   const md = new vscode.MarkdownString();
   md.appendMarkdown(`**Copilot Speedometer**\n\n`);
-  md.appendMarkdown(`Last response: **${fmtRate(last.rate)} tok/s**\n\n`);
+  md.appendMarkdown(`${t('status.md.last')}: **${fmtRate(last.rate)} tok/s**\n\n`);
   md.appendMarkdown(`| | |\n|:--|--:|\n`);
-  md.appendMarkdown(`| Model | \`${last.model}\` |\n`);
-  md.appendMarkdown(`| Output tokens | ${last.output} |\n`);
-  md.appendMarkdown(`| Duration | ${fmtDur(last.durMs)} |\n`);
-  if (last.ttftMs) md.appendMarkdown(`| TTFT | ${fmtDur(last.ttftMs)} |\n`);
-  if (last.decodeRate) md.appendMarkdown(`| Decode rate | ${fmtRate(last.decodeRate)} tok/s |\n`);
-  if (last.byok) md.appendMarkdown(`| Provider | BYOK custom endpoint |\n`);
-  md.appendMarkdown(`| Input / cached | ${fmtTokens(last.input)} / ${fmtTokens(last.cached)} |\n`);
-  md.appendMarkdown(`\nLast ${agg.count} responses: **${fmtRate(agg.rate)} tok/s** weighted, ` +
-    `median ${fmtRate(agg.medianRate)} tok/s, ${agg.output} output tokens.\n\n`);
-  md.appendMarkdown(`Click to open the dashboard.`);
+  md.appendMarkdown(`| ${t('status.md.model')} | \`${last.model}\` |\n`);
+  md.appendMarkdown(`| ${t('status.md.output')} | ${last.output} |\n`);
+  md.appendMarkdown(`| ${t('status.md.duration')} | ${fmtDur(last.durMs)} |\n`);
+  if (last.ttftMs) md.appendMarkdown(`| ${t('status.md.ttft')} | ${fmtDur(last.ttftMs)} |\n`);
+  if (last.decodeRate) md.appendMarkdown(`| ${t('status.md.decode')} | ${fmtRate(last.decodeRate)} tok/s |\n`);
+  if (last.byok) md.appendMarkdown(`| ${t('status.md.provider')} | ${t('status.md.byok')} |\n`);
+  md.appendMarkdown(`| ${t('status.md.io')} | ${fmtTokens(last.input)} / ${fmtTokens(last.cached)} |\n`);
+  md.appendMarkdown('\n' + t('status.md.recent', agg.count, fmtRate(agg.rate), fmtRate(agg.medianRate), agg.output) + '\n\n');
+  md.appendMarkdown(t('status.md.click'));
   statusBar.tooltip = md;
 }
 
@@ -616,7 +635,7 @@ function showDashboard(context) {
   );
 
   const nonce = makeNonce();
-  panel.webview.html = webview.html(nonce, panel.webview.cspSource);
+  panel.webview.html = webview.html(nonce, panel.webview.cspSource, panelLocale());
 
   panel.webview.onDidReceiveMessage((msg) => {
     if (!msg || typeof msg !== 'object') return;
@@ -672,14 +691,13 @@ function makeNonce() {
 }
 
 async function enableLogging(context) {
+  const t = tr();
   const cfg = vscode.workspace.getConfiguration(COPILOT_CONFIG);
   try {
     await cfg.update(FILE_LOGGING_KEY, true, vscode.ConfigurationTarget.Global);
-    vscode.window.showInformationMessage(
-      'Copilot debug logging enabled. Send a message in Copilot Chat, then the status bar will pick it up.'
-    );
+    vscode.window.showInformationMessage(t('msg.loggingEnabled'));
   } catch (err) {
-    vscode.window.showErrorMessage(`Could not enable ${COPILOT_CONFIG}.${FILE_LOGGING_KEY}: ${err.message}`);
+    vscode.window.showErrorMessage(t('msg.loggingFailed', `${COPILOT_CONFIG}.${FILE_LOGGING_KEY}: ${err.message}`));
   }
   context.globalState.update(WARNED_KEY, true);
   setTimeout(() => {
@@ -696,25 +714,28 @@ async function maybeWarnSetup(context) {
     if (state.enabled) return;
     // BYOK / custom-endpoint users have usage records and need no debug logging.
     if (usageScanner && usageScanner.existingRoots(usageOptions()).length) return;
+    const t = tr();
+    const enableLabel = t('msg.setupEnable');
     const pick = await vscode.window.showInformationMessage(
-      'Copilot Speedometer needs Copilot debug logs to measure tok/s. Enable them now?',
-      'Enable logging',
-      'Not now'
+      t('msg.setupAsk'),
+      enableLabel,
+      t('msg.setupLater')
     );
     await context.globalState.update(WARNED_KEY, true);
-    if (pick === 'Enable logging') enableLogging(context);
+    if (pick === enableLabel) enableLogging(context);
   }, 2500);
 }
 
 async function exportJson() {
+  const t = tr();
   if (!records.length) {
-    vscode.window.showInformationMessage('No Copilot requests captured yet - nothing to export.');
+    vscode.window.showInformationMessage(t('msg.nothingToExport'));
     return;
   }
   const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   const target = await vscode.window.showSaveDialog({
     filters: { JSON: ['json'] },
-    saveLabel: 'Export',
+    saveLabel: t('msg.exportLabel'),
     defaultUri: vscode.Uri.joinPath(
       (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0]
         ? vscode.workspace.workspaceFolders[0].uri
@@ -730,12 +751,13 @@ async function exportJson() {
     requests: records,
   };
   fs.writeFileSync(target.fsPath, JSON.stringify(payload, null, 2), 'utf8');
-  vscode.window.showInformationMessage(`Exported ${records.length} requests to ${path.basename(target.fsPath)}.`);
+  vscode.window.showInformationMessage(t('msg.exported', records.length, path.basename(target.fsPath)));
 }
 
 function seedDemo() {
+  const t = tr();
   if (records.length) {
-    vscode.window.showInformationMessage('Demo data is only available when the history is empty (run "Clear Captured History" first).');
+    vscode.window.showInformationMessage(t('msg.demoOnlyEmpty'));
     return;
   }
   const models = ['gpt-5.1-codex', 'claude-sonnet-4.5', 'gemini-2.5-pro'];
@@ -766,7 +788,7 @@ function seedDemo() {
   demoMode = true;
   updateStatusBar();
   pushData();
-  vscode.window.showInformationMessage('Demo data loaded - this is synthetic, not real Copilot traffic.');
+  vscode.window.showInformationMessage(t('msg.demoLoaded'));
 }
 
 module.exports = { activate, deactivate };

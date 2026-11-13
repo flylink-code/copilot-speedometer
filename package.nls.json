@@ -1,0 +1,23 @@
+{
+  "command.showDashboard.title": "Show Dashboard",
+  "command.refresh.title": "Refresh",
+  "command.enableLogging.title": "Enable Copilot Debug Logging",
+  "command.exportJson.title": "Export Captured Requests as JSON",
+  "command.clearHistory.title": "Clear Captured History",
+  "command.seedDemo.title": "Preview With Demo Data",
+  "command.diagnostics.title": "Show Diagnostics (why is it empty?)",
+
+  "config.enabled.description": "Scan Copilot debug logs in the background and show the tokens/sec status bar item.",
+  "config.statusBar.description": "Show the tokens/sec item in the status bar.",
+  "config.statusBarFormat.description": "What the status-bar item shows after each captured response.",
+  "config.statusBarFormat.rate": "Just the throughput, e.g. \"12.4 tok/s\".",
+  "config.statusBarFormat.rateModel": "Throughput plus the model that produced it.",
+  "config.statusBarFormat.rateTtft": "Throughput plus the time to first token.",
+  "config.logPath.description": "Override the Copilot debug-logs root directory (the folder that contains the per-session subfolders with main.jsonl). Leave empty to auto-detect VS Code / Insiders / VSCodium / Cursor.",
+  "config.pollIntervalMs.description": "How often to check the log files for new requests, in milliseconds.",
+  "config.historySize.description": "Maximum number of requests kept in memory.",
+  "config.backfillDays.description": "On startup, load requests from log files modified within this many days (0 disables backfill).",
+  "config.includeLegacyWorkspaceLogs.description": "Also scan the legacy workspaceStorage/<hash>/GitHub.copilot-chat/debug-logs layout used by older VS Code versions.",
+  "config.usageEvents.description": "Also read the Copilot agent usage records (~/.copilot/session-state/*/events.jsonl). These cover BYOK / custom-endpoint models and carry TTFT, and do not require debug logging.",
+  "config.usageEventsRoot.description": "Override the Copilot agent session-state directory. Leave empty to use ~/.copilot/session-state."
+}

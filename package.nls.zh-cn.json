@@ -1,0 +1,23 @@
+{
+  "command.showDashboard.title": "打开仪表盘",
+  "command.refresh.title": "刷新",
+  "command.enableLogging.title": "开启 Copilot 调试日志",
+  "command.exportJson.title": "导出已抓取请求为 JSON",
+  "command.clearHistory.title": "清空已抓取历史",
+  "command.seedDemo.title": "用演示数据预览",
+  "command.diagnostics.title": "显示诊断（为什么没有数据？）",
+
+  "config.enabled.description": "在后台扫描 Copilot 调试日志，并显示 tok/s 状态栏项。",
+  "config.statusBar.description": "在状态栏显示 tok/s。",
+  "config.statusBarFormat.description": "每次抓到回答后，状态栏显示什么内容。",
+  "config.statusBarFormat.rate": "只显示吞吐，例如 “12.4 tok/s”。",
+  "config.statusBarFormat.rateModel": "吞吐 + 产生它的模型。",
+  "config.statusBarFormat.rateTtft": "吞吐 + 首 token 延迟。",
+  "config.logPath.description": "覆盖 Copilot 调试日志根目录（即包含各会话 main.jsonl 子文件夹的那一层）。留空则自动识别 VS Code / Insiders / VSCodium / Cursor。",
+  "config.pollIntervalMs.description": "多久检查一次日志文件里的新请求，单位毫秒。",
+  "config.historySize.description": "内存中最多保留多少条请求。",
+  "config.backfillDays.description": "启动时加载最近几天修改过的日志（0 表示不回填）。",
+  "config.includeLegacyWorkspaceLogs.description": "同时扫描旧版 VS Code 使用的 workspaceStorage/<hash>/GitHub.copilot-chat/debug-logs 布局。",
+  "config.usageEvents.description": "同时读取 Copilot agent 的 usage 记录（~/.copilot/session-state/*/events.jsonl）。它覆盖 BYOK / 自定义端点模型、带 TTFT，且不需要开启调试日志。",
+  "config.usageEventsRoot.description": "覆盖 Copilot agent 会话目录，留空则使用 ~/.copilot/session-state。"
+}

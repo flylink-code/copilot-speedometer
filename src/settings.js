@@ -11,6 +11,8 @@
  * including whether the value is still the default.
  */
 
+const i18n = require('./i18n');
+
 const P = 'copilotSpeedometer';
 const COPILOT = 'github.copilot.chat';
 const FILE_LOGGING_KEY = 'agentDebugLog.fileLogging.enabled';
@@ -20,6 +22,9 @@ const FILE_LOGGING_KEY = 'agentDebugLog.fileLogging.enabled';
  * namespace (the debug-log switch). It is displayed with the others because
  * it is a data-source setting, but it is written through a different
  * configuration section.
+ *
+ * `label`/`hint` are i18n keys, not copy: the panel and the host must agree on
+ * the wording, and a translation lives in one place (src/i18n.js).
  */
 const FIELDS = [
   { key: 'enabled', section: 'general', type: 'boolean', default: true },
@@ -96,42 +101,25 @@ function readValue(config, field) {
 
 /** True while the value differs from the packaged default. */
 function isModified(config, field) {
-  if (field.copilot) {
-    const info = config.copilot.inspect(FILE_LOGGING_KEY);
-    if (!info) return false;
-    return info.globalValue !== undefined || info.workspaceValue !== undefined;
-  }
-  return config.own.get(field.key, field.default) !== field.default;
+  // Comparing effective values (rather than "was it written anywhere?") keeps
+  // the reset affordance honest: an explicit `false` is still the default.
+  return readValue(config, field) !== field.default;
 }
 
 /**
  * Ordered, serialisable description of every setting. `sections` carries the
  * presentation metadata (title + blurb) so the webview never hardcodes copy
- * that the host already knows.
+ * that the host already knows. `t` is the translation function from
+ * src/i18n.js; without one the panel falls back to English.
  */
-function describe(config) {
+function describe(config, t) {
+  const tr = typeof t === 'function' ? t : i18n.create(i18n.DEFAULT).t;
   return {
     sections: [
-      {
-        id: 'general',
-        title: 'General',
-        blurb: 'Master switch for background collection and the status-bar item.',
-      },
-      {
-        id: 'sources',
-        title: 'Data sources',
-        blurb: 'Where token counts come from. Usage records cover every agent session, including BYOK and custom endpoints.',
-      },
-      {
-        id: 'collection',
-        title: 'Collection',
-        blurb: 'How often the session files are tailed and how much history is kept in memory.',
-      },
-      {
-        id: 'display',
-        title: 'Status bar',
-        blurb: 'What the status-bar item shows after each response.',
-      },
+      { id: 'general', title: tr('section.general.title'), blurb: tr('section.general.blurb') },
+      { id: 'sources', title: tr('section.sources.title'), blurb: tr('section.sources.blurb') },
+      { id: 'collection', title: tr('section.collection.title'), blurb: tr('section.collection.blurb') },
+      { id: 'display', title: tr('section.display.title'), blurb: tr('section.display.blurb') },
     ],
     fields: FIELDS.map((f) => ({
       key: f.key,
@@ -143,6 +131,8 @@ function describe(config) {
       step: f.step,
       unit: f.unit,
       options: f.options,
+      label: tr(`field.${f.key}.label`),
+      hint: tr(`field.${f.key}.hint`),
       value: readValue(config, f),
       modified: isModified(config, f),
     })),

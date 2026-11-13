@@ -280,7 +280,7 @@ const context = {
     captured.handlers.get('copilotSpeedometer.diagnostics')();
     const text = (captured.channel && captured.channel.text) || '';
     if (!/usage records/.test(text)) throw new Error('no usage section');
-    if (!/total records : \d+/.test(text)) throw new Error('no record count');
+    if (!/total records:\s*\d+/.test(text)) throw new Error('no record count');
     console.log('       diagnostics lines: ' + text.trim().split('\n').length);
     if (process.env.SMOKE_DUMP) console.log('\n=== diagnostics ===\n' + text + '=== end ===\n');
   });

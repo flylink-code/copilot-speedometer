@@ -1,6 +1,7 @@
 node_modules/
 *.vsix
 docs/preview.html
-docs/preview-settings.html
+docs/preview*.html
 .vscode-test/
 *.log
+dist

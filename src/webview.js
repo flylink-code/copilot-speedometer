@@ -1,5 +1,7 @@
 'use strict';
 
+const i18n = require('./i18n');
+
 /**
  * Dashboard + Settings webview.
  *
@@ -8,7 +10,7 @@
  * switching tabs costs no extra round trip, and each view keeps its own state.
  */
 
-function html(nonce, cspSource) {
+function html(nonce, cspSource, locale) {
   const style = `
     :root {
       /* Every token carries a dark-theme fallback: the panel must still render
@@ -211,18 +213,29 @@ function html(nonce, cspSource) {
     .footnote { margin-top: 16px; font-size: 11px; color: var(--fg-dim); font-style: italic; }
   `;
 
+  const lang = (locale && locale.locale) || 'en';
+  const dictJson = JSON.stringify(locale && locale.dict ? locale.dict : {});
+  const tr = i18n.create(lang).t;
+
   const script = `
     var vscode = acquireVsCodeApi();
+    var DICT = ${dictJson};
     var state = { view: 'dashboard', data: null, settings: null, filter: 'today' };
+
+    /* The host ships one flat dictionary; a missing key falls back to itself so
+       a gap shows up as an obvious identifier instead of an empty label. */
+    function t(key) {
+      var s = DICT[key] !== undefined ? DICT[key] : key;
+      for (var i = 1; i < arguments.length; i += 1) {
+        s = s.split('{' + (i - 1) + '}').join(String(arguments[i]));
+      }
+      return s;
+    }
 
     function esc(s) {
       return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, function (c) {
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
       });
-    }
-    function n(v, d) {
-      if (v === null || v === undefined || !isFinite(v)) return '--';
-      return Number(v).toFixed(d === undefined ? 1 : d);
     }
     function rate(v) {
       if (v === null || v === undefined || !isFinite(v)) return '--';
@@ -246,35 +259,38 @@ function html(nonce, cspSource) {
       var d = new Date(ts);
       return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
     }
+    function unit(u) {
+      return u ? t('ui.unit.' + u) : '';
+    }
 
     /* ── Dashboard ──────────────────────────────────────────────────────── */
 
     function cards(a) {
       return '' +
-        '<div class="card accent"><div class="label">Last response</div>' +
+        '<div class="card accent"><div class="label">' + t('ui.card.last') + '</div>' +
         '<div class="value">' + rate(a.lastRate) + ' <span style="font-size:12px">tok/s</span></div>' +
-        '<div class="sub">' + esc(a.lastModel || '--') + ' \\u00b7 ' + toks(a.lastOutput) + ' tokens</div></div>' +
-        '<div class="card"><div class="label">Average (weighted)</div>' +
+        '<div class="sub">' + esc(a.lastModel || '--') + ' \\u00b7 ' + toks(a.lastOutput) + ' ' + t('ui.card.tokens') + '</div></div>' +
+        '<div class="card"><div class="label">' + t('ui.card.avg') + '</div>' +
         '<div class="value">' + rate(a.agg.rate) + '</div>' +
-        '<div class="sub">' + toks(a.agg.output) + ' out / ' + dur(a.agg.durMs) + '</div></div>' +
-        '<div class="card"><div class="label">Median / p90</div>' +
+        '<div class="sub">' + toks(a.agg.output) + ' ' + t('ui.card.out') + ' / ' + dur(a.agg.durMs) + '</div></div>' +
+        '<div class="card"><div class="label">' + t('ui.card.median') + '</div>' +
         '<div class="value">' + rate(a.agg.medianRate) + ' <span style="font-size:12px" class="muted">/ ' + rate(a.agg.p90Rate) + '</span></div>' +
-        '<div class="sub">per-response tok/s</div></div>' +
-        '<div class="card"><div class="label">Requests</div>' +
+        '<div class="sub">' + t('ui.card.perResponse') + '</div></div>' +
+        '<div class="card"><div class="label">' + t('ui.card.requests') + '</div>' +
         '<div class="value">' + (a.agg.count || 0) + '</div>' +
-        '<div class="sub">' + toks(a.agg.input) + ' in \\u00b7 ' + toks(a.agg.cached) + ' cached</div></div>' +
+        '<div class="sub">' + toks(a.agg.input) + ' ' + t('ui.card.in') + ' \\u00b7 ' + toks(a.agg.cached) + ' ' + t('ui.card.cached') + '</div></div>' +
         (a.agg.ttftMs
-          ? '<div class="card"><div class="label">TTFT (avg)</div><div class="value">' + dur(a.agg.ttftMs) +
-            '</div><div class="sub">first token latency</div></div>'
+          ? '<div class="card"><div class="label">' + t('ui.card.ttft') + '</div><div class="value">' + dur(a.agg.ttftMs) +
+            '</div><div class="sub">' + t('ui.card.ttftSub') + '</div></div>'
           : '') +
         (a.agg.decodeRate
-          ? '<div class="card"><div class="label">Decode rate</div><div class="value">' + rate(a.agg.decodeRate) +
-            '</div><div class="sub">TTFT ' + dur(a.agg.ttftMs) + ' excluded</div></div>'
+          ? '<div class="card"><div class="label">' + t('ui.card.decode') + '</div><div class="value">' + rate(a.agg.decodeRate) +
+            '</div><div class="sub">' + t('ui.card.decodeSub', dur(a.agg.ttftMs)) + '</div></div>'
           : '');
     }
 
     function chart(points) {
-      if (!points.length) return '<div class="muted">No samples in this window.</div>';
+      if (!points.length) return '<div class="muted">' + t('ui.empty.samples') + '</div>';
       var w = 800, h = 150, pad = 6;
       var max = Math.max.apply(null, points.map(function (p) { return p.rate || 0; }).concat([1]));
       var bw = Math.max(2, (w - pad * 2) / points.length - 1);
@@ -288,13 +304,13 @@ function html(nonce, cspSource) {
       return '<svg class="chart" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
         '<line class="axis" x1="0" y1="' + (h - 18) + '" x2="' + w + '" y2="' + (h - 18) + '"/>' + bars + '</svg>' +
         '<div class="muted" style="font-size:11px;display:flex;justify-content:space-between">' +
-        '<span>peak ' + rate(max) + ' tok/s</span><span>last ' + points.length + ' responses</span></div>';
+        '<span>' + t('ui.chart.peak', rate(max)) + '</span><span>' + t('ui.chart.last', points.length) + '</span></div>';
     }
 
     function modelTable(rows) {
-      if (!rows.length) return '<div class="muted">No data.</div>';
-      var head = '<tr><th>Model</th><th class="num">Req</th><th class="num">tok/s</th><th class="num">median</th>' +
-        '<th class="num">p90</th><th class="num">out</th><th class="num">in</th><th class="num">avg dur</th></tr>';
+      if (!rows.length) return '<div class="muted">' + t('ui.empty.data') + '</div>';
+      var head = '<tr><th>' + t('ui.th.model') + '</th><th class="num">' + t('ui.th.req') + '</th><th class="num">' + t('ui.th.rate') + '</th><th class="num">' + t('ui.th.median') + '</th>' +
+        '<th class="num">' + t('ui.th.p90') + '</th><th class="num">' + t('ui.th.out') + '</th><th class="num">' + t('ui.th.in') + '</th><th class="num">' + t('ui.th.avgDur') + '</th></tr>';
       var body = rows.map(function (r) {
         return '<tr><td class="mono">' + esc(r.model) + '</td><td class="num">' + r.count + '</td>' +
           '<td class="num rate">' + rate(r.rate) + '</td><td class="num">' + rate(r.medianRate) + '</td>' +
@@ -305,9 +321,9 @@ function html(nonce, cspSource) {
     }
 
     function requestTable(rows) {
-      if (!rows.length) return '<div class="muted">No data.</div>';
-      var head = '<tr><th>Time</th><th>Model</th><th class="num">tok/s</th><th class="num">out</th>' +
-        '<th class="num">in</th><th class="num">cached</th><th class="num">duration</th><th class="num">ttft</th></tr>';
+      if (!rows.length) return '<div class="muted">' + t('ui.empty.data') + '</div>';
+      var head = '<tr><th>' + t('ui.th.time') + '</th><th>' + t('ui.th.model') + '</th><th class="num">' + t('ui.th.rate') + '</th><th class="num">' + t('ui.th.out') + '</th>' +
+        '<th class="num">' + t('ui.th.in') + '</th><th class="num">' + t('ui.th.cached') + '</th><th class="num">' + t('ui.th.duration') + '</th><th class="num">' + t('ui.th.ttft') + '</th></tr>';
       var body = rows.map(function (r) {
         return '<tr><td class="mono">' + clock(r.ts) + '</td><td class="mono">' + esc(r.model) +
           (r.byok ? ' <span class="tag">BYOK</span>' : '') + '</td>' +
@@ -322,31 +338,28 @@ function html(nonce, cspSource) {
       var s = a.setup || {};
       var usageOk = !!(s.usageEnabled && s.usageRoots && s.usageRoots.length);
       var lines = [];
-      lines.push('<div class="empty"><h2>No model calls captured yet</h2>');
+      lines.push('<div class="empty"><h2>' + t('ui.setup.title') + '</h2>');
       if (usageOk) {
-        lines.push('<div>Watching the Copilot agent usage records - one is written as soon as a request finishes. ' +
-          'Send a message in Copilot Chat, then press Refresh.</div>');
-        lines.push('<div class="row"><button class="btn primary" id="btn-refresh">Refresh</button>' +
-          '<button class="btn" id="btn-open-settings">Settings</button></div>');
+        lines.push('<div>' + t('ui.setup.watching') + '</div>');
+        lines.push('<div class="row"><button class="btn primary" id="btn-refresh">' + t('ui.refresh') + '</button>' +
+          '<button class="btn" id="btn-open-settings">' + t('ui.setup.settings') + '</button></div>');
       }
       if (!s.loggingEnabled) {
-        lines.push('<div style="margin-top:10px">Copilot debug logging is <b>off</b>. It is optional but adds per-call token ' +
-          'counts for models whose endpoint reports no usage.</div>');
-        lines.push('<div class="row"><button class="btn ' + (usageOk ? '' : 'primary') + '" id="btn-enable">Enable Copilot debug logging</button></div>');
+        lines.push('<div style="margin-top:10px">' + t('ui.setup.loggingOff') + '</div>');
+        lines.push('<div class="row"><button class="btn ' + (usageOk ? '' : 'primary') + '" id="btn-enable">' + t('ui.setup.enable') + '</button></div>');
       }
       if (s.roots && s.roots.length) {
-        lines.push('<div style="margin-top:10px" class="muted">Watched debug-log roots:</div>');
+        lines.push('<div style="margin-top:10px" class="muted">' + t('ui.setup.roots') + '</div>');
         lines.push(s.roots.map(function (r) { return '<div class="path">' + esc(r) + '</div>'; }).join(''));
       } else {
-        lines.push('<div style="margin-top:10px" class="muted">No Copilot debug-log directory found. Expected something like:</div>');
+        lines.push('<div style="margin-top:10px" class="muted">' + t('ui.setup.noRoots') + '</div>');
         lines.push('<div class="path">%APPDATA%\\\\Code\\\\User\\\\globalStorage\\\\github.copilot-chat\\\\debug-logs</div>');
       }
       if (usageOk) {
-        lines.push('<div style="margin-top:10px" class="muted">Watched usage-event roots:</div>');
+        lines.push('<div style="margin-top:10px" class="muted">' + t('ui.setup.usageRoots') + '</div>');
         lines.push(s.usageRoots.map(function (r) { return '<div class="path">' + esc(r) + '</div>'; }).join(''));
       }
-      lines.push('<div style="margin-top:10px" class="muted">tok/s = outputTokens / (duration / 1000). Usage records from the ' +
-        'agent also carry TTFT, so BYOK / custom-endpoint models show up there even when debug logs are off.</div>');
+      lines.push('<div style="margin-top:10px" class="muted">' + t('ui.setup.note') + '</div>');
       lines.push('</div>');
       return lines.join('');
     }
@@ -360,9 +373,9 @@ function html(nonce, cspSource) {
         body = setup(a);
       } else {
         body = '<div class="cards">' + cards(a) + '</div>' +
-          '<section class="block"><h2 class="block-title">tok/s per response</h2>' + chart(a.series) + '</section>' +
-          '<section class="block"><h2 class="block-title">By model</h2>' + modelTable(a.models) + '</section>' +
-          '<section class="block"><h2 class="block-title">Recent requests</h2>' + requestTable(a.requests) + '</section>';
+          '<section class="block"><h2 class="block-title">' + t('ui.block.series') + '</h2>' + chart(a.series) + '</section>' +
+          '<section class="block"><h2 class="block-title">' + t('ui.block.models') + '</h2>' + modelTable(a.models) + '</section>' +
+          '<section class="block"><h2 class="block-title">' + t('ui.block.recent') + '</h2>' + requestTable(a.requests) + '</section>';
       }
       root.innerHTML = body;
       var enable = document.getElementById('btn-enable');
@@ -375,56 +388,44 @@ function html(nonce, cspSource) {
 
     /* ── Settings ───────────────────────────────────────────────────────── */
 
-    var COPY = {
-      enabled: ['Enable Copilot Speedometer', 'Turn collection and the status-bar item off without uninstalling the extension.'],
-      usageEvents: ['Read agent usage records', 'Per-request token counts from Copilot agent sessions. Covers BYOK and custom endpoints with no extra setup.'],
-      usageEventsRoot: ['Usage records folder', 'Leave empty to auto-discover. Override only if Copilot stores sessions elsewhere.'],
-      logPath: ['Chat debug-log folder', 'Optional. Leave empty to search the usual Visual Studio Code globalStorage paths.'],
-      includeLegacyWorkspaceLogs: ['Scan legacy workspace logs', 'Older Copilot builds wrote debug logs per workspace instead of per user.'],
-      copilotDebugLogging: ['Copilot chat debug logging', 'Writes one llm_request line per call. Useful for models whose endpoint reports no token usage.'],
-      pollIntervalMs: ['Poll interval', 'How often the session files are tailed for new records.'],
-      historySize: ['History size', 'Requests kept in memory. Older records are dropped first.'],
-      backfillDays: ['Startup backfill', 'Days of history read on activation. The All window always triggers a deep scan.'],
-      statusBar: ['Show status-bar item', 'Live tok/s next to the clock, refreshed after every captured response.'],
-      statusBarFormat: ['Status-bar content', ''],
-    };
-    var SEG_LABEL = {
-      'rate': 'value',
-      'rate-model': 'value + model',
-      'rate-ttft': 'value + TTFT',
+    var SEG_KEY = {
+      'rate': 'ui.seg.rate',
+      'rate-model': 'ui.seg.rateModel',
+      'rate-ttft': 'ui.seg.rateTtft',
     };
 
     var CONTROL = {
-      key: function (f) {
-        var c = COPY[f.key] || [f.key, ''];
-        return '<div class="field-text"><label class="field-label" for="f-' + f.key + '">' + esc(c[0]) + '</label>' +
-          (c[1] ? '<div class="field-hint">' + esc(c[1]) + '</div>' : '') + '</div>';
+      text: function (f) {
+        return '<div class="field-text"><label class="field-label" for="f-' + f.key + '">' + esc(f.label) + '</label>' +
+          (f.hint ? '<div class="field-hint">' + esc(f.hint) + '</div>' : '') + '</div>';
       },
       reset: function (f) {
-        return '<button class="btn-reset" data-reset="' + f.key + '" title="Reset to default" aria-label="Reset to default">&#8635;</button>';
+        return '<button class="btn-reset" data-reset="' + f.key + '" title="' + esc(t('ui.settings.reset')) +
+          '" aria-label="' + esc(t('ui.settings.reset')) + '">&#8635;</button>';
       },
     };
 
     function control(f) {
       if (f.type === 'boolean') {
         return '<button class="switch" role="switch" data-key="' + f.key + '" data-kind="boolean" id="f-' + f.key +
-          '" aria-checked="' + (!!f.value) + '" aria-label="' + esc((COPY[f.key] || [f.key])[0]) + '"></button>';
+          '" aria-checked="' + (!!f.value) + '" aria-label="' + esc(f.label) + '"></button>';
       }
       if (f.type === 'number') {
         return '<input class="input input-num" type="number" data-key="' + f.key + '" data-kind="number" id="f-' + f.key +
           '" value="' + f.value + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '">' +
-          '<span class="unit">' + (f.unit || '') + '</span>';
+          '<span class="unit">' + unit(f.unit) + '</span>';
       }
       if (f.type === 'enum') {
         return '<div class="segmented" role="group" data-key="' + f.key + '" data-kind="enum">' +
           f.options.map(function (o) {
             return '<button class="seg" data-value="' + o + '" aria-pressed="' + (f.value === o) + '">' +
-              esc(SEG_LABEL[o] || o) + '</button>';
+              esc(SEG_KEY[o] ? t(SEG_KEY[o]) : o) + '</button>';
           }).join('') + '</div>';
       }
       return '<input class="input input-text" type="text" data-key="' + f.key + '" data-kind="path" id="f-' + f.key +
-        '" value="' + esc(f.value) + '" spellcheck="false" placeholder="(auto-discover)">' +
-        '<button class="btn" data-browse="' + f.key + '" title="Browse">Browse</button>';
+        '" value="' + esc(f.value) + '" spellcheck="false" placeholder="' + esc(t('ui.settings.placeholder')) + '">' +
+        '<button class="btn" data-browse="' + f.key + '" title="' + esc(t('ui.settings.browse')) + '">' +
+        esc(t('ui.settings.browse')) + '</button>';
     }
 
     function sourceCard(title, ok, folder, meta, cmd, label) {
@@ -449,8 +450,8 @@ function html(nonce, cspSource) {
       var htmlParts = [];
       var status = '';
       htmlParts.push('<div class="settings-wrap">');
-      htmlParts.push('<div class="settings-head"><div><h2>Settings</h2>' +
-        '<p class="muted">Changes are written to your user settings and apply immediately.</p></div>' +
+      htmlParts.push('<div class="settings-head"><div><h2>' + t('ui.settings.title') + '</h2>' +
+        '<p class="muted">' + t('ui.settings.sub') + '</p></div>' +
         '<span class="save-state" id="save-state"></span></div>');
 
       s.sections.forEach(function (sec) {
@@ -461,42 +462,40 @@ function html(nonce, cspSource) {
           (sec.blurb ? '<p class="sec-blurb">' + esc(sec.blurb) + '</p>' : ''));
 
         if (sec.id === 'sources') {
-          status = '<div class="status-caption">Live status</div>' +
-            sourceCard('Agent usage records', usage.exists,
-              usage.root || '(not set)',
+          status = '<div class="status-caption">' + t('ui.settings.liveStatus') + '</div>' +
+            sourceCard(t('ui.settings.usageCard'), usage.exists,
+              usage.root || t('ui.settings.notSet'),
               usage.exists
-                ? usage.files + ' session file(s) \\u00b7 ' + captured.usage + ' records captured'
-                : 'Folder not found - runs are only recorded while Copilot agent sessions exist',
-              usage.exists ? 'revealUsageRoot' : '', 'Reveal') +
-            sourceCard('Chat debug logs', logs.roots.length > 0,
-              logs.roots.length ? logs.roots[0] : '(none found)',
+                ? t('ui.settings.usageFiles', usage.files, captured.usage)
+                : t('ui.settings.usageMissing'),
+              usage.exists ? 'revealUsageRoot' : '', t('ui.settings.reveal')) +
+            sourceCard(t('ui.settings.logsCard'), logs.roots.length > 0,
+              logs.roots.length ? logs.roots[0] : t('ui.settings.noneFound'),
               logs.roots.length
-                ? logs.roots.length + ' root(s) \\u00b7 logging ' + (logs.enabled ? 'on' : 'off')
-                : 'Optional source - enable Copilot debug logging below',
+                ? t('ui.settings.logRoots', logs.roots.length, logs.enabled ? t('ui.settings.logOn') : t('ui.settings.logOff'))
+                : t('ui.settings.noLogRoots'),
               '', '');
         }
 
         fields.forEach(function (f) {
           htmlParts.push('<div class="field' + (f.modified ? ' modified' : '') + '" data-field="' + f.key + '">' +
-            CONTROL.key(f) + '<div class="field-control">' + control(f) + CONTROL.reset(f) + '</div></div>');
+            CONTROL.text(f) + '<div class="field-control">' + control(f) + CONTROL.reset(f) + '</div></div>');
         });
         if (status) htmlParts.push(status);
         htmlParts.push('</section>');
       });
 
-      htmlParts.push('<section class="sec"><div class="sec-title">Maintenance</div>' +
-        '<p class="sec-blurb">' + captured.total + ' request(s) in memory (usage ' + captured.usage +
-        ' \\u00b7 BYOK ' + captured.byok + ').</p>' +
+      htmlParts.push('<section class="sec"><div class="sec-title">' + t('ui.settings.maintenance') + '</div>' +
+        '<p class="sec-blurb">' + t('ui.settings.maintenanceHint', captured.total, captured.usage, captured.byok) + '</p>' +
         '<div class="actions">' +
-        '<button class="btn" data-cmd="refresh">Refresh now</button>' +
-        '<button class="btn" data-cmd="diagnostics">Diagnostics</button>' +
-        '<button class="btn" data-cmd="exportJson">Export JSON</button>' +
-        '<button class="btn" data-cmd="clearHistory">Clear captured history</button>' +
-        '<button class="btn" data-cmd="openVsCodeSettings">Open VS Code settings</button>' +
+        '<button class="btn" data-cmd="refresh">' + t('ui.settings.refreshNow') + '</button>' +
+        '<button class="btn" data-cmd="diagnostics">' + t('ui.settings.diagnostics') + '</button>' +
+        '<button class="btn" data-cmd="exportJson">' + t('ui.settings.export') + '</button>' +
+        '<button class="btn" data-cmd="clearHistory">' + t('ui.settings.clear') + '</button>' +
+        '<button class="btn" data-cmd="openVsCodeSettings">' + t('ui.settings.openVsCode') + '</button>' +
         '</div></section>');
 
-      htmlParts.push('<div class="footnote">tok/s = output tokens / duration. Settings are stored under ' +
-        '<code>copilotSpeedometer.*</code> in your global settings.json.</div>');
+      htmlParts.push('<div class="footnote">' + esc(t('ui.settings.footnote')) + '</div>');
       htmlParts.push('</div>');
 
       host.innerHTML = htmlParts.join('');
@@ -640,13 +639,13 @@ function html(nonce, cspSource) {
         if (!document.querySelector('[data-field]')) renderSettings();
         else syncSettings();
       } else if (msg.type === 'configResult') {
-        if (msg.ok) flash('Saved');
+        if (msg.ok) flash(t('ui.settings.saved'));
         else {
-          flash('Not saved', true);
-          if (msg.key) fieldError(msg.key, msg.message || 'Rejected.');
+          flash(t('ui.settings.notSaved'), true);
+          if (msg.key) fieldError(msg.key, msg.message || t('ui.settings.rejected'));
         }
       } else if (msg.type === 'error') {
-        flash(msg.message || 'Error', true);
+        flash(msg.message || t('ui.settings.rejected'), true);
       }
     });
 
@@ -654,7 +653,7 @@ function html(nonce, cspSource) {
   `;
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; img-src ${cspSource} data:;" />
@@ -668,16 +667,16 @@ function html(nonce, cspSource) {
     Copilot Speedometer
   </div>
   <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" data-view="dashboard" aria-selected="true">Dashboard</button>
-    <button class="tab" role="tab" data-view="settings" aria-selected="false">Settings</button>
+    <button class="tab" role="tab" data-view="dashboard" aria-selected="true">${tr('ui.tab.dashboard')}</button>
+    <button class="tab" role="tab" data-view="settings" aria-selected="false">${tr('ui.tab.settings')}</button>
   </nav>
   <span class="spacer"></span>
-  <select id="filter" title="Time window">
-    <option value="today">Today</option>
-    <option value="7d">Last 7 days</option>
-    <option value="all">All captured</option>
+  <select id="filter" title="${tr('ui.filter.title')}">
+    <option value="today">${tr('ui.filter.today')}</option>
+    <option value="7d">${tr('ui.filter.7d')}</option>
+    <option value="all">${tr('ui.filter.all')}</option>
   </select>
-  <button class="btn" id="refresh">Refresh</button>
+  <button class="btn" id="refresh">${tr('ui.refresh')}</button>
 </header>
 <div id="view-dashboard" class="view"></div>
 <div id="view-settings" class="view" hidden></div>
