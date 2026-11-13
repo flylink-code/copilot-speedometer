@@ -1,0 +1,7 @@
+.git/**
+.gitignore
+test/**
+tools/**
+*.vsix
+node_modules/**
+docs/preview.html
