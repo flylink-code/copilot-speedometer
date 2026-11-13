@@ -88,6 +88,20 @@ function dayKey(ts) {
   return `${d.getFullYear()}-${m}-${day}`;
 }
 
+/**
+ * Whether the status-bar item should be visible. Pure so it can be tested
+ * without a VS Code instance: hidden when the extension is off, the item is
+ * disabled, or the newest capture is older than autoHideMinutes (0 = never).
+ */
+function statusBarWanted(state) {
+  if (!state || !state.enabled || !state.statusBar) return false;
+  const limit = Number(state.autoHideMinutes) || 0;
+  if (limit <= 0) return true;
+  if (!state.lastTs) return true; // nothing captured yet: keep the entry point
+  const now = state.now === undefined ? Date.now() : state.now;
+  return now - state.lastTs <= limit * 60000;
+}
+
 function fmtRate(rate) {
   if (rate === null || rate === undefined || !isFinite(rate)) return '--';
   if (rate >= 100) return String(Math.round(rate));
@@ -118,4 +132,4 @@ function fmtTime(ts) {
   ).padStart(2, '0')}`;
 }
 
-module.exports = { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtTime, quantile };
+module.exports = { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtTime, quantile, statusBarWanted };

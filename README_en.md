@@ -94,7 +94,7 @@ Also: reasoning tokens count as output, tokenizers differ per vendor, and **tok/
 
 ## Features
 
-- The status bar shows the tok/s of the **last response**; hover for model, BYOK badge, output tokens, duration, TTFT, plus the weighted average and median of the last 20 requests.
+- The status bar shows the tok/s of the **last response** (and hides itself after five minutes without a new one, so an idle window is not cluttered); hover for model, BYOK badge, output tokens, duration, TTFT, plus the weighted average and median of the last 20 requests.
 - Panel: cards (last / weighted average / median / p90 / requests / TTFT / decode rate), a per-response tok/s bar chart, a per-model summary and the last 200 requests.
 - **Settings tab inside the panel**: no need to hunt through VS Code settings for JSON — switches, numbers, paths (with Browse) and the status-bar mode live in the panel, apply immediately, and any overridden row offers ↻ to restore its default.
 - Time windows: today / last 7 days / all. Switching to a longer window triggers a deeper backfill (each file is read from its tail, byte-budgeted, roughly one second the first time), so historical sessions show up as well.
@@ -111,6 +111,7 @@ The **Settings** tab edits these values directly; `settings.json` still works:
 |---|---|---|
 | `copilotSpeedometer.enabled` | `true` | master switch |
 | `copilotSpeedometer.statusBar` | `true` | show the status-bar item |
+| `copilotSpeedometer.autoHideMinutes` | `5` | hide the status-bar item after this many minutes without a new response (0 = never) |
 | `copilotSpeedometer.statusBarFormat` | `"rate"` | status-bar content: `rate` number only / `rate-model` adds the model / `rate-ttft` adds TTFT |
 | `copilotSpeedometer.usageEvents` | `true` | read agent usage records (the BYOK + TTFT source) |
 | `copilotSpeedometer.usageEventsRoot` | `""` | override `~/.copilot/session-state` |
@@ -148,7 +149,7 @@ Every string in the panel and in the status bar follows the VS Code display lang
 ## Development
 
 ```bash
-npm test                       # parser / stats / settings / i18n unit tests (43)
+npm test                       # parser / stats / settings / i18n unit tests (44)
 node tools/smoke-activate.js    # runs activate / tick / panel payloads against a stubbed vscode API
 node tools/preview.js          # renders docs/preview*.html and screenshots in both languages
 npm run package                # builds the .vsix into dist/ (vsce flags included)

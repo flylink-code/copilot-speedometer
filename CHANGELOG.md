@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0
+
+- The status-bar item now hides itself when no new Copilot response has arrived for
+  a while (new `copilotSpeedometer.autoHideMinutes`, default 5, 0 = never), so a
+  window you are not chatting in no longer shows a stale number. The decision is a
+  pure helper in `src/stats.js` and is unit-tested.
+- Extension icon (`media/icon.png`, 256x256 speedometer dial) and a plain
+  `displayName` of "Copilot Speedometer", ready for the Marketplace.
+- `tools/make-icon.py` regenerates the icon from code.
+
 ## 0.3.1
 
 - The whole extension now follows the VS Code display language: panel, status bar,

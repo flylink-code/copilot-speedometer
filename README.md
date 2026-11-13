@@ -94,7 +94,7 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 
 ## 功能
 
-- 状态栏实时显示**上一次回答**的 tok/s，悬停看模型、BYOK 标记、输出 token、耗时、TTFT、最近 20 次加权平均与中位数。
+- 状态栏实时显示**上一次回答**的 tok/s（默认 5 分钟没新回答就自动隐藏，不占用不聊天的窗口），悬停看模型、BYOK 标记、输出 token、耗时、TTFT、最近 20 次加权平均与中位数。
 - 面板：卡片（最近一次 / 加权平均 / 中位数 / p90 / 请求数 / TTFT / decode rate）、每次回答的 tok/s 柱状图、按模型汇总、最近 200 条请求明细。
 - **面板内的 Settings 页**：不用去 VS Code 设置里翻 JSON —— 开关、数字、路径（带 Browse）和状态下拉都在面板里，改完立即生效，被改过的项旁边有 ↻ 可一键恢复默认。
 - 时间窗口：今天 / 近 7 天 / 全部。切到「近 7 天」或「全部」时会做一次更深的回填（每个文件读尾部、总量有上限，首次约 1 秒），所以历史会话也能看到。
@@ -111,6 +111,7 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 |---|---|---|
 | `copilotSpeedometer.enabled` | `true` | 总开关 |
 | `copilotSpeedometer.statusBar` | `true` | 是否显示状态栏 |
+| `copilotSpeedometer.autoHideMinutes` | `5` | 多久没有新回答就自动隐藏状态栏项（0 = 不隐藏） |
 | `copilotSpeedometer.statusBarFormat` | `"rate"` | 状态栏内容：`rate` 只有数字 / `rate-model` 加模型名 / `rate-ttft` 加 TTFT |
 | `copilotSpeedometer.usageEvents` | `true` | 读 agent usage records（BYOK + TTFT 来源） |
 | `copilotSpeedometer.usageEventsRoot` | `""` | 覆盖 `~/.copilot/session-state` |
@@ -148,7 +149,7 @@ Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA
 ## 开发
 
 ```bash
-npm test                       # 解析 / 统计 / 设置 / 本地化单测（43 项）
+npm test                       # 解析 / 统计 / 设置 / 本地化单测（44 项）
 node tools/smoke-activate.js    # 用 stub 的 vscode API 真跑一遍 activate / tick / 面板 payload
 node tools/preview.js          # 生成 docs/preview*.html 与中英两套截图，浏览器直接看 UI
 npm run package                # 打包 .vsix（vsce 参数已内置）

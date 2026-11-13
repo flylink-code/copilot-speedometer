@@ -6,9 +6,9 @@
   "command.clearHistory.title": "Clear Captured History",
   "command.seedDemo.title": "Preview With Demo Data",
   "command.diagnostics.title": "Show Diagnostics (why is it empty?)",
-
   "config.enabled.description": "Scan Copilot debug logs in the background and show the tokens/sec status bar item.",
   "config.statusBar.description": "Show the tokens/sec item in the status bar.",
+  "config.autoHideMinutes.description": "Minutes of Copilot silence after which the status-bar item hides itself, so a window you are not chatting in does not keep a stale number. 0 keeps it always visible.",
   "config.statusBarFormat.description": "What the status-bar item shows after each captured response.",
   "config.statusBarFormat.rate": "Just the throughput, e.g. \"12.4 tok/s\".",
   "config.statusBarFormat.rateModel": "Throughput plus the model that produced it.",

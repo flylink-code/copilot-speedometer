@@ -7,6 +7,7 @@ const path = require('path');
 const { LogScanner, parseEventLine } = require('./parser');
 const { UsageScanner, parseUsageLine } = require('./usage-events');
 const { summarize, groupByModel, fmtRate, fmtTokens, fmtDur } = require('./stats');
+const { statusBarWanted: statsStatusBarWanted } = require('./stats');
 const webview = require('./webview');
 const settings = require('./settings');
 const i18n = require('./i18n');
@@ -440,6 +441,8 @@ function tick(force) {
   if (batch.length || force) {
     updateStatusBar();
     pushData();
+  } else {
+    applyStatusBarVisibility();
   }
 }
 
@@ -498,9 +501,36 @@ function deepBackfill() {
   }
 }
 
+/**
+ * Minutes of Copilot silence after which the status-bar item hides itself. A
+ * window that is not chatting should not keep showing a number from yesterday;
+ * the dashboard stays one command away either way.
+ */
+function autoHideMinutes() {
+  const raw = Number(config().get('autoHideMinutes', 5));
+  return Number.isFinite(raw) && raw > 0 ? raw : 0;
+}
+
+function statusBarWanted() {
+  const last = records[records.length - 1];
+  return statsStatusBarWanted({
+    enabled: config().get('enabled', true),
+    statusBar: config().get('statusBar', true),
+    autoHideMinutes: autoHideMinutes(),
+    lastTs: last ? last.ts : 0,
+  });
+}
+
+/** Cheap enough to run on every poll: only show/hide, never rebuild text. */
+function applyStatusBarVisibility() {
+  if (!statusBar) return;
+  if (statusBarWanted()) statusBar.show();
+  else statusBar.hide();
+}
+
 function updateStatusBar() {
   if (!statusBar) return;
-  if (!config().get('statusBar', true) || !config().get('enabled', true)) {
+  if (!statusBarWanted()) {
     statusBar.hide();
     return;
   }

@@ -1,8 +1,8 @@
 {
   "name": "copilot-speedometer",
-  "displayName": "Copilot Speedometer - tok/s for Copilot Chat",
+  "displayName": "Copilot Speedometer",
   "description": "Status bar and dashboard showing tokens/second, latency and token usage for every GitHub Copilot Chat request, parsed from the local Copilot debug logs.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "local",
   "license": "MIT",
   "repository": {
@@ -84,6 +84,13 @@
           "default": true,
           "description": "%config.statusBar.description%"
         },
+        "copilotSpeedometer.autoHideMinutes": {
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "maximum": 1440,
+          "description": "%config.autoHideMinutes.description%"
+        },
         "copilotSpeedometer.statusBarFormat": {
           "type": "string",
           "enum": [
@@ -147,5 +154,6 @@
     "test": "node test/parser.test.js && node test/usage.test.js && node test/settings.test.js && node test/i18n.test.js",
     "preview": "node tools/preview.js",
     "package": "npx --yes @vscode/vsce@latest package --no-dependencies --allow-missing-repository --no-rewrite-relative-links --out dist"
-  }
+  },
+  "icon": "media/icon.png"
 }

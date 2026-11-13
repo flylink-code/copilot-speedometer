@@ -164,6 +164,7 @@ const en = {
   'ui.unit.records': 'records',
   'ui.unit.days': 'days',
   'ui.unit.ms': 'ms',
+  'ui.unit.min': 'min',
 
   /* ── Settings sections and fields ────────────────────────────────────── */
   'section.general.title': 'General',
@@ -192,6 +193,8 @@ const en = {
   'field.historySize.hint': 'Requests kept in memory. Older records are dropped first.',
   'field.backfillDays.label': 'Startup backfill',
   'field.backfillDays.hint': 'Days of history read on activation. The All window always triggers a deep scan.',
+  'field.autoHideMinutes.label': 'Auto-hide after',
+  'field.autoHideMinutes.hint': 'Hide the status-bar item when no new response has arrived for this long. 0 keeps it always visible.',
   'field.statusBar.label': 'Show status-bar item',
   'field.statusBar.hint': 'Live tok/s next to the clock, refreshed after every captured response.',
   'field.statusBarFormat.label': 'Status-bar content',
@@ -352,6 +355,7 @@ const zh = {
   'ui.unit.records': '条',
   'ui.unit.days': '天',
   'ui.unit.ms': 'ms',
+  'ui.unit.min': '分钟',
 
   /* ── 设置分组与字段 ──────────────────────────────────────────────────── */
   'section.general.title': '常规',
@@ -380,6 +384,8 @@ const zh = {
   'field.historySize.hint': '内存中保留的请求数，超出后先丢最旧的。',
   'field.backfillDays.label': '启动回填',
   'field.backfillDays.hint': '启动时读取几天的历史。「全部」窗口总会触发一次深扫。',
+  'field.autoHideMinutes.label': '自动隐藏',
+  'field.autoHideMinutes.hint': '超过这么久没有新回答后隐藏状态栏项，0 表示始终显示。',
   'field.statusBar.label': '显示状态栏',
   'field.statusBar.hint': '在时钟旁实时显示 tok/s，每次抓到回答就刷新。',
   'field.statusBarFormat.label': '状态栏内容',

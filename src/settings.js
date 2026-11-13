@@ -70,6 +70,7 @@ const FIELDS = [
     unit: 'days',
   },
   { key: 'statusBar', section: 'display', type: 'boolean', default: true },
+  { key: 'autoHideMinutes', section: 'display', type: 'number', default: 5, min: 0, max: 1440, step: 1, unit: 'min' },
   {
     key: 'statusBarFormat',
     section: 'display',

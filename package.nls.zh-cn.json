@@ -6,9 +6,9 @@
   "command.clearHistory.title": "清空已抓取历史",
   "command.seedDemo.title": "用演示数据预览",
   "command.diagnostics.title": "显示诊断（为什么没有数据？）",
-
   "config.enabled.description": "在后台扫描 Copilot 调试日志，并显示 tok/s 状态栏项。",
   "config.statusBar.description": "在状态栏显示 tok/s。",
+  "config.autoHideMinutes.description": "多久没有新的 Copilot 回答后自动隐藏状态栏项，避免在不聊天的窗口里显示一个过期的数字。0 表示始终显示。",
   "config.statusBarFormat.description": "每次抓到回答后，状态栏显示什么内容。",
   "config.statusBarFormat.rate": "只显示吞吐，例如 “12.4 tok/s”。",
   "config.statusBarFormat.rateModel": "吞吐 + 产生它的模型。",

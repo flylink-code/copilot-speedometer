@@ -6,7 +6,7 @@ const os = require('os');
 const path = require('path');
 
 const { LogScanner, eventToRecord, parseEventLine } = require('../src/parser');
-const { summarize, groupByModel, fmtRate, fmtTokens, fmtDur } = require('../src/stats');
+const { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, statusBarWanted } = require('../src/stats');
 
 let passed = 0;
 function test(name, fn) {
@@ -182,6 +182,19 @@ test('formatters degrade gracefully', () => {
   assert.strictEqual(fmtTokens(1500000), '1.50M');
   assert.strictEqual(fmtDur(950), '950 ms');
   assert.strictEqual(fmtDur(2500), '2.50 s');
+});
+
+test('status bar hides itself when nothing happened for a while', () => {
+  const now = 10 * 60 * 1000;
+  const base = { enabled: true, statusBar: true, autoHideMinutes: 5, now };
+  assert.strictEqual(statusBarWanted(Object.assign({}, base, { lastTs: now - 60000 })), true);
+  assert.strictEqual(statusBarWanted(Object.assign({}, base, { lastTs: now - 6 * 60000 })), false);
+  // 0 disables auto-hide, an empty history keeps the entry point visible.
+  assert.strictEqual(statusBarWanted(Object.assign({}, base, { autoHideMinutes: 0, lastTs: 1 })), true);
+  assert.strictEqual(statusBarWanted(Object.assign({}, base, { lastTs: 0 })), true);
+  // The explicit switches win over any timing.
+  assert.strictEqual(statusBarWanted(Object.assign({}, base, { statusBar: false, lastTs: now })), false);
+  assert.strictEqual(statusBarWanted(Object.assign({}, base, { enabled: false, lastTs: now })), false);
 });
 
 console.log(`\n${passed} tests passed`);
