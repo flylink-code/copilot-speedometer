@@ -181,6 +181,29 @@ function coerce(field, raw) {
   return { value: raw };
 }
 
+const GLOBAL = 1; // vscode.ConfigurationTarget.Global
+const WORKSPACE = 2; // vscode.ConfigurationTarget.Workspace
+
+/**
+ * Where to write a value. VS Code's `get` hides which scope won, so inspect it:
+ * if the user already has a workspace override, writing to the user settings
+ * would look like a no-op in the panel (the workspace value still wins), which
+ * is the most confusing thing a settings UI can do. Keep the existing scope,
+ * otherwise write to the user's settings.
+ */
+function writeTarget(config, field) {
+  const section = field.copilot ? config.copilot : config.own;
+  const name = field.copilot ? FILE_LOGGING_KEY : field.key;
+  let target = GLOBAL;
+  if (typeof section.inspect === 'function') {
+    const info = section.inspect(name);
+    if (info && info.workspaceValue !== undefined && info.workspaceFolderValue === undefined) {
+      target = WORKSPACE;
+    }
+  }
+  return { section, name, target };
+}
+
 /**
  * Write one setting. `reset` removes the override so the packaged default
  * applies again (which is exactly what VS Code's own "reset" affordance does).
@@ -189,18 +212,17 @@ async function apply(config, key, value, reset) {
   const field = fieldByKey(key);
   if (!field) return { ok: false, message: `Unknown setting "${key}".` };
 
-  const target = field.copilot ? config.copilot : config.own;
-  const name = field.copilot ? FILE_LOGGING_KEY : field.key;
+  const where = writeTarget(config, field);
 
   if (reset) {
-    await target.update(name, undefined, 1 /* ConfigurationTarget.Global */);
+    await where.section.update(where.name, undefined, where.target);
     return { ok: true, key, value: field.default, reset: true };
   }
 
   const result = coerce(field, value);
   if (result.error) return { ok: false, key, message: result.error };
 
-  await target.update(name, result.value, 1 /* ConfigurationTarget.Global */);
+  await where.section.update(where.name, result.value, where.target);
   return { ok: true, key, value: result.value };
 }
 

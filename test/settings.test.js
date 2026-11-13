@@ -152,6 +152,30 @@ test('apply() routes the debug-logging switch to the Copilot namespace', async (
   assert.deepStrictEqual(cfg.calls, [['copilot', settings.FILE_LOGGING_KEY, true]]);
 });
 
+test('apply() keeps the scope that already holds an override', async () => {
+  const calls = [];
+  const cfg = {
+    own: {
+      get: (key, dflt) => (key === 'pollIntervalMs' ? 4000 : dflt),
+      inspect: (key) => ({
+        defaultValue: 2000,
+        globalValue: undefined,
+        workspaceValue: key === 'pollIntervalMs' ? 4000 : undefined,
+      }),
+      update(key, value, target) {
+        calls.push([key, value, target]);
+        return Promise.resolve();
+      },
+    },
+    copilot: { inspect: () => ({}), update: () => Promise.resolve() },
+  };
+
+  const result = await settings.apply(cfg, 'pollIntervalMs', 6000, false);
+  assert.strictEqual(result.ok, true);
+  // 2 = ConfigurationTarget.Workspace: writing Global here would be invisible
+  assert.deepStrictEqual(calls.pop(), ['pollIntervalMs', 6000, 2]);
+});
+
 test('apply() reports unknown keys instead of throwing', async () => {
   const cfg = fakeConfig({});
   const result = await settings.apply(cfg, 'nonsense', 1, false);
