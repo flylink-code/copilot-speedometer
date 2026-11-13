@@ -113,6 +113,11 @@ function describe(config) {
   return {
     sections: [
       {
+        id: 'general',
+        title: 'General',
+        blurb: 'Master switch for background collection and the status-bar item.',
+      },
+      {
         id: 'sources',
         title: 'Data sources',
         blurb: 'Where token counts come from. Usage records cover every agent session, including BYOK and custom endpoints.',
@@ -126,11 +131,6 @@ function describe(config) {
         id: 'display',
         title: 'Status bar',
         blurb: 'What the status-bar item shows after each response.',
-      },
-      {
-        id: 'general',
-        title: 'General',
-        blurb: '',
       },
     ],
     fields: FIELDS.map((f) => ({

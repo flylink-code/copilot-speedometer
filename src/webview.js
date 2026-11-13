@@ -454,7 +454,6 @@ function html(nonce, cspSource) {
         '<span class="save-state" id="save-state"></span></div>');
 
       s.sections.forEach(function (sec) {
-        if (sec.id === 'general') return;
         var fields = s.fields.filter(function (f) { return f.section === sec.id; });
         if (!fields.length) return;
         status = '';
