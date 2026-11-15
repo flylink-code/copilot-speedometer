@@ -1,34 +1,34 @@
 # Copilot Speedometer
 
-**中文** | [English](README_en.md)
+**English** | [简体中文](README_zh.md)
 
-看 GitHub Copilot Chat 的 **tokens/second**、TTFT、token 用量和每次请求的耗时。
+See the **tokens/second**, TTFT, token usage, per-request duration, and estimated USD cost of GitHub Copilot Chat.
 
-支持**官方模型**和**第三方 / BYOK 模型**（Custom Endpoint、自定义 base URL 那些 `customendpoint/...` 模型）——只要 Copilot 自己记录了这次调用，本扩展就能读到。
+Works with **official models** and with **third-party / BYOK models** (Custom Endpoints, your own base URL — the `customendpoint/...` identifiers): if Copilot recorded the call, this extension can read it.
 
-数据全部来自本地文件：不联网、不上传、不调用任何 Copilot 内部 API。
+Everything comes from local files: no network calls, no upload, no private Copilot APIs.
 
-![dashboard](docs/preview-zh.png)
+![dashboard](docs/preview.png)
 
-## 为什么需要它
+## Why
 
-Copilot 官方 UI 只显示 token 数和 credits，**没有速度**。而本地有两份带耗时的记录，任意一份都可以算出 tok/s：
+The official Copilot UI shows token counts and credits but **never speed**. Two local files do carry the timing, and either one is enough to compute tok/s:
 
 ```
 tok/s = outputTokens / (duration / 1000)
 ```
 
-## 数据来源（两个，自动合并）
+## Data sources (two, merged automatically)
 
 | | A. Agent usage records | B. Chat debug logs |
 |---|---|---|
-| 路径 | `%USERPROFILE%\.copilot\session-state\<sessionId>\events.jsonl` | `%APPDATA%\Code\User\globalStorage\github.copilot-chat\debug-logs\<sid>\main.jsonl` |
-| 需要开开关 | ❌ 不需要 | ✅ `github.copilot.chat.agentDebugLog.fileLogging.enabled` |
-| 覆盖 BYOK / 自定义端点 | ✅ 是（`isByok: true`） | 只覆盖 Chat 内的请求 |
-| TTFT | ✅ 有 `timeToFirstTokenMs` | ❌ 只有总时长 |
-| 事件 | `session.usage_record` | `llm_request` |
+| Path | `%USERPROFILE%\.copilot\session-state\<sessionId>\events.jsonl` | `%APPDATA%\Code\User\globalStorage\github.copilot-chat\debug-logs\<sid>\main.jsonl` |
+| Needs a setting | ❌ no | ✅ `github.copilot.chat.agentDebugLog.fileLogging.enabled` |
+| Covers BYOK / custom endpoints | ✅ yes (`isByok: true`) | only requests made inside Chat |
+| TTFT | ✅ `timeToFirstTokenMs` | ❌ total duration only |
+| Event | `session.usage_record` | `llm_request` |
 
-A 的字段长这样（每行一个 JSON）：
+A record from source A (one JSON object per line):
 
 ```json
 { "type": "session.usage_record",
@@ -40,7 +40,7 @@ A 的字段长这样（每行一个 JSON）：
     "isByok": true, "providerType": "openai", "apiCallId": "resp_byok_..." } } }
 ```
 
-B 的字段：
+A record from source B:
 
 ```json
 { "type": "llm_request", "ts": 1763000000000, "dur": 4210,
@@ -48,143 +48,145 @@ B 的字段：
              "outputTokens": 412, "cachedTokens": 3000, "responseId": "..." } }
 ```
 
-同一次调用若两边都有，只保留带 TTFT 的 A 记录。两份都没有时状态栏显示 `Copilot t/s`。
+When both sources describe the same call, the A record wins because it carries TTFT. With neither source present the status bar shows `Copilot t/s`.
 
-## 安装
+## Install
 
-**方式 A：Marketplace（推荐）**
+**Option A: Marketplace (recommended)**
 
-在 VS Code 扩展视图搜索 **Copilot Speedometer**，或：
+Search for **Copilot Speedometer** in the Extensions view, or:
 
 ```bash
 code --install-extension copilot-speedometer.copilot-speedometer
 ```
 
-**方式 B：本地 VSIX**（离线安装）：`dist/copilot-speedometer-0.2.1.vsix`。
+**Option B: local VSIX** (offline): `dist/copilot-speedometer-0.2.2.vsix`.
 
-**方式 C：源码调试**：用 VS Code 打开本目录，按 <kbd>F5</kbd>（Run Extension）。
+**Option C: from source**: open this folder in VS Code and press <kbd>F5</kbd> (Run Extension).
 
-安装后右下角状态栏出现 `⚡ 42.3 tok/s`，点击打开面板。
+After installing, the status bar shows `⚡ 42.3 tok/s`; click it to open the panel.
 
-## 首次使用
+## First run
 
-- **BYOK / 自定义端点用户**：你已经在写 A 了，装完不用做任何事，直接看面板。
-- **只有官方模型、且没有任何数据**：需要让 Copilot 写调试日志 —— 点面板里的 **Enable Copilot debug logging**，或命令面板运行 `Copilot Speedometer: Enable Copilot Debug Logging`，或手动加：
+- **BYOK / custom-endpoint users**: source A is already being written, so there is nothing to set up — the panel works immediately.
+- **Official models only, and no data yet**: Copilot has to write debug logs. Click **Enable Copilot debug logging** in the panel, run `Copilot Speedometer: Enable Copilot Debug Logging` from the command palette, or add:
 
 ```json
 "github.copilot.chat.agentDebugLog.fileLogging.enabled": true
 ```
 
-然后**发一条 Copilot Chat 消息**，状态栏最长 2 秒内更新。
+Then **send a Copilot Chat message**; the status bar updates within two seconds.
 
-> ⚠️ 调试日志开关会把**完整 prompt 和代码上下文**写入本地磁盘。扩展本身只解析 token 与耗时字段，不读 `user_message`。
+> ⚠️ The debug-log switch writes the **full prompt and code context** to local disk. The extension only parses token and timing fields and never reads `user_message`.
 
-Insiders 把 `Code` 换成 `Code - Insiders`；旧版 workspace 布局 `%APPDATA%\Code\User\workspaceStorage\<hash>\GitHub.copilot-chat\debug-logs\` 也会自动扫。
+On Insiders, `Code` becomes `Code - Insiders`. The legacy workspace layout `%APPDATA%\Code\User\workspaceStorage\<hash>\GitHub.copilot-chat\debug-logs\` is scanned too.
 
-## 精度：三个数，别混用
+## Precision: three numbers, do not mix them
 
-| 指标 | 公式 | 含义 |
+| Metric | Formula | Meaning |
 |---|---|---|
-| **平均吞吐**（状态栏默认） | `outputTokens / 总耗时` | 端到端，含排队 + prefill + 首 token |
-| **TTFT** | `timeToFirstTokenMs` | 首 token 延迟（仅 A 有） |
-| **Decode rate** | `(outputTokens − 1) / (总耗时 − TTFT)` | 纯生成速度（仅 A 且流式时有意义） |
+| **Average throughput** (status-bar default) | `outputTokens / total duration` | end to end, including queueing, prefill and the first token |
+| **TTFT** | `timeToFirstTokenMs` | time to first token (only source A) |
+| **Decode rate** | `(outputTokens − 1) / (total − TTFT)` | pure generation speed (only source A, only meaningful when streaming) |
 
-两个坑，都实测过：
+Two traps, both measured on real traffic:
 
-1. **大上下文时「平均吞吐」≈ prefill 速度，不是生成速度。** 上下文 10 万 token、TTFT 40 s、总耗时 41 s 的请求，算出来 4 tok/s —— 那个数字衡量的是首 token 多久到，不是模型吐字多快。看 `Decode rate` 才有意义。
-2. **非流式端点（含很多 Custom Endpoint）TTFT ≈ 总耗时。** 这类请求 `duration − TTFT` 接近 0，decode rate 会被判为不可用（显示 `—`），只留端到端吞吐。实测 569 条 BYOK 记录里只有 24 条能算出 decode rate。
+1. **With a large context, "average throughput" is really prefill speed.** A request with a 100k-token context, 40 s TTFT and 41 s total yields 4 tok/s — that number measures how long the first token took, not how fast the model types. `Decode rate` is the number to look at.
+2. **Non-streaming endpoints (many Custom Endpoints) have TTFT ≈ total duration.** For those, `duration − TTFT` is close to zero, so decode rate is withheld (shown as `—`) and only end-to-end throughput remains. On this machine only 24 of 569 BYOK records produced a decode rate.
 
-另外：reasoning token 计入 output，各厂商 tokenizer 不同，**tok/s 跨厂商不完全可比**。
+Also: reasoning tokens count as output, tokenizers differ per vendor, and **tok/s is not strictly comparable across vendors**.
 
-## 功能
+## Features
 
-- **左侧栏常驻视图（类似 Hub）**：点击左侧活动栏图标或右下角状态栏即可直接定位到常驻左侧栏面板（Dashboard / 会话 Hub / 设置），不再弹出新编辑器标签页；如需宽屏，可点面板右上角 `↗` 按钮打开独立标签页。
-- **打开历史对话即刻显示**：窗口获得焦点或恢复历史会话时自动回填当前工作区的最近会话并唤醒状态栏；`autoHideMinutes`（默认 5 分钟）仅自动隐藏右下角状态栏项，左侧栏始终保持显示。
-- 状态栏实时显示**本窗口上一次回答**的 tok/s（默认 5 分钟没新活动自动隐藏状态栏，不影响左侧栏常驻），悬停看模型、BYOK 标记、输出 token、耗时、TTFT、估算费用、最近 20 次加权平均与中位数。
-- `0.2.0`：新增离线模型费用估算（[src/pricing.js](src/pricing.js)）与跨工作区只读 **会话 Hub** 标签页（[src/sessions.js](src/sessions.js)）。
-- **面板**：单行图标顶栏、Hero 主卡（最近一次速率 + 相对时间 + TTFT）配对称指标网格（加权平均 / 中位数 / p90 / 请求数 / TTFT / 解码速度 / 估算费用）、带加权均值虚线的逐次 tok/s 柱状图、带输出占比条的按模型汇总、最近 200 条请求明细。
-- **会话 Hub**：不用新开窗口，直接在同一面板内按时间桶（进行中 / 今天 / 昨天 / 近 7 天 / 更早）浏览、搜索与筛选（工作区 / 来源 / 项目 / 已归档）所有历史对话（Agent / CLI 与 VS Code Chat）；窄栏采用「列表 ↔ 单会话详情」单流钻取，宽屏自动切换左右双栏阅读；支持一键在终端恢复（`copilot --resume`）、复制恢复命令、`Fork` 会话、移动工作区、归档与安全删除（运行中 PID 自动锁保护）。
+- **Persistent left sidebar**: clicking the Activity Bar icon or the status bar focuses the persistent left sidebar (Dashboard / Sessions Hub / Settings) without opening a new editor tab; an optional `↗` button in the header opens a wide editor tab if needed.
 
-![sessions](docs/preview-sessions-zh.png)
-- **按窗口隔离**：Copilot 把所有 VS Code 窗口的会话写进同一个 `~/.copilot/session-state`，记录里没有窗口 id。本扩展用会话的 `workspace.yaml` / `session.start` 里的 `cwd` 与本窗口打开的文件比对（多根 `.code-workspace` 窗口按工作区文件比对），所以新窗口不会再显示别的窗口的 tok/s。面板顶部会写明当前范围（本窗口 N 条 · 已隐藏 M 条），一键可切到「所有窗口」。新增/移除文件夹会立即重新计算。
-- **面板内的 Settings 页**：不用去 VS Code 设置里翻 JSON —— 开关、数字、路径（带 Browse）和状态下拉都在面板里，改完立即生效，被改过的项旁边有 ↻ 可一键恢复默认。
-- 时间窗口：今天 / 近 7 天 / 全部。切到「近 7 天」或「全部」时会做一次更深的回填（每个文件读尾部、总量有上限，首次约 1 秒），所以历史会话也能看到。
-- 命令：`Show Sidebar`、`Open in Editor Tab`、`Refresh`、`Enable Copilot Debug Logging`、`Export Captured Requests as JSON`、`Clear Captured History`、`Preview With Demo Data`、`Show Diagnostics`。
-- 历史在内存里（默认 3000 条），启动时回填最近 2 天。
+![sidebar](docs/preview-sidebar.png)
 
-## 设置
+- **Instant historical conversation pickup**: focusing a window or resuming a historical Copilot conversation backfills that window's latest session even past `backfillDays` and wakes the status bar immediately; `autoHideMinutes` (default `5`) hides only the bottom-right status-bar item while the left sidebar remains visible.
+- **Status bar & hover card**: shows the tok/s of the **last response in this window** (auto-hiding after five minutes of silence); hover for a 4-section summary card showing window scope, relative freshness, streaming **decode rate** (or `TTFT wait %` when prefill dominates), Duration / TTFT, Input / cache hit rate, Output tokens, today's totals + cumulative est. cost, and clickable **Sidebar / Editor tab / Refresh** command links.
+- **Panel**: single-row icon header, a **Last response** hero card paired with an even KPI grid (weighted average / median / p90 / requests / est. cost / TTFT / decode rate), a per-response tok/s bar chart with dashed weighted-average line, a per-model summary with output-share bars, and the last 200 requests.
+- **Sessions Hub**: a dedicated tab inside the panel to browse by time bucket (*Running / Today / Yesterday / Previous 7 days / Older*), search, filter by workspace/source/project/archived, and read full Copilot conversations (both Agent/CLI and local VS Code Chat) without opening a new window — using single-scroll drill-in on narrow sidebars and side-by-side split in wide tabs, with one-click terminal resume (`copilot --resume`), **Fork**, **Move workspace**, **Archive**, and **Delete** (protected by live-PID lock checks).
 
-![settings](docs/preview-settings-zh.png)
+![sessions](docs/preview-sessions.png)
+- **Per-window isolation**: Copilot writes every VS Code window's sessions into one `~/.copilot/session-state` folder and a usage record carries no window id. This extension compares the session's `cwd` (from `workspace.yaml`, or the `session.start` event in older sessions) with the folders open in this window — and, for a multi-root `.code-workspace` window, the workspace file — so a fresh window no longer shows another window's tok/s. A strip at the top of the panel states the current scope (N requests here · M hidden) and switches to "all windows" in one click. Adding or removing a folder rescopes immediately.
+- **Settings tab inside the panel**: no need to hunt through VS Code settings for JSON — switches, numbers, paths (with Browse) and the status-bar mode live in the panel, apply immediately, and any overridden row offers ↻ to restore its default.
+- Time windows: today / last 7 days / all. Switching to a longer window triggers a deeper backfill (each file is read from its tail, byte-budgeted, roughly one second the first time), so historical sessions show up as well.
+- Commands: `Show Sidebar`, `Open in Editor Tab`, `Refresh`, `Enable Copilot Debug Logging`, `Export Captured Requests as JSON`, `Clear Captured History`, `Preview With Demo Data`, `Show Diagnostics`.
+- History lives in memory (3000 records by default) and is backfilled for the last two days on startup.
 
-面板里的 **Settings** 标签页直接改这些值，也可以照旧在 `settings.json` 里写：
+## Settings
 
-| 设置 | 默认 | 说明 |
+![settings](docs/preview-settings.png)
+
+The **Settings** tab edits these values directly; `settings.json` still works:
+
+| Setting | Default | Description |
 |---|---|---|
-| `copilotSpeedometer.enabled` | `true` | 总开关 |
-| `copilotSpeedometer.statusBar` | `true` | 是否显示状态栏 |
-| `copilotSpeedometer.autoHideMinutes` | `5` | 多久没有新活动就自动隐藏右下角状态栏项（左侧栏常驻，0 = 状态栏也不隐藏） |
-| `copilotSpeedometer.statusBarFormat` | `"rate"` | 状态栏内容：`rate` 只有数字 / `rate-model` 加模型名 / `rate-ttft` 加 TTFT |
-| `copilotSpeedometer.sessionScope` | `"window"` | 统计范围：`window` 只看本窗口打开的文件夹 / `all` 合并本机所有窗口 |
-| `copilotSpeedometer.usageEvents` | `true` | 读 agent usage records（BYOK + TTFT 来源） |
-| `copilotSpeedometer.usageEventsRoot` | `""` | 覆盖 `~/.copilot/session-state` |
-| `copilotSpeedometer.logPath` | `""` | 手动指定 debug-logs 根目录 |
-| `copilotSpeedometer.pollIntervalMs` | `2000` | 轮询间隔（500–60000 ms） |
-| `copilotSpeedometer.historySize` | `3000` | 内存中保留的请求条数（100–50000） |
-| `copilotSpeedometer.backfillDays` | `2` | 启动时回填几天（0–365） |
-| `copilotSpeedometer.includeLegacyWorkspaceLogs` | `true` | 是否扫旧版 workspaceStorage 布局 |
-| `copilotSpeedometer.includeVscodeChats` | `true` | 在会话 Hub 中展示本地 VS Code Chat 会话 |
-| `copilotSpeedometer.pricingMultiplier` | `1` | 估算费用倍率（1 = 官方目录参考价） |
-| `copilotSpeedometer.customPricing` | `{}` | 自定义模型单价（美元 / 百万 token） |
+| `copilotSpeedometer.enabled` | `true` | master switch |
+| `copilotSpeedometer.statusBar` | `true` | show the status-bar item |
+| `copilotSpeedometer.autoHideMinutes` | `5` | hide only the bottom-right status-bar item after this many minutes of silence (the left sidebar stays visible; 0 = never) |
+| `copilotSpeedometer.statusBarFormat` | `"rate"` | status-bar content: `rate` number only / `rate-model` adds the model / `rate-ttft` adds TTFT |
+| `copilotSpeedometer.sessionScope` | `"window"` | which sessions are counted: `window` only this window's folders / `all` every window on the machine |
+| `copilotSpeedometer.usageEvents` | `true` | read agent usage records (the BYOK + TTFT source) |
+| `copilotSpeedometer.usageEventsRoot` | `""` | override `~/.copilot/session-state` |
+| `copilotSpeedometer.logPath` | `""` | point at a specific debug-logs root |
+| `copilotSpeedometer.pollIntervalMs` | `2000` | polling interval (500–60000 ms) |
+| `copilotSpeedometer.historySize` | `3000` | how many requests stay in memory (100–50000) |
+| `copilotSpeedometer.backfillDays` | `2` | days to backfill on startup (0–365) |
+| `copilotSpeedometer.includeLegacyWorkspaceLogs` | `true` | also scan the legacy workspaceStorage layout |
+| `copilotSpeedometer.includeVscodeChats` | `true` | list local VS Code Chat sessions in the Sessions Hub |
+| `copilotSpeedometer.pricingMultiplier` | `1` | multiplier applied to catalog USD prices (1 = standard list price) |
+| `copilotSpeedometer.customPricing` | `{}` | custom per-model USD pricing per 1M tokens |
 
-`github.copilot.chat.agentDebugLog.fileLogging.enabled` 也在 Settings 页的 Data sources 里，切换后会在下面的 Live status 里显示当前是开还是关。
+`github.copilot.chat.agentDebugLog.fileLogging.enabled` also lives in the Settings tab under Data sources; the Live status block below the fields shows whether it is currently on.
 
-面板与状态栏的文案跟随 VS Code 界面语言（中文 / English），切换界面语言后重载窗口即可。
+Every string in the panel and in the status bar follows the VS Code display language (English / 简体中文).
 
-## 常见问题
+## FAQ
 
-**状态栏一直显示 `Copilot t/s`（无数字）**：先跑命令 `Copilot Speedometer: Show Diagnostics`，它会把扫了哪些根目录、找到几个文件、抓到多少条记录全打出来。
-1. 面板里 "Reading" 是否列出了真实存在的目录；
-2. `~\.copilot\session-state` 在不在（在就说明应该有数据）；
-3. 用过 Copilot 之后等 2 秒或点 Refresh；
-4. 如果你用的是 remote / 容器 / WSL，数据在**远端**，需要把扩展装到远端。
+**The status bar keeps showing `Copilot t/s` with no number**: run `Copilot Speedometer: Show Diagnostics` first — it prints which roots were scanned, how many files were found and how many records were captured.
+1. Does "Reading" in the panel list directories that actually exist?
+2. Is `~\.copilot\session-state` present? If it is, there should be data.
+3. After using Copilot, wait two seconds or press Refresh.
+4. On remote / containers / WSL the data lives on the **remote** side, so the extension has to be installed there too.
 
-**数字明显偏低**：先看 TTFT —— 如果 TTFT 接近总耗时，说明你踩的是上面第 1 个坑，看 decode rate 或换小的上下文。
+**The numbers look too low**: check TTFT first. If TTFT is close to the total duration you hit trap 1 above — look at decode rate or shrink the context.
 
-**开了新窗口，却显示另一个窗口的 tok/s**：0.1.1 已修。Copilot 把每个窗口的会话都写在 `~/.copilot/session-state` 里，记录本身没有窗口 id，只能靠会话的 `cwd` 区分。本扩展读 `workspace.yaml`（老会话读 `session.start` 事件）里的 `cwd`，与本窗口打开的文件夹比对，不匹配的不计入。想让某个窗口统计全部会话，把 `copilotSpeedometer.sessionScope` 设成 `all`，或点面板顶部范围条右侧的「查看所有窗口」。如果这个窗口没有打开文件夹，则无法判断归属，会显示全部会话。
+**A new window shows another window's tok/s**: fixed in 0.1.1. Copilot writes every window's sessions into `~/.copilot/session-state` and the records carry no window id, so the session's `cwd` is the only discriminator. The extension reads it from `workspace.yaml` (or the `session.start` event for older sessions) and drops anything that does not match this window's folders. Set `copilotSpeedometer.sessionScope` to `all` — or click "Show all windows" in the panel's scope strip — to count every session. A window with no folder open cannot be scoped, so it shows everything.
 
-**面板空白**：命令 `Preview With Demo Data` 可以先看 UI（合成数据，不是真实流量）。
+**The panel is empty**: run `Preview With Demo Data` to see the UI with synthetic data (not real traffic).
 
-## 和现有插件的区别
+## How it compares
 
-| 插件 | tok/s | TTFT | BYOK | 说明 |
+| Extension | tok/s | TTFT | BYOK | Notes |
 |---|---|---|---|---|
-| **本扩展** | ✅ | ✅ | ✅ | 唯一把 tok/s 作为主指标，且同时读 usage records 和 debug logs |
-| [Copilot Tokens](https://marketplace.visualstudio.com/items?itemName=yuyuanjingxuan.copilot-tokens) | ❌ | ❌ | 部分 | 有每次请求的 Duration + Output，自己除就是 tok/s |
-| [Copilot Token Meter](https://marketplace.visualstudio.com/items?itemName=YoussefSaleh.copilot-token-meter) | ❌ | ❌ | ❌ | token + credits，读 `~/.copilot/session-store.db` |
-| [AI Engineering Fluency](https://marketplace.visualstudio.com/items?itemName=RobBos.ai-engineering-fluency) | ❌ | ❌ | ❌ | token 用量/成本/fluency 面板 |
+| **this one** | ✅ | ✅ | ✅ | the only one that treats tok/s as the primary metric and reads both usage records and debug logs |
+| [Copilot Tokens](https://marketplace.visualstudio.com/items?itemName=yuyuanjingxuan.copilot-tokens) | ❌ | ❌ | partial | has Duration + Output per request; dividing them yourself gives tok/s |
+| [Copilot Token Meter](https://marketplace.visualstudio.com/items?itemName=YoussefSaleh.copilot-token-meter) | ❌ | ❌ | ❌ | tokens + credits, reads `~/.copilot/session-store.db` |
+| [AI Engineering Fluency](https://marketplace.visualstudio.com/items?itemName=RobBos.ai-engineering-fluency) | ❌ | ❌ | ❌ | token usage / cost / fluency dashboard |
 
-## 开发
+## Development
 
 ```bash
-npm test                       # 解析 / 统计 / 范围 / 计价 / 会话 / 设置 / 本地化单测（71 项）
-node tools/smoke-activate.js    # 用 stub 的 vscode API 真跑一遍 activate / tick / 面板 payload
-node tools/preview.js          # 生成 docs/preview*.html 与中英两套截图，浏览器直接看 UI
-npm run package                # 打包 .vsix（vsce 参数已内置）
+npm test                       # parser / stats / scope / pricing / sessions / settings / i18n unit tests (71)
+node tools/smoke-activate.js    # runs activate / tick / panel payloads against a stubbed vscode API
+node tools/preview.js          # renders docs/preview*.html and screenshots in both languages
+npm run package                # builds the .vsix into dist/ (vsce flags included)
 ```
 
-结构：
+Layout:
 
 ```
-src/usage-events.js  A 源：session-state 扫描 + 增量 tail + 记录映射
-src/parser.js        B 源：debug-logs 扫描 + 增量 tail + 记录映射
-src/scope.js         按窗口归属过滤：workspace.yaml / workspace.json 的 cwd 匹配
-src/pricing.js       离线模型目录价目表 + 前缀归一化 + 费用估算
-src/sessions.js      只读会话 Hub 索引与对话详情解析（Agent + VS Code Chat）
-src/stats.js         聚合与格式化（纯函数，可单测）
-src/settings.js      面板设置模型：字段表、校验、写入/恢复默认（host 侧，无 vscode 依赖）
-src/i18n.js          中英字典与翻译函数
-src/webview.js       面板 HTML（Dashboard + Sessions Hub + Settings 三视图，CSP nonce，主题跟随 VS Code）
-src/extension.js     状态栏、轮询、双源合并去重、命令、面板消息
+src/usage-events.js  source A: session-state scanning, incremental tailing, record mapping
+src/parser.js        source B: debug-logs scanning, incremental tailing, record mapping
+src/scope.js         per-window attribution: cwd from workspace.yaml / workspace.json
+src/pricing.js       offline model pricing catalog, prefix normalization, cost estimation
+src/sessions.js      read-only Sessions Hub index and conversation reader (Agent + VS Code Chat)
+src/stats.js         aggregation and formatting (pure functions, unit-tested)
+src/settings.js      panel settings model: field table, validation, write / reset (host side, no vscode import)
+src/i18n.js          English + Chinese dictionaries and the translator
+src/webview.js       panel HTML (Dashboard + Sessions Hub + Settings views, CSP nonce, follows the VS Code theme)
+src/extension.js     status bar, polling, two-source merge and dedupe, commands, panel messages
 ```
 
 ## License

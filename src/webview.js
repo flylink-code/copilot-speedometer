@@ -49,6 +49,10 @@ function html(nonce, cspSource, locale, isSidebar) {
     body.sidebar { --bg: var(--vscode-sideBar-background, var(--vscode-editor-background, #181818)); --pad: 12px; }
     * { box-sizing: border-box; }
     html, body { max-width: 100%; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--vscode-scrollbarSlider-background, rgba(121,121,121,.35)); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--vscode-scrollbarSlider-hoverBackground, rgba(121,121,121,.55)); }
     body {
       font-family: var(--vscode-font-family);
       font-size: var(--vscode-font-size, 13px);
@@ -184,7 +188,7 @@ function html(nonce, cspSource, locale, isSidebar) {
     .hero-value { font-size: 30px; font-weight: 700; color: var(--blue); line-height: 1.15; margin-top: 4px; font-variant-numeric: tabular-nums; }
     .hero-value small { font-size: 13px; font-weight: 600; margin-left: 2px; }
     .hero-sub { font-size: 12px; color: var(--fg-dim); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 10px; }
     .kpi { padding: 9px 11px; border-radius: var(--radius); border: 1px solid var(--border-soft); background: var(--surface); min-width: 0; }
     .kpi-label { font-size: 11px; color: var(--fg-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .kpi-value { font-size: 19px; font-weight: 600; margin-top: 3px; font-variant-numeric: tabular-nums; white-space: nowrap; }

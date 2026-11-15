@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.2 — English default README & crisp README screenshots
+
+- **Bilingual README defaults (`README.md`, `README_zh.md`)**:
+  - Makes English the default extension overview (`README.md`, shown by VS Code
+    and the Marketplace) with a top language switch to `README_zh.md`
+    (Simplified Chinese), replacing the previous `README_en.md` split.
+- **Documentation & screenshot fixes (`docs/preview*.png`, `tools/preview.js`, `src/webview.js`)**:
+  - Re-captured all 8 English/Chinese screenshots (`preview*.png`,
+    `preview-sidebar*.png`, `preview-sessions*.png`, `preview-settings*.png`)
+    via headless Chrome at exact frame dimensions — eliminating the half-width
+    viewport padding and bright white native scrollbars present in the earlier
+    captures.
+  - Tuned `.kpis` wide-grid column sizing (`minmax(130px, 1fr)`) so all 6 KPI
+    cards align in a single row on wide tabs without an orphan card, and styled
+    scrollbars using `--vscode-scrollbarSlider-*` theme tokens.
+  - Enabled `detailOpen` in wide Sessions Hub previews so the conversation
+    pane renders its full turn breakdown in the showcase screenshot.
+
 ## 0.2.1 — redesigned status-bar hover card
 
 - **Status-bar hover tooltip overhaul (`src/extension.js`, `src/i18n.js`)**:

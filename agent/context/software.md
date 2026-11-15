@@ -11,9 +11,9 @@ updated: 2026-11-15
 
 | 内容 | 路径 | 状态 |
 | --- | --- | --- |
-| 架构 / 数据源 / 坑 | `HANDOFF.md` §3–§8 | 有效（0.2.1） |
-| 面向用户的功能说明 | `README.md` | 有效 |
-| 清单与设置定义 | `package.json` | 有效（v0.2.1，`engines.vscode ^1.85.0`） |
+| 架构 / 数据源 / 坑 | `HANDOFF.md` §3–§8 | 有效（0.2.2） |
+| 面向用户的功能说明 | `README.md`（默认英文）、`README_zh.md` | 有效 |
+| 清单与设置定义 | `package.json` | 有效（v0.2.2，`engines.vscode ^1.85.0`） |
 
 ## 关键事实
 

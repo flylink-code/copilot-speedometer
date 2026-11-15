@@ -12,8 +12,8 @@ updated: 2026-11-15
 | 版本 | 路径 | 状态 |
 | --- | --- | --- |
 | 用户待办（当前） | `task.md` | 有效（优化 1、问题修复、功能扩展 1–2 均已在 0.1.1 / 0.2.0 实现） |
-| 交接说明（当前） | `HANDOFF.md` | 有效（对应公开发布 0.2.0） |
-| 用户 / 安装说明 | `README.md`、`README_en.md` | 有效 |
+| 交接说明（当前） | `HANDOFF.md` | 有效（对应公开发布 0.2.2） |
+| 用户 / 安装说明 | `README.md`（默认英文）、`README_zh.md`（简体中文） | 有效 |
 | 版本变更 | `CHANGELOG.md` | 有效（用户要求每版必记） |
 
 ## 当前结论
@@ -30,7 +30,7 @@ updated: 2026-11-15
 ## 未决项
 
 - 状态栏是否要更严格的“仅本窗口”语义（失焦即隐藏）——需用户拍板，见 `HANDOFF.md` §9 限制 1。
-- Marketplace 上传：publisher `copilot-speedometer`，本机未配置 `VSCE_PAT`，`dist/copilot-speedometer-0.2.1.vsix` 待维护者在 Marketplace 管理后台手动上传。
+- Marketplace 上传：publisher `copilot-speedometer`，本机未配置 `VSCE_PAT`，`dist/copilot-speedometer-0.2.2.vsix` 待维护者在 Marketplace 管理后台手动上传。
 
 ## 最后更新
 

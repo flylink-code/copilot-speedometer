@@ -283,7 +283,7 @@ function render(target, initialView, locale, isSidebar) {
     'window.postMessage({type:"settings",payload:' + JSON.stringify(settingsPayload) + '},"*");' +
     'window.postMessage({type:"sessions",payload:' + JSON.stringify(sessionsPayload) + '},"*");' +
     'window.postMessage({type:"sessionDetail",payload:' + JSON.stringify(sessionDetailPayload) + '},"*");' +
-    'window.postMessage({type:"uiState",payload:{view:' + JSON.stringify(initialView) + '}},"*");' +
+    'window.postMessage({type:"uiState",payload:{view:' + JSON.stringify(initialView) + ',detailOpen:' + JSON.stringify(initialView === 'sessions' && !isSidebar) + '}},"*");' +
     '},0);';
   const html = base.replace(`<script nonce="${nonce}">`, `<script nonce="${nonce}">${stub}</script><script nonce="${nonce}">`);
   fs.writeFileSync(target, html, 'utf8');
