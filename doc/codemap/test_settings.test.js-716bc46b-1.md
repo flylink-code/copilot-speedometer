@@ -4,7 +4,7 @@
 
 [Module](test.md) · [Source](../../test/settings.test.js) · page 1/1
 
-Source SHA-256: 37ce51b6a1b756c56a2fbd0a1a963e214396dc1d4f83af62e9d5712dd9fb8042
+Source SHA-256: ed96b2afe25a1591d49aa9033c6ff6263e0eb05dde4ed0141f966b4df94be5bb
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
@@ -38,22 +38,27 @@ Source SHA-256: 37ce51b6a1b756c56a2fbd0a1a963e214396dc1d4f83af62e9d5712dd9fb8042
 | cfg | VariableDeclaration |  | [97](../../test/settings.test.js#L97) |
 | field | VariableDeclaration |  | [98](../../test/settings.test.js#L98) |
 | field | VariableDeclaration |  | [104](../../test/settings.test.js#L104) |
-| field | VariableDeclaration |  | [113](../../test/settings.test.js#L113) |
-| cfg | VariableDeclaration |  | [127](../../test/settings.test.js#L127) |
-| result | VariableDeclaration |  | [128](../../test/settings.test.js#L128) |
-| cfg | VariableDeclaration |  | [134](../../test/settings.test.js#L134) |
-| result | VariableDeclaration |  | [135](../../test/settings.test.js#L135) |
-| cfg | VariableDeclaration |  | [142](../../test/settings.test.js#L142) |
-| result | VariableDeclaration |  | [143](../../test/settings.test.js#L143) |
-| cfg | VariableDeclaration |  | [149](../../test/settings.test.js#L149) |
-| result | VariableDeclaration |  | [150](../../test/settings.test.js#L150) |
-| calls | VariableDeclaration |  | [156](../../test/settings.test.js#L156) |
-| cfg | VariableDeclaration |  | [157](../../test/settings.test.js#L157) |
-| get | PropertyAssignment | cfg | [159](../../test/settings.test.js#L159) |
-| inspect | PropertyAssignment | cfg | [160](../../test/settings.test.js#L160) |
-| update | MethodDeclaration | cfg | [165](../../test/settings.test.js#L165) |
-| inspect | PropertyAssignment | cfg | [170](../../test/settings.test.js#L170) |
-| update | PropertyAssignment | cfg | [170](../../test/settings.test.js#L170) |
-| result | VariableDeclaration |  | [173](../../test/settings.test.js#L173) |
-| cfg | VariableDeclaration |  | [180](../../test/settings.test.js#L180) |
-| result | VariableDeclaration |  | [181](../../test/settings.test.js#L181) |
+| mult | VariableDeclaration |  | [110](../../test/settings.test.js#L110) |
+| field | VariableDeclaration |  | [115](../../test/settings.test.js#L115) |
+| cfg | VariableDeclaration |  | [119](../../test/settings.test.js#L119) |
+| desc | VariableDeclaration |  | [120](../../test/settings.test.js#L120) |
+| custom | VariableDeclaration |  | [121](../../test/settings.test.js#L121) |
+| field | VariableDeclaration |  | [126](../../test/settings.test.js#L126) |
+| cfg | VariableDeclaration |  | [140](../../test/settings.test.js#L140) |
+| result | VariableDeclaration |  | [141](../../test/settings.test.js#L141) |
+| cfg | VariableDeclaration |  | [147](../../test/settings.test.js#L147) |
+| result | VariableDeclaration |  | [148](../../test/settings.test.js#L148) |
+| cfg | VariableDeclaration |  | [155](../../test/settings.test.js#L155) |
+| result | VariableDeclaration |  | [156](../../test/settings.test.js#L156) |
+| cfg | VariableDeclaration |  | [162](../../test/settings.test.js#L162) |
+| result | VariableDeclaration |  | [163](../../test/settings.test.js#L163) |
+| calls | VariableDeclaration |  | [169](../../test/settings.test.js#L169) |
+| cfg | VariableDeclaration |  | [170](../../test/settings.test.js#L170) |
+| get | PropertyAssignment | cfg | [172](../../test/settings.test.js#L172) |
+| inspect | PropertyAssignment | cfg | [173](../../test/settings.test.js#L173) |
+| update | MethodDeclaration | cfg | [178](../../test/settings.test.js#L178) |
+| inspect | PropertyAssignment | cfg | [183](../../test/settings.test.js#L183) |
+| update | PropertyAssignment | cfg | [183](../../test/settings.test.js#L183) |
+| result | VariableDeclaration |  | [186](../../test/settings.test.js#L186) |
+| cfg | VariableDeclaration |  | [193](../../test/settings.test.js#L193) |
+| result | VariableDeclaration |  | [194](../../test/settings.test.js#L194) |

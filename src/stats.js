@@ -2,6 +2,8 @@
 
 /** Aggregation and formatting helpers (no VS Code dependency, so they are testable). */
 
+const { estimateCost, fmtCost } = require('./pricing');
+
 function quantile(sorted, q) {
   if (!sorted.length) return 0;
   const pos = (sorted.length - 1) * q;
@@ -11,7 +13,7 @@ function quantile(sorted, q) {
   return sorted[base] + rest * (next - sorted[base]);
 }
 
-function summarize(records) {
+function summarize(records, pricingOpts) {
   const n = records.length;
   if (!n) {
     return {
@@ -19,6 +21,11 @@ function summarize(records) {
       input: 0,
       output: 0,
       cached: 0,
+      cacheWrite: 0,
+      reasoning: 0,
+      costUsd: null,
+      pricedCount: 0,
+      unpricedCount: 0,
       durMs: 0,
       rate: null,
       medianRate: null,
@@ -31,6 +38,11 @@ function summarize(records) {
   let input = 0;
   let output = 0;
   let cached = 0;
+  let cacheWrite = 0;
+  let reasoning = 0;
+  let costSum = 0;
+  let pricedCount = 0;
+  let unpricedCount = 0;
   let durMs = 0;
   let decodeOut = 0;
   let decodeDur = 0;
@@ -41,7 +53,22 @@ function summarize(records) {
     input += r.input || 0;
     output += r.output || 0;
     cached += r.cached || 0;
+    cacheWrite += r.cacheWrite || 0;
+    reasoning += r.reasoning || 0;
     durMs += r.durMs || 0;
+
+    let costUsd = typeof r.costUsd === 'number' && isFinite(r.costUsd) ? r.costUsd : null;
+    if (costUsd === null && pricingOpts !== false) {
+      const est = estimateCost(r, pricingOpts || undefined);
+      if (est) costUsd = est.costUsd;
+    }
+    if (costUsd !== null) {
+      costSum += costUsd;
+      pricedCount += 1;
+    } else {
+      unpricedCount += 1;
+    }
+
     if (r.ttftMs > 0 && r.durMs > r.ttftMs && r.output > 1) {
       decodeOut += r.output - 1;
       decodeDur += r.durMs - r.ttftMs;
@@ -58,6 +85,11 @@ function summarize(records) {
     input,
     output,
     cached,
+    cacheWrite,
+    reasoning,
+    costUsd: pricedCount > 0 ? costSum : null,
+    pricedCount,
+    unpricedCount,
     durMs,
     rate: durMs > 0 ? output / (durMs / 1000) : null,
     medianRate: rates.length ? quantile(rates, 0.5) : null,
@@ -67,7 +99,7 @@ function summarize(records) {
   };
 }
 
-function groupByModel(records) {
+function groupByModel(records, pricingOpts) {
   const map = new Map();
   for (const r of records) {
     if (!map.has(r.model)) map.set(r.model, []);
@@ -75,7 +107,7 @@ function groupByModel(records) {
   }
   const rows = [];
   for (const [model, list] of map) {
-    rows.push(Object.assign({ model }, summarize(list)));
+    rows.push(Object.assign({ model }, summarize(list, pricingOpts)));
   }
   rows.sort((a, b) => b.count - a.count);
   return rows;
@@ -132,4 +164,4 @@ function fmtTime(ts) {
   ).padStart(2, '0')}`;
 }
 
-module.exports = { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtTime, quantile, statusBarWanted };
+module.exports = { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtTime, fmtCost, quantile, statusBarWanted };

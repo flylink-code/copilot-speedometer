@@ -4,7 +4,7 @@
 
 [Module](test.md) · [Source](../../test/i18n.test.js) · page 1/1
 
-Source SHA-256: 51b72b29652257c33959d105a548f2fab0047e7ad6e413bcff42069ac00def97
+Source SHA-256: 019ef21c43396c8f82bf7c79f8540f920d87a7d597063bbd2038699f13981482
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |

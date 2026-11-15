@@ -4,7 +4,7 @@
 
 [Module](test.md) · [Source](../../test/usage.test.js) · page 1/1
 
-Source SHA-256: 6407e4887b50503b636eca27e5da0c3d1467360c8eb4750b436cf9c582989429
+Source SHA-256: e9e68b3cad3e94173bed8ac0561750fff0b92af0ab991e6828bff0e0735d4430
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
@@ -20,22 +20,28 @@ Source SHA-256: 6407e4887b50503b636eca27e5da0c3d1467360c8eb4750b436cf9c582989429
 | test | FunctionDeclaration |  | [11](../../test/usage.test.js#L11) |
 | err | VariableDeclaration | test | [16](../../test/usage.test.js#L16) |
 | usage | FunctionDeclaration |  | [24](../../test/usage.test.js#L24) |
-| rec | VariableDeclaration |  | [53](../../test/usage.test.js#L53) |
-| rec | VariableDeclaration |  | [70](../../test/usage.test.js#L70) |
-| rec | VariableDeclaration |  | [75](../../test/usage.test.js#L75) |
-| rec | VariableDeclaration |  | [81](../../test/usage.test.js#L81) |
-| rec | VariableDeclaration |  | [86](../../test/usage.test.js#L86) |
-| rec | VariableDeclaration |  | [100](../../test/usage.test.js#L100) |
-| dir | VariableDeclaration |  | [106](../../test/usage.test.js#L106) |
-| sess | VariableDeclaration |  | [107](../../test/usage.test.js#L107) |
-| file | VariableDeclaration |  | [109](../../test/usage.test.js#L109) |
-| scanner | VariableDeclaration |  | [112](../../test/usage.test.js#L112) |
-| files | VariableDeclaration |  | [113](../../test/usage.test.js#L113) |
-| first | VariableDeclaration |  | [117](../../test/usage.test.js#L117) |
-| second | VariableDeclaration |  | [125](../../test/usage.test.js#L125) |
-| dir | VariableDeclaration |  | [133](../../test/usage.test.js#L133) |
-| recent | VariableDeclaration |  | [134](../../test/usage.test.js#L134) |
-| old | VariableDeclaration |  | [135](../../test/usage.test.js#L135) |
-| tenDaysAgo | VariableDeclaration |  | [141](../../test/usage.test.js#L141) |
-| scanner | VariableDeclaration |  | [144](../../test/usage.test.js#L144) |
-| dir | VariableDeclaration |  | [153](../../test/usage.test.js#L153) |
+| rec | VariableDeclaration |  | [55](../../test/usage.test.js#L55) |
+| rec | VariableDeclaration |  | [74](../../test/usage.test.js#L74) |
+| rec | VariableDeclaration |  | [79](../../test/usage.test.js#L79) |
+| rec | VariableDeclaration |  | [85](../../test/usage.test.js#L85) |
+| rec | VariableDeclaration |  | [90](../../test/usage.test.js#L90) |
+| rec | VariableDeclaration |  | [104](../../test/usage.test.js#L104) |
+| dir | VariableDeclaration |  | [110](../../test/usage.test.js#L110) |
+| sess | VariableDeclaration |  | [111](../../test/usage.test.js#L111) |
+| file | VariableDeclaration |  | [113](../../test/usage.test.js#L113) |
+| scanner | VariableDeclaration |  | [116](../../test/usage.test.js#L116) |
+| files | VariableDeclaration |  | [117](../../test/usage.test.js#L117) |
+| first | VariableDeclaration |  | [121](../../test/usage.test.js#L121) |
+| second | VariableDeclaration |  | [129](../../test/usage.test.js#L129) |
+| dir | VariableDeclaration |  | [137](../../test/usage.test.js#L137) |
+| recent | VariableDeclaration |  | [138](../../test/usage.test.js#L138) |
+| old | VariableDeclaration |  | [139](../../test/usage.test.js#L139) |
+| tenDaysAgo | VariableDeclaration |  | [145](../../test/usage.test.js#L145) |
+| scanner | VariableDeclaration |  | [148](../../test/usage.test.js#L148) |
+| dir | VariableDeclaration |  | [157](../../test/usage.test.js#L157) |
+| dir | VariableDeclaration |  | [165](../../test/usage.test.js#L165) |
+| mine | VariableDeclaration |  | [166](../../test/usage.test.js#L166) |
+| other | VariableDeclaration |  | [167](../../test/usage.test.js#L167) |
+| files | VariableDeclaration |  | [175](../../test/usage.test.js#L175) |
+| byName | VariableDeclaration |  | [176](../../test/usage.test.js#L176) |
+| rec | VariableDeclaration |  | [181](../../test/usage.test.js#L181) |

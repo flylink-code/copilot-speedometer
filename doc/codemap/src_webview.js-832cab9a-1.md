@@ -4,14 +4,14 @@
 
 [Module](src.md) · [Source](../../src/webview.js) · page 1/1
 
-Source SHA-256: 55ea50f2fc9f2768457f4212f2cc1c495cadcc3d8725dfc4d1b8fcae986e7400
+Source SHA-256: 9043ab1fed7688b9abb107fff7c350999e17aca50bb6fecdd59a93c44d473bcf
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
 | i18n | VariableDeclaration |  | [3](../../src/webview.js#L3) |
 | html | FunctionDeclaration |  | [13](../../src/webview.js#L13) |
 | style | VariableDeclaration | html | [14](../../src/webview.js#L14) |
-| lang | VariableDeclaration | html | [216](../../src/webview.js#L216) |
-| dictJson | VariableDeclaration | html | [217](../../src/webview.js#L217) |
-| tr | VariableDeclaration | html | [218](../../src/webview.js#L218) |
-| script | VariableDeclaration | html | [220](../../src/webview.js#L220) |
+| lang | VariableDeclaration | html | [427](../../src/webview.js#L427) |
+| dictJson | VariableDeclaration | html | [428](../../src/webview.js#L428) |
+| tr | VariableDeclaration | html | [429](../../src/webview.js#L429) |
+| script | VariableDeclaration | html | [431](../../src/webview.js#L431) |

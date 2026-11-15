@@ -8,5 +8,5 @@
 
 | File | Symbols | Symbol pages |
 | --- | ---: | --- |
-| [tools/preview.js](../../tools/preview.js) | 38 | [1](tools_preview.js-91ea8763-1.md) |
-| [tools/smoke-activate.js](../../tools/smoke-activate.js) | 69 | [1](tools_smoke-activate.js-59e1fd45-1.md) |
+| [tools/preview.js](../../tools/preview.js) | 46 | [1](tools_preview.js-91ea8763-1.md) |
+| [tools/smoke-activate.js](../../tools/smoke-activate.js) | 102 | [1](tools_smoke-activate.js-59e1fd45-1.md) [2](tools_smoke-activate.js-59e1fd45-2.md) |

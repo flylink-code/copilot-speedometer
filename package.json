@@ -2,7 +2,7 @@
   "name": "copilot-speedometer",
   "displayName": "Copilot Speedometer",
   "description": "Status bar and dashboard showing tokens/second, latency and token usage for every GitHub Copilot Chat request, parsed from the local Copilot debug logs.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "copilot-speedometer",
   "license": "MIT",
   "repository": {
@@ -34,6 +34,24 @@
   ],
   "main": "./src/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "copilot-speedometer-container",
+          "title": "Copilot Speedometer",
+          "icon": "media/sidebar-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "copilot-speedometer-container": [
+        {
+          "type": "webview",
+          "id": "copilotSpeedometer.sidebarView",
+          "name": "%view.sidebar.name%"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "copilotSpeedometer.showDashboard",
@@ -41,9 +59,16 @@
         "category": "Copilot Speedometer"
       },
       {
+        "command": "copilotSpeedometer.openTab",
+        "title": "%command.openTab.title%",
+        "category": "Copilot Speedometer",
+        "icon": "$(link-external)"
+      },
+      {
         "command": "copilotSpeedometer.refresh",
         "title": "%command.refresh.title%",
-        "category": "Copilot Speedometer"
+        "category": "Copilot Speedometer",
+        "icon": "$(refresh)"
       },
       {
         "command": "copilotSpeedometer.enableLogging",
@@ -71,6 +96,25 @@
         "category": "Copilot Speedometer"
       }
     ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "copilotSpeedometer.diagnostics",
+          "when": "view == copilotSpeedometer.sidebarView",
+          "group": "1_tools@1"
+        },
+        {
+          "command": "copilotSpeedometer.exportJson",
+          "when": "view == copilotSpeedometer.sidebarView",
+          "group": "1_tools@2"
+        },
+        {
+          "command": "copilotSpeedometer.clearHistory",
+          "when": "view == copilotSpeedometer.sidebarView",
+          "group": "2_danger@1"
+        }
+      ]
+    },
     "configuration": {
       "title": "Copilot Speedometer",
       "properties": {
@@ -105,6 +149,19 @@
           ],
           "default": "rate",
           "description": "%config.statusBarFormat.description%"
+        },
+        "copilotSpeedometer.sessionScope": {
+          "type": "string",
+          "enum": [
+            "window",
+            "all"
+          ],
+          "enumDescriptions": [
+            "%config.sessionScope.window%",
+            "%config.sessionScope.all%"
+          ],
+          "default": "window",
+          "description": "%config.sessionScope.description%"
         },
         "copilotSpeedometer.logPath": {
           "type": "string",
@@ -146,12 +203,29 @@
           "type": "string",
           "default": "",
           "description": "%config.usageEventsRoot.description%"
+        },
+        "copilotSpeedometer.includeVscodeChats": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.includeVscodeChats.description%"
+        },
+        "copilotSpeedometer.pricingMultiplier": {
+          "type": "number",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 100,
+          "description": "%config.pricingMultiplier.description%"
+        },
+        "copilotSpeedometer.customPricing": {
+          "type": "object",
+          "default": {},
+          "description": "%config.customPricing.description%"
         }
       }
     }
   },
   "scripts": {
-    "test": "node test/parser.test.js && node test/usage.test.js && node test/settings.test.js && node test/i18n.test.js",
+    "test": "node test/parser.test.js && node test/usage.test.js && node test/scope.test.js && node test/pricing.test.js && node test/sessions.test.js && node test/settings.test.js && node test/i18n.test.js",
     "preview": "node tools/preview.js",
     "package": "node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && npx --yes @vscode/vsce@latest package --no-dependencies --allow-missing-repository --out dist"
   },

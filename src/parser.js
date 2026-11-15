@@ -17,6 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { DirMetadataCache, workspaceStorageId } = require('./scope');
 
 const EDITOR_FOLDERS = ['Code', 'Code - Insiders', 'VSCodium', 'Cursor', 'Windsurf', 'Trae'];
 const DIR_CACHE_MS = 10000;
@@ -68,8 +69,7 @@ function toMs(value) {
   return undefined;
 }
 
-/** Convert one parsed JSON line into a normalized request record, or null. */
-function eventToRecord(ev, file) {
+function eventToRecord(ev, file, cwd, workspacePath) {
   if (!ev || typeof ev !== 'object' || ev.type !== 'llm_request') return null;
   const a = ev.attrs && typeof ev.attrs === 'object' ? ev.attrs : {};
 
@@ -78,6 +78,8 @@ function eventToRecord(ev, file) {
   const output = num(a.outputTokens) ?? num(a.output_tokens) ?? num(a.completionTokens);
   const input = num(a.inputTokens) ?? num(a.input_tokens) ?? num(a.promptTokens);
   const cached = num(a.cachedTokens) ?? num(a.cached_tokens) ?? num(a.cachedInputTokens);
+  const cacheWrite = num(a.cacheWriteTokens) ?? num(a.cacheCreationTokens) ?? num(a.cache_creation_tokens);
+  const reasoning = num(a.reasoningTokens) ?? num(a.reasoning_tokens);
   const ttftMs =
     num(a.ttftMs) ?? num(a.timeToFirstTokenMs) ?? num(a.firstTokenMs) ?? num(a.timeToFirstChunkMs);
 
@@ -98,15 +100,19 @@ function eventToRecord(ev, file) {
     input: input || 0,
     output,
     cached: cached || 0,
+    cacheWrite: cacheWrite || 0,
+    reasoning: reasoning || 0,
     durMs,
     ttftMs: ttftMs > 0 ? ttftMs : null,
     rate,
     decodeRate,
+    cwd: cwd || '',
+    workspacePath: workspacePath || '',
     file: file || null,
   };
 }
 
-function parseEventLine(line, file) {
+function parseEventLine(line, file, cwd, workspacePath) {
   const trimmed = line.trim();
   if (!trimmed) return null;
   let ev;
@@ -115,7 +121,7 @@ function parseEventLine(line, file) {
   } catch {
     return null;
   }
-  return eventToRecord(ev, file);
+  return eventToRecord(ev, file, cwd, workspacePath);
 }
 
 class LogScanner {
@@ -123,7 +129,33 @@ class LogScanner {
     this.offsets = new Map();
     this.dirCache = null;
     this.dirCacheAt = 0;
+    this.dirs = new DirMetadataCache(now);
     this.now = now;
+  }
+
+  /**
+   * Working directory that produced one `main.jsonl`. The legacy layout nests
+   * the file under a `workspaceStorage/<hash>/` folder whose `workspace.json`
+   * names either a folder or a saved `.code-workspace` file; the global layout
+   * has no such ancestor, so the record stays unattributed instead of guessed.
+   */
+  origin(file) {
+    let dir = path.dirname(file);
+    for (let depth = 0; depth < 5; depth += 1) {
+      if (fs.existsSync(path.join(dir, 'workspace.json'))) {
+        const id = workspaceStorageId(dir, this.dirs);
+        return { cwd: id.folder, workspacePath: id.workspace };
+      }
+      const parent = path.dirname(dir);
+      if (!parent || parent === dir) break;
+      dir = parent;
+    }
+    return { cwd: '', workspacePath: '' };
+  }
+
+  /** Backwards-compatible shorthand for the folder-based identity. */
+  cwdOf(file) {
+    return this.origin(file).cwd;
   }
 
   roots(opts = {}) {
@@ -207,7 +239,8 @@ class LogScanner {
         continue;
       }
       if (backfillDays > 0 && st.mtimeMs < cutoff && !this.offsets.has(f)) continue;
-      listed.push({ file: f, size: st.size, mtimeMs: st.mtimeMs });
+      const where = this.origin(f);
+      listed.push({ file: f, size: st.size, mtimeMs: st.mtimeMs, cwd: where.cwd, workspacePath: where.workspacePath });
     }
     listed.sort((a, b) => b.mtimeMs - a.mtimeMs);
 

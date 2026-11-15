@@ -60,7 +60,7 @@ Search for **Copilot Speedometer** in the Extensions view, or:
 code --install-extension copilot-speedometer.copilot-speedometer
 ```
 
-**Option B: local VSIX** (offline): `dist/copilot-speedometer-0.1.0.vsix`.
+**Option B: local VSIX** (offline): `dist/copilot-speedometer-0.2.0.vsix`.
 
 **Option C: from source**: open this folder in VS Code and press <kbd>F5</kbd> (Run Extension).
 
@@ -98,11 +98,17 @@ Also: reasoning tokens count as output, tokenizers differ per vendor, and **tok/
 
 ## Features
 
-- The status bar shows the tok/s of the **last response** (and hides itself after five minutes without a new one, so an idle window is not cluttered); hover for model, BYOK badge, output tokens, duration, TTFT, plus the weighted average and median of the last 20 requests.
-- Panel: cards (last / weighted average / median / p90 / requests / TTFT / decode rate), a per-response tok/s bar chart, a per-model summary and the last 200 requests.
+- **Persistent left sidebar**: clicking the Activity Bar icon or the status bar focuses the persistent left sidebar (Dashboard / Sessions Hub / Settings) without opening a new editor tab; an optional `↗` button in the header opens a wide editor tab if needed.
+- **Instant historical conversation pickup**: focusing a window or resuming a historical Copilot conversation backfills that window's latest session even past `backfillDays` and wakes the status bar immediately; `autoHideMinutes` (default `5`) hides only the bottom-right status-bar item while the left sidebar remains visible.
+- The status bar shows the tok/s of the **last response in this window** (hiding only the status bar after five minutes of silence); hover for model, BYOK badge, output tokens, duration, TTFT, est. cost, plus the weighted average and median of the last 20 requests.
+- **Panel**: single-row icon header, a **Last response** hero card paired with an even KPI grid (weighted average / median / p90 / requests / est. cost / TTFT / decode rate), a per-response tok/s bar chart with dashed weighted-average line, a per-model summary with output-share bars, and the last 200 requests.
+- **Sessions Hub**: a dedicated tab inside the panel to browse by time bucket (*Running / Today / Yesterday / Previous 7 days / Older*), search, filter by workspace/source/project/archived, and read full Copilot conversations (both Agent/CLI and local VS Code Chat) without opening a new window — using single-scroll drill-in on narrow sidebars and side-by-side split in wide tabs, with one-click terminal resume (`copilot --resume`), **Fork**, **Move workspace**, **Archive**, and **Delete** (protected by live-PID lock checks).
+
+![sessions](https://github.com/flylink-code/copilot-speedometer/raw/HEAD/docs/preview-sessions.png)
+- **Per-window isolation**: Copilot writes every VS Code window's sessions into one `~/.copilot/session-state` folder and a usage record carries no window id. This extension compares the session's `cwd` (from `workspace.yaml`, or the `session.start` event in older sessions) with the folders open in this window — and, for a multi-root `.code-workspace` window, the workspace file — so a fresh window no longer shows another window's tok/s. A strip at the top of the panel states the current scope (N requests here · M hidden) and switches to "all windows" in one click. Adding or removing a folder rescopes immediately.
 - **Settings tab inside the panel**: no need to hunt through VS Code settings for JSON — switches, numbers, paths (with Browse) and the status-bar mode live in the panel, apply immediately, and any overridden row offers ↻ to restore its default.
 - Time windows: today / last 7 days / all. Switching to a longer window triggers a deeper backfill (each file is read from its tail, byte-budgeted, roughly one second the first time), so historical sessions show up as well.
-- Commands: `Show Dashboard`, `Refresh`, `Enable Copilot Debug Logging`, `Export Captured Requests as JSON`, `Clear Captured History`, `Preview With Demo Data`, `Show Diagnostics`.
+- Commands: `Show Sidebar`, `Open in Editor Tab`, `Refresh`, `Enable Copilot Debug Logging`, `Export Captured Requests as JSON`, `Clear Captured History`, `Preview With Demo Data`, `Show Diagnostics`.
 - History lives in memory (3000 records by default) and is backfilled for the last two days on startup.
 
 ## Settings
@@ -115,8 +121,9 @@ The **Settings** tab edits these values directly; `settings.json` still works:
 |---|---|---|
 | `copilotSpeedometer.enabled` | `true` | master switch |
 | `copilotSpeedometer.statusBar` | `true` | show the status-bar item |
-| `copilotSpeedometer.autoHideMinutes` | `5` | hide the status-bar item after this many minutes without a new response (0 = never) |
+| `copilotSpeedometer.autoHideMinutes` | `5` | hide only the bottom-right status-bar item after this many minutes of silence (the left sidebar stays visible; 0 = never) |
 | `copilotSpeedometer.statusBarFormat` | `"rate"` | status-bar content: `rate` number only / `rate-model` adds the model / `rate-ttft` adds TTFT |
+| `copilotSpeedometer.sessionScope` | `"window"` | which sessions are counted: `window` only this window's folders / `all` every window on the machine |
 | `copilotSpeedometer.usageEvents` | `true` | read agent usage records (the BYOK + TTFT source) |
 | `copilotSpeedometer.usageEventsRoot` | `""` | override `~/.copilot/session-state` |
 | `copilotSpeedometer.logPath` | `""` | point at a specific debug-logs root |
@@ -124,6 +131,9 @@ The **Settings** tab edits these values directly; `settings.json` still works:
 | `copilotSpeedometer.historySize` | `3000` | how many requests stay in memory (100–50000) |
 | `copilotSpeedometer.backfillDays` | `2` | days to backfill on startup (0–365) |
 | `copilotSpeedometer.includeLegacyWorkspaceLogs` | `true` | also scan the legacy workspaceStorage layout |
+| `copilotSpeedometer.includeVscodeChats` | `true` | list local VS Code Chat sessions in the Sessions Hub |
+| `copilotSpeedometer.pricingMultiplier` | `1` | multiplier applied to catalog USD prices (1 = standard list price) |
+| `copilotSpeedometer.customPricing` | `{}` | custom per-model USD pricing per 1M tokens |
 
 `github.copilot.chat.agentDebugLog.fileLogging.enabled` also lives in the Settings tab under Data sources; the Live status block below the fields shows whether it is currently on.
 
@@ -139,6 +149,8 @@ Every string in the panel and in the status bar follows the VS Code display lang
 
 **The numbers look too low**: check TTFT first. If TTFT is close to the total duration you hit trap 1 above — look at decode rate or shrink the context.
 
+**A new window shows another window's tok/s**: fixed in 0.1.1. Copilot writes every window's sessions into `~/.copilot/session-state` and the records carry no window id, so the session's `cwd` is the only discriminator. The extension reads it from `workspace.yaml` (or the `session.start` event for older sessions) and drops anything that does not match this window's folders. Set `copilotSpeedometer.sessionScope` to `all` — or click "Show all windows" in the panel's scope strip — to count every session. A window with no folder open cannot be scoped, so it shows everything.
+
 **The panel is empty**: run `Preview With Demo Data` to see the UI with synthetic data (not real traffic).
 
 ## How it compares
@@ -153,7 +165,7 @@ Every string in the panel and in the status bar follows the VS Code display lang
 ## Development
 
 ```bash
-npm test                       # parser / stats / settings / i18n unit tests (44)
+npm test                       # parser / stats / scope / pricing / sessions / settings / i18n unit tests (71)
 node tools/smoke-activate.js    # runs activate / tick / panel payloads against a stubbed vscode API
 node tools/preview.js          # renders docs/preview*.html and screenshots in both languages
 npm run package                # builds the .vsix into dist/ (vsce flags included)
@@ -164,10 +176,13 @@ Layout:
 ```
 src/usage-events.js  source A: session-state scanning, incremental tailing, record mapping
 src/parser.js        source B: debug-logs scanning, incremental tailing, record mapping
+src/scope.js         per-window attribution: cwd from workspace.yaml / workspace.json
+src/pricing.js       offline model pricing catalog, prefix normalization, cost estimation
+src/sessions.js      read-only Sessions Hub index and conversation reader (Agent + VS Code Chat)
 src/stats.js         aggregation and formatting (pure functions, unit-tested)
 src/settings.js      panel settings model: field table, validation, write / reset (host side, no vscode import)
 src/i18n.js          English + Chinese dictionaries and the translator
-src/webview.js       panel HTML (Dashboard + Settings views, CSP nonce, follows the VS Code theme)
+src/webview.js       panel HTML (Dashboard + Sessions Hub + Settings views, CSP nonce, follows the VS Code theme)
 src/extension.js     status bar, polling, two-source merge and dedupe, commands, panel messages
 ```
 

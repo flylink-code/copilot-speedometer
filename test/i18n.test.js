@@ -103,7 +103,7 @@ test('every key used by the panel exists in both dictionaries', () => {
 test('dynamic panel keys (segments, units, fields) resolve in both languages', () => {
   for (const locale of ['en', 'zh']) {
     const tr = i18n.create(locale).t;
-    for (const key of ['ui.seg.rate', 'ui.seg.rateModel', 'ui.seg.rateTtft', 'ui.unit.ms', 'ui.unit.records', 'ui.unit.days']) {
+    for (const key of ['ui.seg.rate', 'ui.seg.rateModel', 'ui.seg.rateTtft', 'ui.unit.ms', 'ui.unit.records', 'ui.unit.days', 'ui.unit.x']) {
       assert.notStrictEqual(tr(key), key, `${locale}: ${key} is missing`);
     }
     for (const field of settings.FIELDS) {
@@ -112,7 +112,7 @@ test('dynamic panel keys (segments, units, fields) resolve in both languages', (
         assert.ok(key in en && key in zh, `missing ${key}`);
       }
     }
-    for (const id of ['general', 'sources', 'collection', 'display']) {
+    for (const id of ['general', 'sources', 'collection', 'display', 'pricing']) {
       assert.ok(`section.${id}.title` in en && `section.${id}.title` in zh, `missing section.${id}.title`);
     }
   }

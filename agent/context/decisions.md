@@ -14,6 +14,9 @@ updated: 2026-11-13
 
 | 编号 | 决策 | 状态 | 详情 |
 | --- | --- | --- | --- |
+| 0008 | 窄栏（`<600px` / 左侧栏）采用单滚动流 + 会话列表/详情钻取切换 + Hero 主卡配对称网格，替代上下双滚动框与孤卡网格；保持零外部 UI 框架依赖 | accepted | `agent/context/research/sidebar-ui-layout.md` |
+| 0007 | 会话 Hub 采用纯 JS 只读索引（Agent `events.jsonl` + VS Code `chatSessions/*.jsonl`），不写活窗口 `state.vscdb` / `agent-host.db` | accepted | `agent/context/research/copilot-session-hub.md` |
+| 0006 | 模型费用采用离线目录价 + 网关前缀归一化 + 自定义单价/倍率，未命中显示 `--` 不回落默认价 | accepted | `agent/context/research/token-cost-pricing.md` |
 | 0005 | 文案跟随 VS Code 显示语言，不单独提供语言设置 | accepted | `CHANGELOG.md`（0.3.1） |
 | 0004 | 状态栏按“多久没有新回答”隐藏，不做严格窗口级可见性 | accepted | `HANDOFF.md` §9 限制 1 |
 | 0003 | 设置可在面板内修改，并写入已有 override 的作用域 | accepted | `HANDOFF.md` §4 |

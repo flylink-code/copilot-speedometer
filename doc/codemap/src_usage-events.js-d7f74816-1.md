@@ -4,57 +4,61 @@
 
 [Module](src.md) · [Source](../../src/usage-events.js) · page 1/1
 
-Source SHA-256: df3b5b26228fc1973a9cb859f98bb1db90a30adf2acae55ab1bbe029fb499e12
+Source SHA-256: 0926dad70f520ac3a27812fed9003c99d72736d2460dd66b1a4bc636b8799593
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
 | fs | VariableDeclaration |  | [24](../../src/usage-events.js#L24) |
 | path | VariableDeclaration |  | [25](../../src/usage-events.js#L25) |
 | os | VariableDeclaration |  | [26](../../src/usage-events.js#L26) |
-| DIR_CACHE_MS | VariableDeclaration |  | [28](../../src/usage-events.js#L28) |
-| MAX_FIRST_READ_BYTES | VariableDeclaration |  | [29](../../src/usage-events.js#L29) |
-| defaultRoot | FunctionDeclaration |  | [31](../../src/usage-events.js#L31) |
-| num | FunctionDeclaration |  | [35](../../src/usage-events.js#L35) |
-| n | VariableDeclaration | num | [38](../../src/usage-events.js#L38) |
-| usageToRecord | FunctionDeclaration |  | [44](../../src/usage-events.js#L44) |
-| u | VariableDeclaration | usageToRecord | [46](../../src/usage-events.js#L46) |
-| output | VariableDeclaration | usageToRecord | [49](../../src/usage-events.js#L49) |
-| durMs | VariableDeclaration | usageToRecord | [50](../../src/usage-events.js#L50) |
-| ts | VariableDeclaration | usageToRecord | [51](../../src/usage-events.js#L51) |
-| ttftMs | VariableDeclaration | usageToRecord | [54](../../src/usage-events.js#L54) |
-| rawModel | VariableDeclaration | usageToRecord | [55](../../src/usage-events.js#L55) |
-| model | VariableDeclaration | usageToRecord | [56](../../src/usage-events.js#L56) |
-| genMs | VariableDeclaration | usageToRecord | [62](../../src/usage-events.js#L62) |
-| decodeRate | VariableDeclaration | usageToRecord | [63](../../src/usage-events.js#L63) |
-| apiCallId | VariableDeclaration | usageToRecord | [66](../../src/usage-events.js#L66) |
-| parseUsageLine | FunctionDeclaration |  | [88](../../src/usage-events.js#L88) |
-| trimmed | VariableDeclaration | parseUsageLine | [89](../../src/usage-events.js#L89) |
-| ev | VariableDeclaration | parseUsageLine | [92](../../src/usage-events.js#L92) |
-| UsageScanner | ClassDeclaration |  | [101](../../src/usage-events.js#L101) |
-| constructor | Constructor | UsageScanner | [102](../../src/usage-events.js#L102) |
-| root | MethodDeclaration | UsageScanner | [109](../../src/usage-events.js#L109) |
-| custom | VariableDeclaration | UsageScanner.root | [110](../../src/usage-events.js#L110) |
-| existingRoots | MethodDeclaration | UsageScanner | [114](../../src/usage-events.js#L114) |
-| root | VariableDeclaration | UsageScanner.existingRoots | [115](../../src/usage-events.js#L115) |
-| scan | MethodDeclaration | UsageScanner | [125](../../src/usage-events.js#L125) |
-| now | VariableDeclaration | UsageScanner.scan | [126](../../src/usage-events.js#L126) |
-| windowKey | VariableDeclaration | UsageScanner.scan | [127](../../src/usage-events.js#L127) |
-| base | VariableDeclaration | UsageScanner.scan | [132](../../src/usage-events.js#L132) |
-| files | VariableDeclaration | UsageScanner.scan | [133](../../src/usage-events.js#L133) |
-| names | VariableDeclaration | UsageScanner.scan | [134](../../src/usage-events.js#L134) |
-| e | VariableDeclaration | UsageScanner.scan | [144](../../src/usage-events.js#L144) |
-| f | VariableDeclaration | UsageScanner.scan | [146](../../src/usage-events.js#L146) |
-| backfillDays | VariableDeclaration | UsageScanner.scan | [154](../../src/usage-events.js#L154) |
-| cutoff | VariableDeclaration | UsageScanner.scan | [155](../../src/usage-events.js#L155) |
-| listed | VariableDeclaration | UsageScanner.scan | [156](../../src/usage-events.js#L156) |
-| f | VariableDeclaration | UsageScanner.scan | [157](../../src/usage-events.js#L157) |
-| st | VariableDeclaration | UsageScanner.scan | [158](../../src/usage-events.js#L158) |
-| readNew | MethodDeclaration | UsageScanner | [175](../../src/usage-events.js#L175) |
-| st | VariableDeclaration | UsageScanner.readNew | [176](../../src/usage-events.js#L176) |
-| offset | VariableDeclaration | UsageScanner.readNew | [183](../../src/usage-events.js#L183) |
-| fd | VariableDeclaration | UsageScanner.readNew | [193](../../src/usage-events.js#L193) |
-| buf | VariableDeclaration | UsageScanner.readNew | [194](../../src/usage-events.js#L194) |
-| probe | VariableDeclaration | UsageScanner.readNew | [198](../../src/usage-events.js#L198) |
-| length | VariableDeclaration | UsageScanner.readNew | [202](../../src/usage-events.js#L202) |
-| lastNewline | VariableDeclaration | UsageScanner.readNew | [221](../../src/usage-events.js#L221) |
-| chunk | VariableDeclaration | UsageScanner.readNew | [226](../../src/usage-events.js#L226) |
+| { DirMetadataCache, sessionCwd } | VariableDeclaration |  | [27](../../src/usage-events.js#L27) |
+| DirMetadataCache | BindingElement | { DirMetadataCache, sessionCwd } | [27](../../src/usage-events.js#L27) |
+| sessionCwd | BindingElement | { DirMetadataCache, sessionCwd } | [27](../../src/usage-events.js#L27) |
+| DIR_CACHE_MS | VariableDeclaration |  | [29](../../src/usage-events.js#L29) |
+| MAX_FIRST_READ_BYTES | VariableDeclaration |  | [30](../../src/usage-events.js#L30) |
+| defaultRoot | FunctionDeclaration |  | [32](../../src/usage-events.js#L32) |
+| num | FunctionDeclaration |  | [36](../../src/usage-events.js#L36) |
+| n | VariableDeclaration | num | [39](../../src/usage-events.js#L39) |
+| usageToRecord | FunctionDeclaration |  | [45](../../src/usage-events.js#L45) |
+| u | VariableDeclaration | usageToRecord | [47](../../src/usage-events.js#L47) |
+| output | VariableDeclaration | usageToRecord | [50](../../src/usage-events.js#L50) |
+| durMs | VariableDeclaration | usageToRecord | [51](../../src/usage-events.js#L51) |
+| ts | VariableDeclaration | usageToRecord | [52](../../src/usage-events.js#L52) |
+| ttftMs | VariableDeclaration | usageToRecord | [55](../../src/usage-events.js#L55) |
+| rawModel | VariableDeclaration | usageToRecord | [56](../../src/usage-events.js#L56) |
+| model | VariableDeclaration | usageToRecord | [57](../../src/usage-events.js#L57) |
+| genMs | VariableDeclaration | usageToRecord | [63](../../src/usage-events.js#L63) |
+| decodeRate | VariableDeclaration | usageToRecord | [64](../../src/usage-events.js#L64) |
+| apiCallId | VariableDeclaration | usageToRecord | [67](../../src/usage-events.js#L67) |
+| parseUsageLine | FunctionDeclaration |  | [92](../../src/usage-events.js#L92) |
+| trimmed | VariableDeclaration | parseUsageLine | [93](../../src/usage-events.js#L93) |
+| ev | VariableDeclaration | parseUsageLine | [96](../../src/usage-events.js#L96) |
+| UsageScanner | ClassDeclaration |  | [105](../../src/usage-events.js#L105) |
+| constructor | Constructor | UsageScanner | [106](../../src/usage-events.js#L106) |
+| cwdOf | MethodDeclaration | UsageScanner | [115](../../src/usage-events.js#L115) |
+| root | MethodDeclaration | UsageScanner | [119](../../src/usage-events.js#L119) |
+| custom | VariableDeclaration | UsageScanner.root | [120](../../src/usage-events.js#L120) |
+| existingRoots | MethodDeclaration | UsageScanner | [124](../../src/usage-events.js#L124) |
+| root | VariableDeclaration | UsageScanner.existingRoots | [125](../../src/usage-events.js#L125) |
+| scan | MethodDeclaration | UsageScanner | [135](../../src/usage-events.js#L135) |
+| now | VariableDeclaration | UsageScanner.scan | [136](../../src/usage-events.js#L136) |
+| windowKey | VariableDeclaration | UsageScanner.scan | [137](../../src/usage-events.js#L137) |
+| base | VariableDeclaration | UsageScanner.scan | [142](../../src/usage-events.js#L142) |
+| files | VariableDeclaration | UsageScanner.scan | [143](../../src/usage-events.js#L143) |
+| names | VariableDeclaration | UsageScanner.scan | [144](../../src/usage-events.js#L144) |
+| e | VariableDeclaration | UsageScanner.scan | [154](../../src/usage-events.js#L154) |
+| f | VariableDeclaration | UsageScanner.scan | [156](../../src/usage-events.js#L156) |
+| backfillDays | VariableDeclaration | UsageScanner.scan | [164](../../src/usage-events.js#L164) |
+| cutoff | VariableDeclaration | UsageScanner.scan | [165](../../src/usage-events.js#L165) |
+| listed | VariableDeclaration | UsageScanner.scan | [166](../../src/usage-events.js#L166) |
+| f | VariableDeclaration | UsageScanner.scan | [167](../../src/usage-events.js#L167) |
+| st | VariableDeclaration | UsageScanner.scan | [168](../../src/usage-events.js#L168) |
+| readNew | MethodDeclaration | UsageScanner | [185](../../src/usage-events.js#L185) |
+| st | VariableDeclaration | UsageScanner.readNew | [186](../../src/usage-events.js#L186) |
+| offset | VariableDeclaration | UsageScanner.readNew | [193](../../src/usage-events.js#L193) |
+| fd | VariableDeclaration | UsageScanner.readNew | [203](../../src/usage-events.js#L203) |
+| buf | VariableDeclaration | UsageScanner.readNew | [204](../../src/usage-events.js#L204) |
+| probe | VariableDeclaration | UsageScanner.readNew | [208](../../src/usage-events.js#L208) |
+| length | VariableDeclaration | UsageScanner.readNew | [212](../../src/usage-events.js#L212) |
+| lastNewline | VariableDeclaration | UsageScanner.readNew | [231](../../src/usage-events.js#L231) |
+| chunk | VariableDeclaration | UsageScanner.readNew | [236](../../src/usage-events.js#L236) |

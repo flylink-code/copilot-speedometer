@@ -1,5 +1,7 @@
 {
-  "command.showDashboard.title": "Show Dashboard",
+  "view.sidebar.name": "Speedometer & Sessions",
+  "command.showDashboard.title": "Show Sidebar",
+  "command.openTab.title": "Open in Editor Tab",
   "command.refresh.title": "Refresh",
   "command.enableLogging.title": "Enable Copilot Debug Logging",
   "command.exportJson.title": "Export Captured Requests as JSON",
@@ -8,16 +10,22 @@
   "command.diagnostics.title": "Show Diagnostics (why is it empty?)",
   "config.enabled.description": "Scan Copilot debug logs in the background and show the tokens/sec status bar item.",
   "config.statusBar.description": "Show the tokens/sec item in the status bar.",
-  "config.autoHideMinutes.description": "Minutes of Copilot silence after which the status-bar item hides itself, so a window you are not chatting in does not keep a stale number. 0 keeps it always visible.",
+  "config.autoHideMinutes.description": "Minutes of Copilot silence after which the bottom-right status-bar item hides itself (the left sidebar stays visible). 0 keeps the status bar visible too.",
   "config.statusBarFormat.description": "What the status-bar item shows after each captured response.",
   "config.statusBarFormat.rate": "Just the throughput, e.g. \"12.4 tok/s\".",
   "config.statusBarFormat.rateModel": "Throughput plus the model that produced it.",
   "config.statusBarFormat.rateTtft": "Throughput plus the time to first token.",
+  "config.sessionScope.description": "Which Copilot sessions the status bar and dashboard show. Copilot keeps every window's sessions in one shared folder, so the default narrows the view to the folders open in this window.",
+  "config.sessionScope.window": "Only sessions started in this window's folders (default).",
+  "config.sessionScope.all": "Every session on this machine, from all windows.",
   "config.logPath.description": "Override the Copilot debug-logs root directory (the folder that contains the per-session subfolders with main.jsonl). Leave empty to auto-detect VS Code / Insiders / VSCodium / Cursor.",
   "config.pollIntervalMs.description": "How often to check the log files for new requests, in milliseconds.",
   "config.historySize.description": "Maximum number of requests kept in memory.",
   "config.backfillDays.description": "On startup, load requests from log files modified within this many days (0 disables backfill).",
   "config.includeLegacyWorkspaceLogs.description": "Also scan the legacy workspaceStorage/<hash>/GitHub.copilot-chat/debug-logs layout used by older VS Code versions.",
   "config.usageEvents.description": "Also read the Copilot agent usage records (~/.copilot/session-state/*/events.jsonl). These cover BYOK / custom-endpoint models and carry TTFT, and do not require debug logging.",
-  "config.usageEventsRoot.description": "Override the Copilot agent session-state directory. Leave empty to use ~/.copilot/session-state."
+  "config.usageEventsRoot.description": "Override the Copilot agent session-state directory. Leave empty to use ~/.copilot/session-state.",
+  "config.includeVscodeChats.description": "Also list local VS Code Chat sessions (workspaceStorage/*/chatSessions) in the Sessions Hub.",
+  "config.pricingMultiplier.description": "Multiplier applied to estimated USD token costs (for relay discounts or markup; 1 = standard catalog rate).",
+  "config.customPricing.description": "Override or add per-model pricing in USD per 1M tokens, e.g. {\"my-model\":{\"input\":1,\"output\":5,\"cacheRead\":0.1}}."
 }

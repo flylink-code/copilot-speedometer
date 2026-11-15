@@ -142,6 +142,46 @@ test('legacy workspaceStorage layout is discovered', () => {
   scanner.roots = original;
 });
 
+test('a legacy debug log carries the workspace of its workspaceStorage folder', () => {
+  const root = tmpDir();
+  const hash = path.join(root, 'workspaceStorage', 'deadbeef');
+  const dir = path.join(hash, 'GitHub.copilot-chat', 'debug-logs', 's1');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(hash, 'workspace.json'), JSON.stringify({ folder: 'file:///e%3A/workspace/demo' }), 'utf8');
+  const file = path.join(dir, 'main.jsonl');
+  fs.writeFileSync(file, JSON.stringify(ev({ outputTokens: 5 })) + '\n', 'utf8');
+
+  const scanner = new LogScanner();
+  scanner.roots = () => [{ root: path.join(root, 'workspaceStorage'), legacy: true, editor: 'test' }];
+  const [listed] = scanner.scan({ legacy: true, backfillDays: 5 });
+  assert.strictEqual(listed.cwd, 'e:/workspace/demo');
+  const rec = parseEventLine(fs.readFileSync(file, 'utf8').trim(), file, listed.cwd);
+  assert.strictEqual(rec.cwd, 'e:/workspace/demo');
+});
+
+test('a multi-root legacy log reports its .code-workspace file instead of a folder', () => {
+  const root = tmpDir();
+  const hash = path.join(root, 'workspaceStorage', 'cafe');
+  const dir = path.join(hash, 'GitHub.copilot-chat', 'debug-logs', 's2');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(
+    path.join(hash, 'workspace.json'),
+    JSON.stringify({ workspace: 'file:///e%3A/workspace/mono/mono.code-workspace' }),
+    'utf8'
+  );
+  const file = path.join(dir, 'main.jsonl');
+  fs.writeFileSync(file, JSON.stringify(ev({ outputTokens: 5 })) + '\n', 'utf8');
+
+  const scanner = new LogScanner();
+  scanner.roots = () => [{ root: path.join(root, 'workspaceStorage'), legacy: true, editor: 'test' }];
+  const [listed] = scanner.scan({ legacy: true, backfillDays: 5 });
+  assert.strictEqual(listed.cwd, '');
+  assert.strictEqual(listed.workspacePath, 'e:/workspace/mono/mono.code-workspace');
+
+  const rec = parseEventLine(fs.readFileSync(file, 'utf8').trim(), file, listed.cwd, listed.workspacePath);
+  assert.strictEqual(rec.workspacePath, 'e:/workspace/mono/mono.code-workspace');
+});
+
 console.log('stats');
 
 test('weighted average is sum(output)/sum(duration), not mean of rates', () => {

@@ -78,6 +78,26 @@ const FIELDS = [
     default: 'rate',
     options: ['rate', 'rate-model', 'rate-ttft'],
   },
+  {
+    key: 'sessionScope',
+    section: 'sources',
+    type: 'enum',
+    default: 'window',
+    options: ['window', 'all'],
+  },
+  { key: 'includeVscodeChats', section: 'sources', type: 'boolean', default: true },
+  {
+    key: 'pricingMultiplier',
+    section: 'pricing',
+    type: 'number',
+    default: 1,
+    min: 0,
+    max: 100,
+    step: 0.1,
+    decimal: true,
+    unit: 'x',
+  },
+  { key: 'customPricing', section: 'pricing', type: 'json', default: {} },
 ];
 
 function fieldByKey(key) {
@@ -104,7 +124,11 @@ function readValue(config, field) {
 function isModified(config, field) {
   // Comparing effective values (rather than "was it written anywhere?") keeps
   // the reset affordance honest: an explicit `false` is still the default.
-  return readValue(config, field) !== field.default;
+  const val = readValue(config, field);
+  if (field.type === 'json') {
+    return JSON.stringify(val || {}) !== JSON.stringify(field.default || {});
+  }
+  return val !== field.default;
 }
 
 /**
@@ -121,6 +145,7 @@ function describe(config, t) {
       { id: 'sources', title: tr('section.sources.title'), blurb: tr('section.sources.blurb') },
       { id: 'collection', title: tr('section.collection.title'), blurb: tr('section.collection.blurb') },
       { id: 'display', title: tr('section.display.title'), blurb: tr('section.display.blurb') },
+      { id: 'pricing', title: tr('section.pricing.title'), blurb: tr('section.pricing.blurb') },
     ],
     fields: FIELDS.map((f) => ({
       key: f.key,
@@ -163,7 +188,22 @@ function coerce(field, raw) {
     if (field.max !== undefined && n > field.max) {
       return { error: `Maximum is ${field.max}.` };
     }
-    return { value: Math.round(n) };
+    return { value: field.decimal ? Math.round(n * 1000) / 1000 : Math.round(n) };
+  }
+  if (field.type === 'json') {
+    if (raw === undefined || raw === null || raw === '') return { value: {} };
+    let obj = raw;
+    if (typeof raw === 'string') {
+      try {
+        obj = JSON.parse(raw);
+      } catch {
+        return { error: 'Enter valid JSON (e.g. {"model":{"input":1,"output":5}}).' };
+      }
+    }
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+      return { error: 'Expected a JSON object keyed by model name.' };
+    }
+    return { value: obj };
   }
   if (field.type === 'path') {
     const value = String(raw === undefined || raw === null ? '' : raw).trim();

@@ -4,7 +4,7 @@
 
 [Module](test.md) · [Source](../../test/parser.test.js) · page 1/1
 
-Source SHA-256: 54ffa4107f9dcda3890edcaa27bae26ffc36fd0cb6cab28cbc17e9c32e90d719
+Source SHA-256: e83572f2a4a90fd8b538892893caf2f42a521cce52ccd98277657c5be125bbb8
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
@@ -53,10 +53,26 @@ Source SHA-256: 54ffa4107f9dcda3890edcaa27bae26ffc36fd0cb6cab28cbc17e9c32e90d719
 | scanner | VariableDeclaration |  | [136](../../test/parser.test.js#L136) |
 | original | VariableDeclaration |  | [137](../../test/parser.test.js#L137) |
 | files | VariableDeclaration |  | [139](../../test/parser.test.js#L139) |
-| a | VariableDeclaration |  | [148](../../test/parser.test.js#L148) |
-| b | VariableDeclaration |  | [149](../../test/parser.test.js#L149) |
-| s | VariableDeclaration |  | [150](../../test/parser.test.js#L150) |
-| s | VariableDeclaration |  | [160](../../test/parser.test.js#L160) |
-| rows | VariableDeclaration |  | [166](../../test/parser.test.js#L166) |
-| now | VariableDeclaration |  | [188](../../test/parser.test.js#L188) |
-| base | VariableDeclaration |  | [189](../../test/parser.test.js#L189) |
+| root | VariableDeclaration |  | [146](../../test/parser.test.js#L146) |
+| hash | VariableDeclaration |  | [147](../../test/parser.test.js#L147) |
+| dir | VariableDeclaration |  | [148](../../test/parser.test.js#L148) |
+| file | VariableDeclaration |  | [151](../../test/parser.test.js#L151) |
+| scanner | VariableDeclaration |  | [154](../../test/parser.test.js#L154) |
+| [listed] | VariableDeclaration |  | [156](../../test/parser.test.js#L156) |
+| listed | BindingElement | [listed] | [156](../../test/parser.test.js#L156) |
+| rec | VariableDeclaration |  | [158](../../test/parser.test.js#L158) |
+| root | VariableDeclaration |  | [163](../../test/parser.test.js#L163) |
+| hash | VariableDeclaration |  | [164](../../test/parser.test.js#L164) |
+| dir | VariableDeclaration |  | [165](../../test/parser.test.js#L165) |
+| file | VariableDeclaration |  | [172](../../test/parser.test.js#L172) |
+| scanner | VariableDeclaration |  | [175](../../test/parser.test.js#L175) |
+| [listed] | VariableDeclaration |  | [177](../../test/parser.test.js#L177) |
+| listed | BindingElement | [listed] | [177](../../test/parser.test.js#L177) |
+| rec | VariableDeclaration |  | [181](../../test/parser.test.js#L181) |
+| a | VariableDeclaration |  | [188](../../test/parser.test.js#L188) |
+| b | VariableDeclaration |  | [189](../../test/parser.test.js#L189) |
+| s | VariableDeclaration |  | [190](../../test/parser.test.js#L190) |
+| s | VariableDeclaration |  | [200](../../test/parser.test.js#L200) |
+| rows | VariableDeclaration |  | [206](../../test/parser.test.js#L206) |
+| now | VariableDeclaration |  | [228](../../test/parser.test.js#L228) |
+| base | VariableDeclaration |  | [229](../../test/parser.test.js#L229) |

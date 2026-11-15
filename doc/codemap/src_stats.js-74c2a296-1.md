@@ -4,45 +4,55 @@
 
 [Module](src.md) · [Source](../../src/stats.js) · page 1/1
 
-Source SHA-256: c2f4f0c9609579a3bfcf546abded3ab2a33fcf9a6912fa50686e3242427476ab
+Source SHA-256: d2d7b79426c82465af593103b9a915e8dc7739166d8ae6afc20d784aeb748da5
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
-| quantile | FunctionDeclaration |  | [5](../../src/stats.js#L5) |
-| pos | VariableDeclaration | quantile | [7](../../src/stats.js#L7) |
-| base | VariableDeclaration | quantile | [8](../../src/stats.js#L8) |
-| rest | VariableDeclaration | quantile | [9](../../src/stats.js#L9) |
-| next | VariableDeclaration | quantile | [10](../../src/stats.js#L10) |
-| summarize | FunctionDeclaration |  | [14](../../src/stats.js#L14) |
-| n | VariableDeclaration | summarize | [15](../../src/stats.js#L15) |
-| input | VariableDeclaration | summarize | [31](../../src/stats.js#L31) |
-| output | VariableDeclaration | summarize | [32](../../src/stats.js#L32) |
-| cached | VariableDeclaration | summarize | [33](../../src/stats.js#L33) |
-| durMs | VariableDeclaration | summarize | [34](../../src/stats.js#L34) |
-| decodeOut | VariableDeclaration | summarize | [35](../../src/stats.js#L35) |
-| decodeDur | VariableDeclaration | summarize | [36](../../src/stats.js#L36) |
-| ttftSum | VariableDeclaration | summarize | [37](../../src/stats.js#L37) |
-| ttftCount | VariableDeclaration | summarize | [38](../../src/stats.js#L38) |
-| r | VariableDeclaration | summarize | [40](../../src/stats.js#L40) |
-| rates | VariableDeclaration | summarize | [53](../../src/stats.js#L53) |
-| groupByModel | FunctionDeclaration |  | [70](../../src/stats.js#L70) |
-| map | VariableDeclaration | groupByModel | [71](../../src/stats.js#L71) |
-| r | VariableDeclaration | groupByModel | [72](../../src/stats.js#L72) |
-| rows | VariableDeclaration | groupByModel | [76](../../src/stats.js#L76) |
-| [model, list] | VariableDeclaration | groupByModel | [77](../../src/stats.js#L77) |
-| model | BindingElement | groupByModel.[model, list] | [77](../../src/stats.js#L77) |
-| list | BindingElement | groupByModel.[model, list] | [77](../../src/stats.js#L77) |
-| dayKey | FunctionDeclaration |  | [84](../../src/stats.js#L84) |
-| d | VariableDeclaration | dayKey | [85](../../src/stats.js#L85) |
-| m | VariableDeclaration | dayKey | [86](../../src/stats.js#L86) |
-| day | VariableDeclaration | dayKey | [87](../../src/stats.js#L87) |
-| statusBarWanted | FunctionDeclaration |  | [96](../../src/stats.js#L96) |
-| limit | VariableDeclaration | statusBarWanted | [98](../../src/stats.js#L98) |
-| now | VariableDeclaration | statusBarWanted | [101](../../src/stats.js#L101) |
-| fmtRate | FunctionDeclaration |  | [105](../../src/stats.js#L105) |
-| fmtTokens | FunctionDeclaration |  | [112](../../src/stats.js#L112) |
-| fmtDur | FunctionDeclaration |  | [119](../../src/stats.js#L119) |
-| min | VariableDeclaration | fmtDur | [123](../../src/stats.js#L123) |
-| sec | VariableDeclaration | fmtDur | [124](../../src/stats.js#L124) |
-| fmtTime | FunctionDeclaration |  | [128](../../src/stats.js#L128) |
-| d | VariableDeclaration | fmtTime | [129](../../src/stats.js#L129) |
+| { estimateCost, fmtCost } | VariableDeclaration |  | [5](../../src/stats.js#L5) |
+| estimateCost | BindingElement | { estimateCost, fmtCost } | [5](../../src/stats.js#L5) |
+| fmtCost | BindingElement | { estimateCost, fmtCost } | [5](../../src/stats.js#L5) |
+| quantile | FunctionDeclaration |  | [7](../../src/stats.js#L7) |
+| pos | VariableDeclaration | quantile | [9](../../src/stats.js#L9) |
+| base | VariableDeclaration | quantile | [10](../../src/stats.js#L10) |
+| rest | VariableDeclaration | quantile | [11](../../src/stats.js#L11) |
+| next | VariableDeclaration | quantile | [12](../../src/stats.js#L12) |
+| summarize | FunctionDeclaration |  | [16](../../src/stats.js#L16) |
+| n | VariableDeclaration | summarize | [17](../../src/stats.js#L17) |
+| input | VariableDeclaration | summarize | [38](../../src/stats.js#L38) |
+| output | VariableDeclaration | summarize | [39](../../src/stats.js#L39) |
+| cached | VariableDeclaration | summarize | [40](../../src/stats.js#L40) |
+| cacheWrite | VariableDeclaration | summarize | [41](../../src/stats.js#L41) |
+| reasoning | VariableDeclaration | summarize | [42](../../src/stats.js#L42) |
+| costSum | VariableDeclaration | summarize | [43](../../src/stats.js#L43) |
+| pricedCount | VariableDeclaration | summarize | [44](../../src/stats.js#L44) |
+| unpricedCount | VariableDeclaration | summarize | [45](../../src/stats.js#L45) |
+| durMs | VariableDeclaration | summarize | [46](../../src/stats.js#L46) |
+| decodeOut | VariableDeclaration | summarize | [47](../../src/stats.js#L47) |
+| decodeDur | VariableDeclaration | summarize | [48](../../src/stats.js#L48) |
+| ttftSum | VariableDeclaration | summarize | [49](../../src/stats.js#L49) |
+| ttftCount | VariableDeclaration | summarize | [50](../../src/stats.js#L50) |
+| r | VariableDeclaration | summarize | [52](../../src/stats.js#L52) |
+| costUsd | VariableDeclaration | summarize | [60](../../src/stats.js#L60) |
+| est | VariableDeclaration | summarize | [62](../../src/stats.js#L62) |
+| rates | VariableDeclaration | summarize | [80](../../src/stats.js#L80) |
+| groupByModel | FunctionDeclaration |  | [102](../../src/stats.js#L102) |
+| map | VariableDeclaration | groupByModel | [103](../../src/stats.js#L103) |
+| r | VariableDeclaration | groupByModel | [104](../../src/stats.js#L104) |
+| rows | VariableDeclaration | groupByModel | [108](../../src/stats.js#L108) |
+| [model, list] | VariableDeclaration | groupByModel | [109](../../src/stats.js#L109) |
+| model | BindingElement | groupByModel.[model, list] | [109](../../src/stats.js#L109) |
+| list | BindingElement | groupByModel.[model, list] | [109](../../src/stats.js#L109) |
+| dayKey | FunctionDeclaration |  | [116](../../src/stats.js#L116) |
+| d | VariableDeclaration | dayKey | [117](../../src/stats.js#L117) |
+| m | VariableDeclaration | dayKey | [118](../../src/stats.js#L118) |
+| day | VariableDeclaration | dayKey | [119](../../src/stats.js#L119) |
+| statusBarWanted | FunctionDeclaration |  | [128](../../src/stats.js#L128) |
+| limit | VariableDeclaration | statusBarWanted | [130](../../src/stats.js#L130) |
+| now | VariableDeclaration | statusBarWanted | [133](../../src/stats.js#L133) |
+| fmtRate | FunctionDeclaration |  | [137](../../src/stats.js#L137) |
+| fmtTokens | FunctionDeclaration |  | [144](../../src/stats.js#L144) |
+| fmtDur | FunctionDeclaration |  | [151](../../src/stats.js#L151) |
+| min | VariableDeclaration | fmtDur | [155](../../src/stats.js#L155) |
+| sec | VariableDeclaration | fmtDur | [156](../../src/stats.js#L156) |
+| fmtTime | FunctionDeclaration |  | [160](../../src/stats.js#L160) |
+| d | VariableDeclaration | fmtTime | [161](../../src/stats.js#L161) |

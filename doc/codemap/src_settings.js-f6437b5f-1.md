@@ -4,7 +4,7 @@
 
 [Module](src.md) · [Source](../../src/settings.js) · page 1/1
 
-Source SHA-256: 74f8a3c2cdb80a306a2b6a32d1b50d95e327b728f42b7a90da32e3c3952cd028
+Source SHA-256: 11bdd6f9ad58cb874c2dc5fc93d207711971174240f8352018ba68abe172b12d
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
@@ -13,24 +13,26 @@ Source SHA-256: 74f8a3c2cdb80a306a2b6a32d1b50d95e327b728f42b7a90da32e3c3952cd028
 | COPILOT | VariableDeclaration |  | [17](../../src/settings.js#L17) |
 | FILE_LOGGING_KEY | VariableDeclaration |  | [18](../../src/settings.js#L18) |
 | FIELDS | VariableDeclaration |  | [29](../../src/settings.js#L29) |
-| fieldByKey | FunctionDeclaration |  | [83](../../src/settings.js#L83) |
-| readValue | FunctionDeclaration |  | [88](../../src/settings.js#L88) |
-| info | VariableDeclaration | readValue | [90](../../src/settings.js#L90) |
-| raw | VariableDeclaration | readValue | [92](../../src/settings.js#L92) |
-| isModified | FunctionDeclaration |  | [104](../../src/settings.js#L104) |
-| describe | FunctionDeclaration |  | [116](../../src/settings.js#L116) |
-| tr | VariableDeclaration | describe | [117](../../src/settings.js#L117) |
-| coerce | FunctionDeclaration |  | [148](../../src/settings.js#L148) |
-| n | VariableDeclaration | coerce | [158](../../src/settings.js#L158) |
-| value | VariableDeclaration | coerce | [169](../../src/settings.js#L169) |
-| GLOBAL | VariableDeclaration |  | [175](../../src/settings.js#L175) |
-| WORKSPACE | VariableDeclaration |  | [176](../../src/settings.js#L176) |
-| writeTarget | FunctionDeclaration |  | [185](../../src/settings.js#L185) |
-| section | VariableDeclaration | writeTarget | [186](../../src/settings.js#L186) |
-| name | VariableDeclaration | writeTarget | [187](../../src/settings.js#L187) |
-| target | VariableDeclaration | writeTarget | [188](../../src/settings.js#L188) |
-| info | VariableDeclaration | writeTarget | [190](../../src/settings.js#L190) |
-| apply | FunctionDeclaration |  | [202](../../src/settings.js#L202) |
-| field | VariableDeclaration | apply | [203](../../src/settings.js#L203) |
-| where | VariableDeclaration | apply | [206](../../src/settings.js#L206) |
-| result | VariableDeclaration | apply | [213](../../src/settings.js#L213) |
+| fieldByKey | FunctionDeclaration |  | [103](../../src/settings.js#L103) |
+| readValue | FunctionDeclaration |  | [108](../../src/settings.js#L108) |
+| info | VariableDeclaration | readValue | [110](../../src/settings.js#L110) |
+| raw | VariableDeclaration | readValue | [112](../../src/settings.js#L112) |
+| isModified | FunctionDeclaration |  | [124](../../src/settings.js#L124) |
+| val | VariableDeclaration | isModified | [127](../../src/settings.js#L127) |
+| describe | FunctionDeclaration |  | [140](../../src/settings.js#L140) |
+| tr | VariableDeclaration | describe | [141](../../src/settings.js#L141) |
+| coerce | FunctionDeclaration |  | [173](../../src/settings.js#L173) |
+| n | VariableDeclaration | coerce | [183](../../src/settings.js#L183) |
+| obj | VariableDeclaration | coerce | [195](../../src/settings.js#L195) |
+| value | VariableDeclaration | coerce | [209](../../src/settings.js#L209) |
+| GLOBAL | VariableDeclaration |  | [215](../../src/settings.js#L215) |
+| WORKSPACE | VariableDeclaration |  | [216](../../src/settings.js#L216) |
+| writeTarget | FunctionDeclaration |  | [225](../../src/settings.js#L225) |
+| section | VariableDeclaration | writeTarget | [226](../../src/settings.js#L226) |
+| name | VariableDeclaration | writeTarget | [227](../../src/settings.js#L227) |
+| target | VariableDeclaration | writeTarget | [228](../../src/settings.js#L228) |
+| info | VariableDeclaration | writeTarget | [230](../../src/settings.js#L230) |
+| apply | FunctionDeclaration |  | [242](../../src/settings.js#L242) |
+| field | VariableDeclaration | apply | [243](../../src/settings.js#L243) |
+| where | VariableDeclaration | apply | [246](../../src/settings.js#L246) |
+| result | VariableDeclaration | apply | [253](../../src/settings.js#L253) |

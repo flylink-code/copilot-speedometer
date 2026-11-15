@@ -33,6 +33,8 @@ function usage(overrides) {
           inputTokens: 1200,
           outputTokens: 400,
           cacheReadTokens: 300,
+          cacheWriteTokens: 50,
+          reasoningTokens: 40,
           duration: 4000,
           timeToFirstTokenMs: 1000,
           interTokenLatencyMs: 4,
@@ -57,6 +59,8 @@ test('maps a BYOK usage record to a request record', () => {
   assert.strictEqual(rec.output, 400);
   assert.strictEqual(rec.input, 1200);
   assert.strictEqual(rec.cached, 300);
+  assert.strictEqual(rec.cacheWrite, 50);
+  assert.strictEqual(rec.reasoning, 40);
   assert.strictEqual(rec.durMs, 4000);
   assert.strictEqual(rec.ttftMs, 1000);
   assert.strictEqual(rec.rate, 100);
@@ -154,6 +158,33 @@ test('scanner skips dot-directories such as .session-operation-locks', () => {
   fs.mkdirSync(path.join(dir, '.session-operation-locks'), { recursive: true });
   fs.writeFileSync(path.join(dir, '.session-operation-locks', 'events.jsonl'), '{}\n', 'utf8');
   assert.strictEqual(new UsageScanner().scan({ root: dir, backfillDays: 0 }).length, 0);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('scanner reports the workspace of every session it lists', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cpm-usage-'));
+  const mine = path.join(dir, 'mine');
+  const other = path.join(dir, 'other');
+  fs.mkdirSync(mine, { recursive: true });
+  fs.mkdirSync(other, { recursive: true });
+  fs.writeFileSync(path.join(mine, 'workspace.yaml'), 'id: mine\ncwd: e:\\workspace\\demo\n', 'utf8');
+  fs.writeFileSync(path.join(other, 'workspace.yaml'), 'id: other\ncwd: e:\\workspace\\elsewhere\n', 'utf8');
+  fs.writeFileSync(path.join(mine, 'events.jsonl'), JSON.stringify(usage()) + '\n', 'utf8');
+  fs.writeFileSync(path.join(other, 'events.jsonl'), JSON.stringify(usage()) + '\n', 'utf8');
+
+  const files = new UsageScanner().scan({ root: dir, backfillDays: 0 });
+  const byName = new Map(files.map((f) => [path.basename(path.dirname(f.file)), f.cwd]));
+  assert.strictEqual(byName.get('mine'), 'e:\\workspace\\demo');
+  assert.strictEqual(byName.get('other'), 'e:\\workspace\\elsewhere');
+
+  // The cwd travels into the record so the host can filter without re-reading files.
+  const rec = parseUsageLine(
+    fs.readFileSync(path.join(mine, 'events.jsonl'), 'utf8').trim(),
+    path.join(mine, 'events.jsonl'),
+    byName.get('mine')
+  );
+  assert.strictEqual(rec.cwd, 'e:\\workspace\\demo');
+
   fs.rmSync(dir, { recursive: true, force: true });
 });
 

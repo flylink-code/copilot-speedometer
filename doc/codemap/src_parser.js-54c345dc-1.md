@@ -4,26 +4,29 @@
 
 [Module](src.md) · [Source](../../src/parser.js) · page 1/1
 
-Source SHA-256: 21d5e38b3c8704ac4ad688263e7b4fa78bdfc4d338a7fe2aff3857d91fec72a8
+Source SHA-256: 0cf4a93599c396fff9dccb15c684bef7852a6125f97c5fa8fc00a67f5b15efb4
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
 | fs | VariableDeclaration |  | [17](../../src/parser.js#L17) |
 | path | VariableDeclaration |  | [18](../../src/parser.js#L18) |
 | os | VariableDeclaration |  | [19](../../src/parser.js#L19) |
-| EDITOR_FOLDERS | VariableDeclaration |  | [21](../../src/parser.js#L21) |
-| DIR_CACHE_MS | VariableDeclaration |  | [22](../../src/parser.js#L22) |
-| MAX_FIRST_READ_BYTES | VariableDeclaration |  | [23](../../src/parser.js#L23) |
-| exists | FunctionDeclaration |  | [25](../../src/parser.js#L25) |
-| editorUserDirs | FunctionDeclaration |  | [34](../../src/parser.js#L34) |
-| home | VariableDeclaration | editorUserDirs | [35](../../src/parser.js#L35) |
-| out | VariableDeclaration | editorUserDirs | [36](../../src/parser.js#L36) |
-| name | VariableDeclaration | editorUserDirs | [37](../../src/parser.js#L37) |
-| num | FunctionDeclaration |  | [49](../../src/parser.js#L49) |
-| n | VariableDeclaration | num | [52](../../src/parser.js#L52) |
-| toMs | FunctionDeclaration |  | [58](../../src/parser.js#L58) |
-| direct | VariableDeclaration | toMs | [59](../../src/parser.js#L59) |
-| parsed | VariableDeclaration | toMs | [65](../../src/parser.js#L65) |
+| { DirMetadataCache, workspaceStorageId } | VariableDeclaration |  | [20](../../src/parser.js#L20) |
+| DirMetadataCache | BindingElement | { DirMetadataCache, workspaceStorageId } | [20](../../src/parser.js#L20) |
+| workspaceStorageId | BindingElement | { DirMetadataCache, workspaceStorageId } | [20](../../src/parser.js#L20) |
+| EDITOR_FOLDERS | VariableDeclaration |  | [22](../../src/parser.js#L22) |
+| DIR_CACHE_MS | VariableDeclaration |  | [23](../../src/parser.js#L23) |
+| MAX_FIRST_READ_BYTES | VariableDeclaration |  | [24](../../src/parser.js#L24) |
+| exists | FunctionDeclaration |  | [26](../../src/parser.js#L26) |
+| editorUserDirs | FunctionDeclaration |  | [35](../../src/parser.js#L35) |
+| home | VariableDeclaration | editorUserDirs | [36](../../src/parser.js#L36) |
+| out | VariableDeclaration | editorUserDirs | [37](../../src/parser.js#L37) |
+| name | VariableDeclaration | editorUserDirs | [38](../../src/parser.js#L38) |
+| num | FunctionDeclaration |  | [50](../../src/parser.js#L50) |
+| n | VariableDeclaration | num | [53](../../src/parser.js#L53) |
+| toMs | FunctionDeclaration |  | [59](../../src/parser.js#L59) |
+| direct | VariableDeclaration | toMs | [60](../../src/parser.js#L60) |
+| parsed | VariableDeclaration | toMs | [66](../../src/parser.js#L66) |
 | eventToRecord | FunctionDeclaration |  | [72](../../src/parser.js#L72) |
 | a | VariableDeclaration | eventToRecord | [74](../../src/parser.js#L74) |
 | ts | VariableDeclaration | eventToRecord | [76](../../src/parser.js#L76) |
@@ -31,48 +34,57 @@ Source SHA-256: 21d5e38b3c8704ac4ad688263e7b4fa78bdfc4d338a7fe2aff3857d91fec72a8
 | output | VariableDeclaration | eventToRecord | [78](../../src/parser.js#L78) |
 | input | VariableDeclaration | eventToRecord | [79](../../src/parser.js#L79) |
 | cached | VariableDeclaration | eventToRecord | [80](../../src/parser.js#L80) |
-| ttftMs | VariableDeclaration | eventToRecord | [81](../../src/parser.js#L81) |
-| model | VariableDeclaration | eventToRecord | [86](../../src/parser.js#L86) |
-| rate | VariableDeclaration | eventToRecord | [87](../../src/parser.js#L87) |
-| decodeRate | VariableDeclaration | eventToRecord | [88](../../src/parser.js#L88) |
-| responseId | VariableDeclaration | eventToRecord | [91](../../src/parser.js#L91) |
-| id | VariableDeclaration | eventToRecord | [92](../../src/parser.js#L92) |
-| parseEventLine | FunctionDeclaration |  | [109](../../src/parser.js#L109) |
-| trimmed | VariableDeclaration | parseEventLine | [110](../../src/parser.js#L110) |
-| ev | VariableDeclaration | parseEventLine | [112](../../src/parser.js#L112) |
-| LogScanner | ClassDeclaration |  | [121](../../src/parser.js#L121) |
-| constructor | Constructor | LogScanner | [122](../../src/parser.js#L122) |
-| roots | MethodDeclaration | LogScanner | [129](../../src/parser.js#L129) |
-| custom | VariableDeclaration | LogScanner.roots | [130](../../src/parser.js#L130) |
-| out | VariableDeclaration | LogScanner.roots | [133](../../src/parser.js#L133) |
-| user | VariableDeclaration | LogScanner.roots | [134](../../src/parser.js#L134) |
-| editor | VariableDeclaration | LogScanner.roots | [135](../../src/parser.js#L135) |
-| existingRoots | MethodDeclaration | LogScanner | [153](../../src/parser.js#L153) |
-| scan | MethodDeclaration | LogScanner | [158](../../src/parser.js#L158) |
-| now | VariableDeclaration | LogScanner.scan | [159](../../src/parser.js#L159) |
-| files | VariableDeclaration | LogScanner.scan | [162](../../src/parser.js#L162) |
-| entry | VariableDeclaration | LogScanner.scan | [163](../../src/parser.js#L163) |
-| names | VariableDeclaration | LogScanner.scan | [164](../../src/parser.js#L164) |
-| e | VariableDeclaration | LogScanner.scan | [171](../../src/parser.js#L171) |
-| p | VariableDeclaration | LogScanner.scan | [172](../../src/parser.js#L172) |
-| f | VariableDeclaration | LogScanner.scan | [175](../../src/parser.js#L175) |
-| e | VariableDeclaration | LogScanner.scan | [180](../../src/parser.js#L180) |
-| base | VariableDeclaration | LogScanner.scan | [182](../../src/parser.js#L182) |
-| inner | VariableDeclaration | LogScanner.scan | [184](../../src/parser.js#L184) |
-| s | VariableDeclaration | LogScanner.scan | [190](../../src/parser.js#L190) |
-| f | VariableDeclaration | LogScanner.scan | [191](../../src/parser.js#L191) |
-| unique | VariableDeclaration | LogScanner.scan | [198](../../src/parser.js#L198) |
-| backfillDays | VariableDeclaration | LogScanner.scan | [199](../../src/parser.js#L199) |
-| cutoff | VariableDeclaration | LogScanner.scan | [200](../../src/parser.js#L200) |
-| listed | VariableDeclaration | LogScanner.scan | [201](../../src/parser.js#L201) |
-| f | VariableDeclaration | LogScanner.scan | [202](../../src/parser.js#L202) |
-| st | VariableDeclaration | LogScanner.scan | [203](../../src/parser.js#L203) |
-| readNew | MethodDeclaration | LogScanner | [225](../../src/parser.js#L225) |
-| st | VariableDeclaration | LogScanner.readNew | [226](../../src/parser.js#L226) |
-| offset | VariableDeclaration | LogScanner.readNew | [233](../../src/parser.js#L233) |
-| fd | VariableDeclaration | LogScanner.readNew | [243](../../src/parser.js#L243) |
-| buf | VariableDeclaration | LogScanner.readNew | [244](../../src/parser.js#L244) |
-| probe | VariableDeclaration | LogScanner.readNew | [250](../../src/parser.js#L250) |
-| length | VariableDeclaration | LogScanner.readNew | [254](../../src/parser.js#L254) |
-| lastNewline | VariableDeclaration | LogScanner.readNew | [273](../../src/parser.js#L273) |
-| chunk | VariableDeclaration | LogScanner.readNew | [278](../../src/parser.js#L278) |
+| cacheWrite | VariableDeclaration | eventToRecord | [81](../../src/parser.js#L81) |
+| reasoning | VariableDeclaration | eventToRecord | [82](../../src/parser.js#L82) |
+| ttftMs | VariableDeclaration | eventToRecord | [83](../../src/parser.js#L83) |
+| model | VariableDeclaration | eventToRecord | [88](../../src/parser.js#L88) |
+| rate | VariableDeclaration | eventToRecord | [89](../../src/parser.js#L89) |
+| decodeRate | VariableDeclaration | eventToRecord | [90](../../src/parser.js#L90) |
+| responseId | VariableDeclaration | eventToRecord | [93](../../src/parser.js#L93) |
+| id | VariableDeclaration | eventToRecord | [94](../../src/parser.js#L94) |
+| parseEventLine | FunctionDeclaration |  | [115](../../src/parser.js#L115) |
+| trimmed | VariableDeclaration | parseEventLine | [116](../../src/parser.js#L116) |
+| ev | VariableDeclaration | parseEventLine | [118](../../src/parser.js#L118) |
+| LogScanner | ClassDeclaration |  | [127](../../src/parser.js#L127) |
+| constructor | Constructor | LogScanner | [128](../../src/parser.js#L128) |
+| origin | MethodDeclaration | LogScanner | [142](../../src/parser.js#L142) |
+| dir | VariableDeclaration | LogScanner.origin | [143](../../src/parser.js#L143) |
+| depth | VariableDeclaration | LogScanner.origin | [144](../../src/parser.js#L144) |
+| id | VariableDeclaration | LogScanner.origin | [146](../../src/parser.js#L146) |
+| parent | VariableDeclaration | LogScanner.origin | [149](../../src/parser.js#L149) |
+| cwdOf | MethodDeclaration | LogScanner | [157](../../src/parser.js#L157) |
+| roots | MethodDeclaration | LogScanner | [161](../../src/parser.js#L161) |
+| custom | VariableDeclaration | LogScanner.roots | [162](../../src/parser.js#L162) |
+| out | VariableDeclaration | LogScanner.roots | [165](../../src/parser.js#L165) |
+| user | VariableDeclaration | LogScanner.roots | [166](../../src/parser.js#L166) |
+| editor | VariableDeclaration | LogScanner.roots | [167](../../src/parser.js#L167) |
+| existingRoots | MethodDeclaration | LogScanner | [185](../../src/parser.js#L185) |
+| scan | MethodDeclaration | LogScanner | [190](../../src/parser.js#L190) |
+| now | VariableDeclaration | LogScanner.scan | [191](../../src/parser.js#L191) |
+| files | VariableDeclaration | LogScanner.scan | [194](../../src/parser.js#L194) |
+| entry | VariableDeclaration | LogScanner.scan | [195](../../src/parser.js#L195) |
+| names | VariableDeclaration | LogScanner.scan | [196](../../src/parser.js#L196) |
+| e | VariableDeclaration | LogScanner.scan | [203](../../src/parser.js#L203) |
+| p | VariableDeclaration | LogScanner.scan | [204](../../src/parser.js#L204) |
+| f | VariableDeclaration | LogScanner.scan | [207](../../src/parser.js#L207) |
+| e | VariableDeclaration | LogScanner.scan | [212](../../src/parser.js#L212) |
+| base | VariableDeclaration | LogScanner.scan | [214](../../src/parser.js#L214) |
+| inner | VariableDeclaration | LogScanner.scan | [216](../../src/parser.js#L216) |
+| s | VariableDeclaration | LogScanner.scan | [222](../../src/parser.js#L222) |
+| f | VariableDeclaration | LogScanner.scan | [223](../../src/parser.js#L223) |
+| unique | VariableDeclaration | LogScanner.scan | [230](../../src/parser.js#L230) |
+| backfillDays | VariableDeclaration | LogScanner.scan | [231](../../src/parser.js#L231) |
+| cutoff | VariableDeclaration | LogScanner.scan | [232](../../src/parser.js#L232) |
+| listed | VariableDeclaration | LogScanner.scan | [233](../../src/parser.js#L233) |
+| f | VariableDeclaration | LogScanner.scan | [234](../../src/parser.js#L234) |
+| st | VariableDeclaration | LogScanner.scan | [235](../../src/parser.js#L235) |
+| where | VariableDeclaration | LogScanner.scan | [242](../../src/parser.js#L242) |
+| readNew | MethodDeclaration | LogScanner | [258](../../src/parser.js#L258) |
+| st | VariableDeclaration | LogScanner.readNew | [259](../../src/parser.js#L259) |
+| offset | VariableDeclaration | LogScanner.readNew | [266](../../src/parser.js#L266) |
+| fd | VariableDeclaration | LogScanner.readNew | [276](../../src/parser.js#L276) |
+| buf | VariableDeclaration | LogScanner.readNew | [277](../../src/parser.js#L277) |
+| probe | VariableDeclaration | LogScanner.readNew | [283](../../src/parser.js#L283) |
+| length | VariableDeclaration | LogScanner.readNew | [287](../../src/parser.js#L287) |
+| lastNewline | VariableDeclaration | LogScanner.readNew | [306](../../src/parser.js#L306) |
+| chunk | VariableDeclaration | LogScanner.readNew | [311](../../src/parser.js#L311) |

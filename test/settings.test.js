@@ -70,7 +70,7 @@ test('every declared field exists in package.json configuration', () => {
     if (field.copilot) continue;
     const key = `copilotSpeedometer.${field.key}`;
     assert.ok(props[key], `${key} is missing from package.json`);
-    assert.strictEqual(props[key].default, field.default, `${key} default drifted from settings.js`);
+    assert.deepStrictEqual(props[key].default, field.default, `${key} default drifted from settings.js`);
     if (field.min !== undefined) assert.strictEqual(props[key].minimum, field.min, `${key} minimum drifted`);
     if (field.options) assert.deepStrictEqual(props[key].enum, field.options, `${key} enum drifted`);
   }
@@ -107,6 +107,19 @@ test('number fields reject non-numbers and out-of-range values', () => {
   assert.deepStrictEqual(settings.coerce(field, 999999), { error: 'Maximum is 60000.' });
   assert.deepStrictEqual(settings.coerce(field, '1500'), { value: 1500 });
   assert.deepStrictEqual(settings.coerce(field, 1500.4), { value: 1500 });
+  const mult = settings.fieldByKey('pricingMultiplier');
+  assert.deepStrictEqual(settings.coerce(mult, '0.5'), { value: 0.5 });
+});
+
+test('json fields validate objects and keep default unmodified', () => {
+  const field = settings.fieldByKey('customPricing');
+  assert.deepStrictEqual(settings.coerce(field, '{"m":{"input":1,"output":5}}'), { value: { m: { input: 1, output: 5 } } });
+  assert.ok(settings.coerce(field, '{bad').error);
+  assert.ok(settings.coerce(field, '[1,2]').error);
+  const cfg = fakeConfig({});
+  const desc = settings.describe(cfg);
+  const custom = desc.fields.find((f) => f.key === 'customPricing');
+  assert.strictEqual(custom.modified, false);
 });
 
 test('enum fields reject options outside the packaged list', () => {

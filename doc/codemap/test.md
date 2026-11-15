@@ -9,6 +9,9 @@
 | File | Symbols | Symbol pages |
 | --- | ---: | --- |
 | [test/i18n.test.js](../../test/i18n.test.js) | 48 | [1](test_i18n.test.js-3fd81af8-1.md) |
-| [test/parser.test.js](../../test/parser.test.js) | 52 | [1](test_parser.test.js-fdc851b3-1.md) |
-| [test/settings.test.js](../../test/settings.test.js) | 49 | [1](test_settings.test.js-716bc46b-1.md) |
-| [test/usage.test.js](../../test/usage.test.js) | 31 | [1](test_usage.test.js-5e269066-1.md) |
+| [test/parser.test.js](../../test/parser.test.js) | 68 | [1](test_parser.test.js-fdc851b3-1.md) |
+| [test/pricing.test.js](../../test/pricing.test.js) | 14 | [1](test_pricing.test.js-010a8294-1.md) |
+| [test/scope.test.js](../../test/scope.test.js) | 32 | [1](test_scope.test.js-57cb97d7-1.md) |
+| [test/sessions.test.js](../../test/sessions.test.js) | 46 | [1](test_sessions.test.js-6c4a4731-1.md) |
+| [test/settings.test.js](../../test/settings.test.js) | 54 | [1](test_settings.test.js-716bc46b-1.md) |
+| [test/usage.test.js](../../test/usage.test.js) | 37 | [1](test_usage.test.js-5e269066-1.md) |

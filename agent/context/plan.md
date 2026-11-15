@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-11-13
+updated: 2026-11-15
 ---
 
 # 计划与进度
@@ -10,35 +10,37 @@ updated: 2026-11-13
 
 ## 当前阶段
 
-- 创建 / 实现 / 调试 / [x] 优化 / 归档 —— 当前：**优化 / 首次发布准备**（0.1.0 已打包，等待用户手动上传）
+- 创建 / 实现 / 调试 / 优化 / [x] 归档 —— 当前：**0.2.0 已发布提交并推送至 GitHub（含标签 `v0.2.0`），本地已安装 VSIX，待上传 Marketplace 后台**
 
 ## 当前目标
 
-- 上传 `dist/copilot-speedometer-0.1.0.vsix` 到 Marketplace，确认介绍图与面板正常。
+- 在 VS Code Marketplace 管理后台上传 `dist/copilot-speedometer-0.2.0.vsix` 完成商店上架。
 
 ## 进行中
 
 | 事项 | 状态 | 阻塞点 | 负责人 |
 | --- | --- | --- | --- |
-| 功能扩展①：Copilot 会话管理 hub | 待讨论 | 需调研会话是否可按工作目录聚合、能否稳定读取 | 用户 + Agent |
-| 功能扩展②：token 费用统计 | 待讨论 | 需确认 usage record 的 `cost` 字段口径与模型价目来源 | 用户 + Agent |
-| 发布 0.1.0 到 Marketplace | 待上传 | 用户手动上传 `dist/copilot-speedometer-0.1.0.vsix` | 用户 |
+| 上传 `dist/copilot-speedometer-0.2.0.vsix` 到 Marketplace | 已推送源码与标签，VSIX 就绪 | 本机未配置 `VSCE_PAT`，需登录 Marketplace 网页后台上传 | 用户 |
 
 ## 下一步（按优先级）
 
-1. 用户在 Marketplace 上传 0.1.0（判定：页面版本显示 0.1.0，publisher 为 `copilot-speedometer`）。
-2. 上传后复核介绍图（判定：无 `dashboard` / `settings` alt 文本占位）。
-3. 按 `agent/playbooks/10-create.md` 对两个功能扩展做调研与方案对比（判定：每个功能给出“做/不做/怎么做 + 代价”）。
+1. 打开 VS Code Marketplace 发布者后台（`https://marketplace.visualstudio.com/manage/publishers/copilot-speedometer`）上传 `dist/copilot-speedometer-0.2.0.vsix`（判定：商店页面版本显示 `0.2.0`，且 3 张介绍图正常显示）。
+2. 在当前 VS Code 执行 `Developer: Reload Window` 使用正式安装的 `0.2.0`（判定：左侧常驻视图、状态栏唤醒、会话 Hub 与费用估算正常）。
+3. 如后续希望命令行一键发布到商店，可配置 `VSCE_PAT` 或添加 GitHub Actions Release 工作流（判定：`npx @vscode/vsce verify-pat copilot-speedometer` 返回成功）。
 
 ## 已完成（只留最近 10 条，更早的走归档）
 
+- 0.2.0 左侧栏与面板 UI 重构：单行图标顶栏 + 原生 `view/title` 溢出菜单、仪表盘 Hero 主卡 + 2×3 对称指标格 + 均值虚线 + 通栏分组头、会话 Hub 时间分组 + 折叠筛选器 + 窄栏单流钻取（移除双滚动条）+ 结构化详情与分级操作、设置页布尔开关单行右对齐，更新全部中英文预览图（2026-11-15）。
+- 0.2.0 增强：会话详情默认折叠、Agent 会话管理（Fork / 移动工作区 / 归档与取消归档 / 删除，含运行锁保护）与面板 UI 状态按窗口持久化（`workspaceState`）（2026-11-14）。
+- 0.2.0 追加：左侧栏常驻 `WebviewViewProvider`（`media/sidebar-icon.svg` + 窄屏自适应布局）+ 历史对话打开即回填唤醒，仅自动隐藏右下角状态栏（2026-11-14）。
+- 0.2.0：Token 费用估算（`src/pricing.js` + `pricingMultiplier`/`customPricing`）与只读跨工作区会话 Hub（`src/sessions.js` + Hub 视图）（2026-11-14）。
+- 0.1.1 补充修复：`setScope` 运行时兜底（`sessionScopeOverride`）+ 面板事件委托，解决未完全重载主进程时「查看所有窗口」静默失败（2026-11-14）。
+- 功能扩展①②技术调研落地：`copilot-session-hub.md`、`token-cost-pricing.md`（2026-11-14）。
+- 0.1.1：tok/s 按窗口隔离（`src/scope.js` + `sessionScope` 设置 + 面板范围条，2026-11-13）。
 - Marketplace 图片修复：去掉 `--no-rewrite-relative-links`，包装脚本先建 `dist/`；vsix 从 72 文件/670 KB 降到 17 文件/73 KB（2026-11-13）。
 - 0.4.0：状态栏空闲自动隐藏（`autoHideMinutes`）、图标、改名（提交 `e9f3a9a`）。
 - 0.3.1：中英文跟随 VS Code 显示语言（`591d0bb`）。
-- 0.3.0：面板内 Settings 页、`statusBarFormat`、写入作用域修复（`26baecc`、`fc19f6a`、`37d4798`）。
-- 0.2.3：`Show Diagnostics` 诊断命令。
-- 0.2.2：按需深回填 + 目录缓存 key 修复。
 
 ## 最后更新
 
-- 2026-11-13 / Claude（依据 `task.md`、`HANDOFF.md` §9、CHANGELOG）
+- 2026-11-15 / Gemini（完成左侧栏与面板 UI 重新规划落地、截图更新与重新打包）

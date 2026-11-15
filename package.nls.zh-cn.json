@@ -1,5 +1,7 @@
 {
-  "command.showDashboard.title": "打开仪表盘",
+  "view.sidebar.name": "速率监控与会话 Hub",
+  "command.showDashboard.title": "打开左侧栏面板",
+  "command.openTab.title": "在编辑器标签页打开",
   "command.refresh.title": "刷新",
   "command.enableLogging.title": "开启 Copilot 调试日志",
   "command.exportJson.title": "导出已抓取请求为 JSON",
@@ -8,16 +10,22 @@
   "command.diagnostics.title": "显示诊断（为什么没有数据？）",
   "config.enabled.description": "在后台扫描 Copilot 调试日志，并显示 tok/s 状态栏项。",
   "config.statusBar.description": "在状态栏显示 tok/s。",
-  "config.autoHideMinutes.description": "多久没有新的 Copilot 回答后自动隐藏状态栏项，避免在不聊天的窗口里显示一个过期的数字。0 表示始终显示。",
+  "config.autoHideMinutes.description": "多久没有新的 Copilot 活动后自动隐藏右下角状态栏项（左侧栏会一直保留显示）。0 表示状态栏也始终显示。",
   "config.statusBarFormat.description": "每次抓到回答后，状态栏显示什么内容。",
   "config.statusBarFormat.rate": "只显示吞吐，例如 “12.4 tok/s”。",
   "config.statusBarFormat.rateModel": "吞吐 + 产生它的模型。",
   "config.statusBarFormat.rateTtft": "吞吐 + 首 token 延迟。",
+  "config.sessionScope.description": "状态栏和面板显示哪些 Copilot 会话。Copilot 把所有窗口的会话写在同一个目录里，所以默认只统计本窗口打开的文件夹。",
+  "config.sessionScope.window": "只显示本窗口文件夹里开始的会话（默认）。",
+  "config.sessionScope.all": "显示本机所有窗口的会话。",
   "config.logPath.description": "覆盖 Copilot 调试日志根目录（即包含各会话 main.jsonl 子文件夹的那一层）。留空则自动识别 VS Code / Insiders / VSCodium / Cursor。",
   "config.pollIntervalMs.description": "多久检查一次日志文件里的新请求，单位毫秒。",
   "config.historySize.description": "内存中最多保留多少条请求。",
   "config.backfillDays.description": "启动时加载最近几天修改过的日志（0 表示不回填）。",
   "config.includeLegacyWorkspaceLogs.description": "同时扫描旧版 VS Code 使用的 workspaceStorage/<hash>/GitHub.copilot-chat/debug-logs 布局。",
   "config.usageEvents.description": "同时读取 Copilot agent 的 usage 记录（~/.copilot/session-state/*/events.jsonl）。它覆盖 BYOK / 自定义端点模型、带 TTFT，且不需要开启调试日志。",
-  "config.usageEventsRoot.description": "覆盖 Copilot agent 会话目录，留空则使用 ~/.copilot/session-state。"
+  "config.usageEventsRoot.description": "覆盖 Copilot agent 会话目录，留空则使用 ~/.copilot/session-state。",
+  "config.includeVscodeChats.description": "在会话 Hub 中同时展示本地 VS Code Chat 会话（workspaceStorage/*/chatSessions）。",
+  "config.pricingMultiplier.description": "估算费用倍率（适用于中转站折扣或倍率；1 = 官方目录参考价）。",
+  "config.customPricing.description": "自定义或覆盖模型单价（美元 / 百万 token），例如 {\"my-model\":{\"input\":1,\"output\":5,\"cacheRead\":0.1}}。"
 }

@@ -24,6 +24,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { DirMetadataCache, sessionCwd } = require('./scope');
 
 const DIR_CACHE_MS = 10000;
 const MAX_FIRST_READ_BYTES = 8 * 1024 * 1024;
@@ -41,7 +42,7 @@ function num(value) {
   return undefined;
 }
 
-function usageToRecord(ev, file) {
+function usageToRecord(ev, file, cwd) {
   if (!ev || typeof ev !== 'object' || ev.type !== 'session.usage_record') return null;
   const u = ev.data && typeof ev.data === 'object' ? ev.data.usage : null;
   if (!u || typeof u !== 'object') return null;
@@ -73,6 +74,8 @@ function usageToRecord(ev, file) {
     input: num(u.inputTokens) || 0,
     output,
     cached: num(u.cacheReadTokens) || 0,
+    cacheWrite: num(u.cacheWriteTokens) || 0,
+    reasoning: num(u.reasoningTokens) || 0,
     durMs,
     ttftMs: ttftMs > 0 ? ttftMs : null,
     rate: output / (durMs / 1000),
@@ -81,11 +84,12 @@ function usageToRecord(ev, file) {
     byok: !!u.isByok,
     provider:
       typeof u.providerType === 'string' ? u.providerType : typeof u.modelProvider === 'string' ? u.modelProvider : null,
+    cwd: cwd || '',
     file: file || null,
   };
 }
 
-function parseUsageLine(line, file) {
+function parseUsageLine(line, file, cwd) {
   const trimmed = line.trim();
   // Cheap pre-filter: the file also holds prompts, tool output and response text.
   if (!trimmed || trimmed.indexOf('session.usage_record') === -1) return null;
@@ -95,7 +99,7 @@ function parseUsageLine(line, file) {
   } catch {
     return null;
   }
-  return usageToRecord(ev, file);
+  return usageToRecord(ev, file, cwd);
 }
 
 class UsageScanner {
@@ -103,7 +107,13 @@ class UsageScanner {
     this.offsets = new Map();
     this.dirCache = null;
     this.dirCacheAt = 0;
+    this.dirs = new DirMetadataCache(now);
     this.now = now;
+  }
+
+  /** Working directory of a session file, memoised: read on every poll. */
+  cwdOf(file) {
+    return sessionCwd(path.dirname(file), this.dirs);
   }
 
   root(opts = {}) {
@@ -162,7 +172,7 @@ class UsageScanner {
         continue;
       }
       if (backfillDays > 0 && st.mtimeMs < cutoff && !this.offsets.has(f)) continue;
-      listed.push({ file: f, size: st.size, mtimeMs: st.mtimeMs });
+      listed.push({ file: f, size: st.size, mtimeMs: st.mtimeMs, cwd: this.cwdOf(f) });
     }
     listed.sort((a, b) => b.mtimeMs - a.mtimeMs);
 

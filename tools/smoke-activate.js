@@ -36,9 +36,12 @@ const settings = {
     usageEvents: true,
     usageEventsRoot: '',
     statusBarFormat: 'rate',
+    sessionScope: 'window',
   },
   'github.copilot.chat': { 'agentDebugLog.fileLogging.enabled': false },
 };
+
+let rejectSessionScopeWrite = false;
 
 function getConfiguration(ns) {
   return {
@@ -52,6 +55,9 @@ function getConfiguration(ns) {
       return { defaultValue: undefined, globalValue: bucket[key], workspaceValue: undefined };
     },
     async update(key, value) {
+      if (rejectSessionScopeWrite && key === 'sessionScope') {
+        throw new Error('Unable to write to User Settings because copilotSpeedometer.sessionScope is not a registered configuration.');
+      }
       settings[ns] = Object.assign({}, settings[ns], { [key]: value });
     },
   };
@@ -87,11 +93,27 @@ const stub = {
   workspace: {
     getConfiguration,
     workspaceFolders: undefined,
+    workspaceFile: undefined,
     onDidChangeConfiguration() {
+      return new stub.Disposable();
+    },
+    onDidChangeWorkspaceFolders(fn) {
+      captured.folderListeners = captured.folderListeners || [];
+      captured.folderListeners.push(fn);
       return new stub.Disposable();
     },
   },
   window: {
+    registerWebviewViewProvider(id, provider) {
+      captured.viewProviders = captured.viewProviders || new Map();
+      captured.viewProviders.set(id, provider);
+      return new stub.Disposable();
+    },
+    onDidChangeWindowState(fn) {
+      captured.windowStateListeners = captured.windowStateListeners || [];
+      captured.windowStateListeners.push(fn);
+      return new stub.Disposable();
+    },
     createStatusBarItem() {
       return {
         text: '',
@@ -167,11 +189,17 @@ Module._load = function (request, parent, isMain) {
 
 const ext = require('../src/extension.js');
 
+const memGlobal = new Map();
+const memWorkspace = new Map();
 const context = {
   subscriptions: [],
   globalState: {
-    get: () => undefined,
-    update: async () => undefined,
+    get: (k) => memGlobal.get(k),
+    update: async (k, v) => { memGlobal.set(k, v); },
+  },
+  workspaceState: {
+    get: (k) => memWorkspace.get(k),
+    update: async (k, v) => { memWorkspace.set(k, v); },
   },
 };
 
@@ -200,23 +228,61 @@ const context = {
   console.log('smoke');
 
   ext.activate(context);
-  check('activate registers every command', () => {
-    for (const cmd of ['showDashboard', 'refresh', 'enableLogging', 'exportJson', 'clearHistory', 'seedDemo']) {
+  check('activate registers every command and the sidebar view provider', () => {
+    for (const cmd of ['showDashboard', 'openTab', 'refresh', 'enableLogging', 'exportJson', 'clearHistory', 'seedDemo']) {
       if (!captured.handlers.has(`copilotSpeedometer.${cmd}`)) throw new Error(`missing ${cmd}`);
+    }
+    if (!captured.viewProviders || !captured.viewProviders.has('copilotSpeedometer.sidebarView')) {
+      throw new Error('sidebarView provider not registered');
     }
   });
 
-  // Let the first tick (synchronous) run, then open the dashboard.
-  check('opening the dashboard creates a webview', () => {
+  check('sidebar view resolves as always-available sidebar layout and showDashboard focuses it', () => {
+    const provider = captured.viewProviders.get('copilotSpeedometer.sidebarView');
+    const fakeView = {
+      visible: true,
+      webview: {
+        html: '',
+        cspSource: 'vscode-resource:',
+        onDidReceiveMessage(fn) {
+          captured.webviewMessages.push(fn);
+          return new stub.Disposable();
+        },
+        postMessage(msg) {
+          captured.posted.push(msg);
+          return Promise.resolve(true);
+        },
+      },
+      onDidDispose() {
+        return new stub.Disposable();
+      },
+      onDidChangeVisibility() {
+        return new stub.Disposable();
+      },
+    };
+    provider.resolveWebviewView(fakeView);
+    if (!fakeView.webview.html.includes('class="sidebar"')) throw new Error('sidebar class missing');
+    if (!fakeView.webview.html.includes('id="open-tab"')) throw new Error('open-tab button missing');
+
     captured.handlers.get('copilotSpeedometer.showDashboard')();
-    if (!captured.webviewMessages.length) throw new Error('no message handler registered');
+    if (!captured.command || captured.command[0] !== 'copilotSpeedometer.sidebarView.focus') {
+      throw new Error('showDashboard did not focus sidebarView');
+    }
+  });
+
+  // Also test the optional editor tab pop-out.
+  check('openTab opens an editor webview panel', () => {
+    captured.handlers.get('copilotSpeedometer.openTab')();
+    if (captured.webviewMessages.length < 2) throw new Error('editor panel message handler missing');
   });
 
   const send = (msg) => captured.webviewMessages.forEach((fn) => fn(msg));
   const lastOf = (type) => [...captured.posted].reverse().find((m) => m.type === type);
 
-  check('"today" payload has the expected shape', () => {
-    send({ type: 'ready', window: 'today' });
+  check('"today" payload has the expected shape and uiState is restored', () => {
+    send({ type: 'ready' });
+    const uiMsg = lastOf('uiState');
+    if (!uiMsg || uiMsg.payload.detailOpen !== false) throw new Error('uiState missing or detailOpen not false by default');
     const msg = lastOf('data');
     if (!msg || msg.type !== 'data') throw new Error('no data message');
     const p = msg.payload;
@@ -227,7 +293,7 @@ const context = {
   });
 
   check('"all" window triggers a deep backfill and keeps sane numbers', () => {
-    send({ type: 'ready', window: 'all' });
+    send({ type: 'filter', window: 'all' });
     const p = lastOf('data').payload;
     if (p.totalCaptured <= 0) throw new Error('deep backfill produced no records');
     if (!(p.agg.rate > 0)) throw new Error('aggregate rate is not positive');
@@ -283,6 +349,131 @@ const context = {
     if (!/total records:\s*\d+/.test(text)) throw new Error('no record count');
     console.log('       diagnostics lines: ' + text.trim().split('\n').length);
     if (process.env.SMOKE_DUMP) console.log('\n=== diagnostics ===\n' + text + '=== end ===\n');
+  });
+
+  await checkAsync('sessions hub lists sessions, supports archive/unarchive, and persists uiState', async () => {
+    send({ type: 'tab', view: 'sessions' });
+    const msg = lastOf('sessions');
+    if (!msg || !msg.payload || !Array.isArray(msg.payload.sessions)) throw new Error('sessions payload missing');
+    if (!msg.payload.sessions.length) throw new Error('expected at least one local session');
+    const first = msg.payload.sessions[0];
+    send({ type: 'sessionDetail', id: first.id });
+    const det = lastOf('sessionDetail');
+    if (!det || !det.payload || !det.payload.session) throw new Error('sessionDetail missing');
+
+    send({ type: 'archiveSession', id: first.id });
+    await new Promise((r) => setTimeout(r, 30));
+    const afterArch = lastOf('sessions').payload;
+    if (!afterArch.sessions.find((s) => s.id === first.id && s.archived)) throw new Error('archive flag not set');
+    send({ type: 'unarchiveSession', id: first.id });
+    await new Promise((r) => setTimeout(r, 30));
+    const afterUnarch = lastOf('sessions').payload;
+    if (!afterUnarch.sessions.find((s) => s.id === first.id && !s.archived)) throw new Error('unarchive flag not cleared');
+
+    send({ type: 'saveUiState', patch: { selectedSessionId: first.id, detailOpen: false, dashOpen: { chart: false } } });
+    send({ type: 'ready' });
+    const restored = lastOf('uiState').payload;
+    if (restored.view !== 'sessions' || restored.selectedSessionId !== first.id || restored.dashOpen.chart !== false) {
+      throw new Error('uiState did not persist across ready');
+    }
+
+    console.log(`       sessions: count=${msg.payload.sessions.length} topTurns=${det.payload.turns.length}`);
+    send({ type: 'tab', view: 'dashboard' });
+  });
+
+  /*
+   * The bug this suite exists to prevent: Copilot writes every window's
+   * sessions into one shared folder, so without scoping a fresh window shows
+   * whatever another window happened to run. Point the fake window at a real
+   * project folder and the payload must shrink to that folder's sessions.
+   */
+  await checkAsync('scoping hides other windows\' sessions and can be turned off', async () => {
+    const all = lastOf('data').payload;
+    const allCount = all.totalCaptured;
+
+    stub.workspace.workspaceFolders = [{ uri: { fsPath: 'E:\\workspace\\copilot-speedometer' } }];
+    send({ type: 'refresh' });
+    await new Promise((r) => setTimeout(r, 80));
+    const mine = lastOf('data').payload;
+
+    if (mine.scope.mode !== 'window') throw new Error(`scope mode is ${mine.scope.mode}`);
+    if (mine.totalCaptured >= allCount) {
+      throw new Error(`window scope captured ${mine.totalCaptured} of ${allCount} - nothing was filtered`);
+    }
+    if (mine.scope.otherSessions <= 0) throw new Error('otherSessions is not positive');
+    const foreign = mine.requests.filter((r) => r.cwd && !/copilot-speedometer/i.test(r.cwd));
+    if (foreign.length) throw new Error(`${foreign.length} requests from another workspace leaked in`);
+    console.log(`       scoped: ${mine.totalCaptured} of ${allCount} records, ${mine.scope.otherSessions} hidden`);
+
+    settings.copilotSpeedometer.sessionScope = 'all';
+    send({ type: 'refresh' });
+    await new Promise((r) => setTimeout(r, 80));
+    const merged = lastOf('data').payload;
+    if (merged.scope.mode !== 'all') throw new Error('sessionScope=all was not honoured');
+    if (merged.totalCaptured !== allCount) {
+      throw new Error(`all mode captured ${merged.totalCaptured}, expected ${allCount}`);
+    }
+
+    settings.copilotSpeedometer.sessionScope = 'window';
+    stub.workspace.workspaceFolders = undefined;
+    send({ type: 'refresh' });
+    await new Promise((r) => setTimeout(r, 80));
+    const unscoped = lastOf('data').payload;
+    if (unscoped.totalCaptured !== allCount) throw new Error('no folder open should keep every record');
+  });
+
+  await checkAsync('opening a folder rescopes without waiting for a new record', async () => {
+    // The window had no folder, so everything was counted. Opening one must
+    // rebuild the payload immediately; otherwise the stale merged number stays
+    // on screen until Copilot happens to answer again.
+    const before = lastOf('data').payload;
+    if (before.scope.roots.length !== 0) throw new Error('test starts with no folder open');
+
+    stub.workspace.workspaceFolders = [{ uri: { fsPath: 'E:\\workspace\\copilot-speedometer' } }];
+    for (const fn of captured.folderListeners || []) fn();
+    const after = lastOf('data').payload;
+
+    if (after === before) throw new Error('nothing was pushed');
+    if (after.scope.roots.length !== 1) throw new Error('the new folder was not picked up');
+    if (after.totalCaptured >= before.totalCaptured) {
+      throw new Error(`still counting ${after.totalCaptured} of ${before.totalCaptured} records`);
+    }
+    console.log(`       refoldered: ${after.totalCaptured} of ${before.totalCaptured} records`);
+    stub.workspace.workspaceFolders = undefined;
+
+    // Clicking the panel's scope strip must repaint without an extra refresh.
+    settings.copilotSpeedometer.sessionScope = 'window';
+    stub.workspace.workspaceFolders = [{ uri: { fsPath: 'E:\\workspace\\copilot-speedometer' } }];
+    send({ type: 'setScope', value: 'all' });
+    await new Promise((r) => setTimeout(r, 80));
+    const swapped = lastOf('data').payload;
+    if (swapped.scope.mode !== 'all') throw new Error('scope strip did not repaint');
+    if (swapped.totalCaptured !== before.totalCaptured) {
+      throw new Error(`all mode shows ${swapped.totalCaptured}, expected ${before.totalCaptured}`);
+    }
+
+    // Even if VS Code rejects writing the new setting (e.g. only Extension Host
+    // restarted without reloading the manifest), the runtime override must still
+    // switch the dashboard and settings state cleanly.
+    send({ type: 'setScope', value: 'window' });
+    await new Promise((r) => setTimeout(r, 40));
+    rejectSessionScopeWrite = true;
+    send({ type: 'setScope', value: 'all' });
+    await new Promise((r) => setTimeout(r, 80));
+    const fallback = lastOf('data').payload;
+    if (fallback.scope.mode !== 'all') throw new Error('setScope fallback failed when update threw');
+    if (fallback.totalCaptured !== before.totalCaptured) {
+      throw new Error(`fallback all mode shows ${fallback.totalCaptured}, expected ${before.totalCaptured}`);
+    }
+    const fallbackSettings = lastOf('settings').payload.fields.find((f) => f.key === 'sessionScope');
+    if (!fallbackSettings || fallbackSettings.value !== 'all') {
+      throw new Error('settings field did not reflect runtime scope override');
+    }
+    rejectSessionScopeWrite = false;
+    send({ type: 'setScope', value: 'window' });
+    await new Promise((r) => setTimeout(r, 40));
+    settings.copilotSpeedometer.sessionScope = 'window';
+    stub.workspace.workspaceFolders = undefined;
   });
 
   check('enableLogging writes the Copilot setting', () => {

@@ -8,10 +8,13 @@
 
 | File | Symbols | Symbol pages |
 | --- | ---: | --- |
-| [src/extension.js](../../src/extension.js) | 184 | [1](src_extension.js-41610ea8-1.md) [2](src_extension.js-41610ea8-2.md) |
+| [src/extension.js](../../src/extension.js) | 331 | [1](src_extension.js-41610ea8-1.md) [2](src_extension.js-41610ea8-2.md) [3](src_extension.js-41610ea8-3.md) [4](src_extension.js-41610ea8-4.md) |
 | [src/i18n.js](../../src/i18n.js) | 14 | [1](src_i18n.js-247b6ba6-1.md) |
-| [src/parser.js](../../src/parser.js) | 68 | [1](src_parser.js-54c345dc-1.md) |
-| [src/settings.js](../../src/settings.js) | 26 | [1](src_settings.js-f6437b5f-1.md) |
-| [src/stats.js](../../src/stats.js) | 38 | [1](src_stats.js-74c2a296-1.md) |
-| [src/usage-events.js](../../src/usage-events.js) | 50 | [1](src_usage-events.js-d7f74816-1.md) |
+| [src/parser.js](../../src/parser.js) | 80 | [1](src_parser.js-54c345dc-1.md) |
+| [src/pricing.js](../../src/pricing.js) | 34 | [1](src_pricing.js-12dad449-1.md) |
+| [src/scope.js](../../src/scope.js) | 50 | [1](src_scope.js-bd88f6e1-1.md) |
+| [src/sessions.js](../../src/sessions.js) | 275 | [1](src_sessions.js-b6649690-1.md) [2](src_sessions.js-b6649690-2.md) [3](src_sessions.js-b6649690-3.md) |
+| [src/settings.js](../../src/settings.js) | 28 | [1](src_settings.js-f6437b5f-1.md) |
+| [src/stats.js](../../src/stats.js) | 48 | [1](src_stats.js-74c2a296-1.md) |
+| [src/usage-events.js](../../src/usage-events.js) | 54 | [1](src_usage-events.js-d7f74816-1.md) |
 | [src/webview.js](../../src/webview.js) | 7 | [1](src_webview.js-832cab9a-1.md) |

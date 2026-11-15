@@ -4,45 +4,53 @@
 
 [Module](tools.md) · [Source](../../tools/preview.js) · page 1/1
 
-Source SHA-256: b8526541b8f4b7dc3e4fa124a9187616a8bb295489c5b3088ddfb3434fde4b92
+Source SHA-256: 41808021774e6117d76f8e76b09a6f91d2652803803081be00f5e2960a7744de
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
-| fs | VariableDeclaration |  | [14](../../tools/preview.js#L14) |
-| path | VariableDeclaration |  | [15](../../tools/preview.js#L15) |
-| { summarize, groupByModel } | VariableDeclaration |  | [17](../../tools/preview.js#L17) |
-| summarize | BindingElement | { summarize, groupByModel } | [17](../../tools/preview.js#L17) |
-| groupByModel | BindingElement | { summarize, groupByModel } | [17](../../tools/preview.js#L17) |
-| settings | VariableDeclaration |  | [18](../../tools/preview.js#L18) |
-| webview | VariableDeclaration |  | [19](../../tools/preview.js#L19) |
-| i18n | VariableDeclaration |  | [20](../../tools/preview.js#L20) |
-| now | VariableDeclaration |  | [22](../../tools/preview.js#L22) |
-| models | VariableDeclaration |  | [25](../../tools/preview.js#L25) |
-| between | FunctionDeclaration |  | [32](../../tools/preview.js#L32) |
-| lo | BindingElement | between | [32](../../tools/preview.js#L32) |
-| hi | BindingElement | between | [32](../../tools/preview.js#L32) |
-| records | VariableDeclaration |  | [36](../../tools/preview.js#L36) |
-| i | VariableDeclaration |  | [37](../../tools/preview.js#L37) |
-| m | VariableDeclaration |  | [38](../../tools/preview.js#L38) |
-| input | VariableDeclaration |  | [39](../../tools/preview.js#L39) |
-| output | VariableDeclaration |  | [40](../../tools/preview.js#L40) |
-| ttft | VariableDeclaration |  | [42](../../tools/preview.js#L42) |
-| decodeMs | VariableDeclaration |  | [43](../../tools/preview.js#L43) |
-| durMs | VariableDeclaration |  | [44](../../tools/preview.js#L44) |
-| last | VariableDeclaration |  | [61](../../tools/preview.js#L61) |
-| payload | VariableDeclaration |  | [62](../../tools/preview.js#L62) |
-| fakeConfig | FunctionDeclaration |  | [86](../../tools/preview.js#L86) |
-| get | MethodDeclaration | fakeConfig | [89](../../tools/preview.js#L89) |
-| update | MethodDeclaration | fakeConfig | [92](../../tools/preview.js#L92) |
-| inspect | MethodDeclaration | fakeConfig | [95](../../tools/preview.js#L95) |
-| update | MethodDeclaration | fakeConfig | [98](../../tools/preview.js#L98) |
-| config | VariableDeclaration |  | [103](../../tools/preview.js#L103) |
-| sources | VariableDeclaration |  | [104](../../tools/preview.js#L104) |
-| nonce | VariableDeclaration |  | [118](../../tools/preview.js#L118) |
-| render | FunctionDeclaration |  | [120](../../tools/preview.js#L120) |
-| translator | VariableDeclaration | render | [121](../../tools/preview.js#L121) |
-| settingsPayload | VariableDeclaration | render | [122](../../tools/preview.js#L122) |
-| base | VariableDeclaration | render | [123](../../tools/preview.js#L123) |
-| stub | VariableDeclaration | render | [125](../../tools/preview.js#L125) |
-| html | VariableDeclaration | render | [134](../../tools/preview.js#L134) |
-| outDir | VariableDeclaration |  | [139](../../tools/preview.js#L139) |
+| fs | VariableDeclaration |  | [15](../../tools/preview.js#L15) |
+| path | VariableDeclaration |  | [16](../../tools/preview.js#L16) |
+| { summarize, groupByModel } | VariableDeclaration |  | [18](../../tools/preview.js#L18) |
+| summarize | BindingElement | { summarize, groupByModel } | [18](../../tools/preview.js#L18) |
+| groupByModel | BindingElement | { summarize, groupByModel } | [18](../../tools/preview.js#L18) |
+| { estimateCost } | VariableDeclaration |  | [19](../../tools/preview.js#L19) |
+| estimateCost | BindingElement | { estimateCost } | [19](../../tools/preview.js#L19) |
+| settings | VariableDeclaration |  | [20](../../tools/preview.js#L20) |
+| webview | VariableDeclaration |  | [21](../../tools/preview.js#L21) |
+| i18n | VariableDeclaration |  | [22](../../tools/preview.js#L22) |
+| now | VariableDeclaration |  | [24](../../tools/preview.js#L24) |
+| models | VariableDeclaration |  | [27](../../tools/preview.js#L27) |
+| between | FunctionDeclaration |  | [34](../../tools/preview.js#L34) |
+| lo | BindingElement | between | [34](../../tools/preview.js#L34) |
+| hi | BindingElement | between | [34](../../tools/preview.js#L34) |
+| records | VariableDeclaration |  | [38](../../tools/preview.js#L38) |
+| i | VariableDeclaration |  | [39](../../tools/preview.js#L39) |
+| m | VariableDeclaration |  | [40](../../tools/preview.js#L40) |
+| input | VariableDeclaration |  | [41](../../tools/preview.js#L41) |
+| output | VariableDeclaration |  | [42](../../tools/preview.js#L42) |
+| ttft | VariableDeclaration |  | [44](../../tools/preview.js#L44) |
+| decodeMs | VariableDeclaration |  | [45](../../tools/preview.js#L45) |
+| durMs | VariableDeclaration |  | [46](../../tools/preview.js#L46) |
+| cached | VariableDeclaration |  | [47](../../tools/preview.js#L47) |
+| est | VariableDeclaration |  | [48](../../tools/preview.js#L48) |
+| last | VariableDeclaration |  | [66](../../tools/preview.js#L66) |
+| payload | VariableDeclaration |  | [67](../../tools/preview.js#L67) |
+| fakeConfig | FunctionDeclaration |  | [97](../../tools/preview.js#L97) |
+| get | MethodDeclaration | fakeConfig | [100](../../tools/preview.js#L100) |
+| update | MethodDeclaration | fakeConfig | [103](../../tools/preview.js#L103) |
+| inspect | MethodDeclaration | fakeConfig | [106](../../tools/preview.js#L106) |
+| update | MethodDeclaration | fakeConfig | [109](../../tools/preview.js#L109) |
+| config | VariableDeclaration |  | [114](../../tools/preview.js#L114) |
+| sources | VariableDeclaration |  | [115](../../tools/preview.js#L115) |
+| scopeInfo | VariableDeclaration |  | [129](../../tools/preview.js#L129) |
+| sampleSessions | VariableDeclaration |  | [131](../../tools/preview.js#L131) |
+| sessionsPayload | VariableDeclaration |  | [247](../../tools/preview.js#L247) |
+| sessionDetailPayload | VariableDeclaration |  | [254](../../tools/preview.js#L254) |
+| nonce | VariableDeclaration |  | [272](../../tools/preview.js#L272) |
+| render | FunctionDeclaration |  | [274](../../tools/preview.js#L274) |
+| translator | VariableDeclaration | render | [275](../../tools/preview.js#L275) |
+| settingsPayload | VariableDeclaration | render | [276](../../tools/preview.js#L276) |
+| base | VariableDeclaration | render | [277](../../tools/preview.js#L277) |
+| stub | VariableDeclaration | render | [279](../../tools/preview.js#L279) |
+| html | VariableDeclaration | render | [288](../../tools/preview.js#L288) |
+| outDir | VariableDeclaration |  | [293](../../tools/preview.js#L293) |
