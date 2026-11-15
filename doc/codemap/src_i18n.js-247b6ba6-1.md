@@ -4,21 +4,21 @@
 
 [Module](src.md) · [Source](../../src/i18n.js) · page 1/1
 
-Source SHA-256: 3ab777197d50a744b71515a9ba621b33d01cd7c530c1ec0e897e22ab5124aa39
+Source SHA-256: b23d05eb6abd43ce31e85d1d0109410849f3e93513a70e14cd44b1dbd31d68a3
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
 | en | VariableDeclaration |  | [13](../../src/i18n.js#L13) |
-| zh | VariableDeclaration |  | [320](../../src/i18n.js#L320) |
-| DICTS | VariableDeclaration |  | [627](../../src/i18n.js#L627) |
-| DEFAULT | VariableDeclaration |  | [628](../../src/i18n.js#L628) |
-| resolve | FunctionDeclaration |  | [631](../../src/i18n.js#L631) |
-| value | VariableDeclaration | resolve | [632](../../src/i18n.js#L632) |
-| format | FunctionDeclaration |  | [636](../../src/i18n.js#L636) |
-| out | VariableDeclaration | format | [637](../../src/i18n.js#L637) |
-| create | FunctionDeclaration |  | [649](../../src/i18n.js#L649) |
-| locale | VariableDeclaration | create | [650](../../src/i18n.js#L650) |
-| dict | VariableDeclaration | create | [651](../../src/i18n.js#L651) |
-| t | FunctionDeclaration | create | [652](../../src/i18n.js#L652) |
-| template | VariableDeclaration | create.t | [653](../../src/i18n.js#L653) |
-| args | VariableDeclaration | create.t | [654](../../src/i18n.js#L654) |
+| zh | VariableDeclaration |  | [331](../../src/i18n.js#L331) |
+| DICTS | VariableDeclaration |  | [649](../../src/i18n.js#L649) |
+| DEFAULT | VariableDeclaration |  | [650](../../src/i18n.js#L650) |
+| resolve | FunctionDeclaration |  | [653](../../src/i18n.js#L653) |
+| value | VariableDeclaration | resolve | [654](../../src/i18n.js#L654) |
+| format | FunctionDeclaration |  | [658](../../src/i18n.js#L658) |
+| out | VariableDeclaration | format | [659](../../src/i18n.js#L659) |
+| create | FunctionDeclaration |  | [671](../../src/i18n.js#L671) |
+| locale | VariableDeclaration | create | [672](../../src/i18n.js#L672) |
+| dict | VariableDeclaration | create | [673](../../src/i18n.js#L673) |
+| t | FunctionDeclaration | create | [674](../../src/i18n.js#L674) |
+| template | VariableDeclaration | create.t | [675](../../src/i18n.js#L675) |
+| args | VariableDeclaration | create.t | [676](../../src/i18n.js#L676) |

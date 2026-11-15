@@ -4,7 +4,7 @@
 
 [Module](src.md) · [Source](../../src/extension.js) · page 1/4
 
-Source SHA-256: f20c15ccc11f08883b3b513b7051a7ce584ec5e3af23ed1e6a793eb0e3fe2ffb
+Source SHA-256: 29966a53fc7aac9bd1b781899541a6bb09b502391b35a92ed8f710bd6eeca0c9
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
@@ -17,13 +17,14 @@ Source SHA-256: f20c15ccc11f08883b3b513b7051a7ce584ec5e3af23ed1e6a793eb0e3fe2ffb
 | { UsageScanner, parseUsageLine } | VariableDeclaration |  | [8](../../src/extension.js#L8) |
 | UsageScanner | BindingElement | { UsageScanner, parseUsageLine } | [8](../../src/extension.js#L8) |
 | parseUsageLine | BindingElement | { UsageScanner, parseUsageLine } | [8](../../src/extension.js#L8) |
-| { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } | VariableDeclaration |  | [9](../../src/extension.js#L9) |
-| summarize | BindingElement | { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
-| groupByModel | BindingElement | { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
-| fmtRate | BindingElement | { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
-| fmtTokens | BindingElement | { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
-| fmtDur | BindingElement | { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
-| fmtCost | BindingElement | { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
+| { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | VariableDeclaration |  | [9](../../src/extension.js#L9) |
+| summarize | BindingElement | { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
+| groupByModel | BindingElement | { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
+| dayKey | BindingElement | { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
+| fmtRate | BindingElement | { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
+| fmtTokens | BindingElement | { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
+| fmtDur | BindingElement | { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
+| fmtCost | BindingElement | { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } | [9](../../src/extension.js#L9) |
 | { statusBarWanted: statsStatusBarWanted } | VariableDeclaration |  | [10](../../src/extension.js#L10) |
 | statsStatusBarWanted | BindingElement | { statusBarWanted: statsStatusBarWanted } | [10](../../src/extension.js#L10) |
 | { estimateCost } | VariableDeclaration |  | [11](../../src/extension.js#L11) |
@@ -107,4 +108,3 @@ Source SHA-256: f20c15ccc11f08883b3b513b7051a7ce584ec5e3af23ed1e6a793eb0e3fe2ffb
 | k | BindingElement | showDiagnostics.[k, v] | [290](../../src/extension.js#L290) |
 | v | BindingElement | showDiagnostics.[k, v] | [290](../../src/extension.js#L290) |
 | last | VariableDeclaration | showDiagnostics | [294](../../src/extension.js#L294) |
-| dirCacheInvalidate | FunctionDeclaration |  | [309](../../src/extension.js#L309) |

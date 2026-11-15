@@ -1,7 +1,7 @@
 # 交接文档 / Handoff — Copilot Speedometer
 
 > 写给下一个接手的 agent（或未来的我）。读完这份就能继续干活，不需要翻旧对话。
-> 最后更新：2026-11-15，对应 **0.2.0 费用估算 + 跨工作区会话 Hub + 常驻左侧栏重构**（0.1.0 为首个公开发布；内部 0.2.x–0.4.0 为预发布版本），分支 `main`。
+> 最后更新：2026-11-15，对应 **0.2.1 状态栏悬停卡片重构**（0.2.0 费用估算 + 跨工作区会话 Hub + 常驻左侧栏；0.1.0 为首个公开发布），分支 `main`。
 
 ---
 
@@ -19,9 +19,9 @@
 |---|---|
 | 仓库 | `git@github.com:flylink-code/copilot-speedometer.git`（分支 `main`） |
 | 本地工作区 | `E:\workspace\copilot-speedometer` |
-| 版本 | `package.json` → **0.2.0**（费用估算 + 只读跨工作区会话 Hub） |
-| 安装方式 | `code --install-extension dist/copilot-speedometer-0.2.0.vsix --force` |
-| 已装实例 | `%USERPROFILE%\.vscode\extensions\copilot-speedometer.copilot-speedometer-0.2.0` |
+| 版本 | `package.json` → **0.2.1**（状态栏悬停卡片重构 + 费用估算 + 跨工作区会话 Hub） |
+| 安装方式 | `code --install-extension dist/copilot-speedometer-0.2.1.vsix --force` |
+| 已装实例 | `%USERPROFILE%\.vscode\extensions\copilot-speedometer.copilot-speedometer-0.2.1` |
 | 未跟踪文件 | `task.md`（用户自己的待办，**不要提交**） |
 | 最近提交 | `7ee880d` release 0.1.0 / `661043f` 介绍图 / `304f888` 代码地图 |
 
@@ -102,7 +102,7 @@ npm test                        # 72 项单测：parser 15 + usage 11 + scope 12
 node tools/smoke-activate.js    # stub 的 vscode API 跑 activate/tick/面板/窗口作用域/会话Hub；SMOKE_DUMP=1 打诊断全文
 node tools/preview.js           # 生成 docs/preview*.html（11 个，含侧边栏窄屏预览）
 npm run package                 # 打包到 dist/copilot-speedometer-<ver>.vsix
-code --install-extension dist\copilot-speedometer-0.2.0.vsix --force
+code --install-extension dist\copilot-speedometer-0.2.1.vsix --force
 ```
 
 截图（headless Chrome，PNG 约 10 s 后才出现，要轮询）：
@@ -127,7 +127,7 @@ code --install-extension dist\copilot-speedometer-0.2.0.vsix --force
 ## 9. 已知限制 / 待办
 
 1. **窗口作用域靠 `cwd` 推断，不是硬边界**（0.1.1 起）：usage 记录没有窗口 id，只能读会话目录的 `workspace.yaml`（老会话读首行 `session.start` 的 `context.cwd`）与本窗口 `workspaceFolders` 比对。已知边界：① 本窗口没打开任何文件夹 → 不做过滤，显示全部；② 同一目录开两个窗口 → 无法区分，两个窗口都会显示（同一项目的两条会话本来也不该分）；③ `cwd` 解析不出来的记录保留而不是丢弃（否则面板会莫名空白）；④ 目录元数据缓存 10 s，新建会话的 `workspace.yaml` 可能滞后一轮轮询。想完全合并时设 `copilotSpeedometer.sessionScope = "all"`。
-2. **发布**：publisher 已设为 `copilot-speedometer`；`0.2.0` 已打包为 `dist/copilot-speedometer-0.2.0.vsix` 并推送源码与截图至 GitHub（本机未配置 Marketplace PAT，由维护者在 Marketplace 管理页手动上传 VSIX）；`repository`/`bugs` 指向 GitHub；截图 8 张在 `docs/`；图标 256×256 已就位；`CHANGELOG.md` 逐版本记录（用户明确要求"每次版本更新需要记录更新内容"）。
+2. **发布**：publisher 已设为 `copilot-speedometer`；`0.2.1` 已打包为 `dist/copilot-speedometer-0.2.1.vsix` 并推送源码与截图至 GitHub（本机未配置 Marketplace PAT，由维护者在 Marketplace 管理页手动上传 VSIX）；`repository`/`bugs` 指向 GitHub；截图 8 张在 `docs/`；图标 256×256 已就位；`CHANGELOG.md` 逐版本记录（用户明确要求"每次版本更新需要记录更新内容"）。
 3. 可选增强：marketplace 用的 GIF 演示、远程/WSL 场景提示、p90 之外的时序图（按天趋势）、把 `task.md` 内容转进 GitHub Issues。
 4. 精度口径（README 已写，别再混）：大上下文时"平均吞吐"≈ prefill 速度；非流式端点 TTFT≈总时长；reasoning token 计入 output；跨厂商 tokenizer 不同，tok/s 不完全可比。
 

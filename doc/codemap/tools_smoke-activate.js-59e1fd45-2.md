@@ -4,9 +4,20 @@
 
 [Module](tools.md) · [Source](../../tools/smoke-activate.js) · page 2/2
 
-Source SHA-256: f823a0cd18193c205ac211f424989853b0e54c7940e7ede5b1c55059205b5e67
+Source SHA-256: ce291b2dfd0b8e781282b24fba8fc018830cf8d6c1a9223f90abb91b7f75b47c
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
-| after | VariableDeclaration |  | [482](../../tools/smoke-activate.js#L482) |
-| last | VariableDeclaration |  | [488](../../tools/smoke-activate.js#L488) |
+| mine | VariableDeclaration |  | [448](../../tools/smoke-activate.js#L448) |
+| foreign | VariableDeclaration |  | [455](../../tools/smoke-activate.js#L455) |
+| merged | VariableDeclaration |  | [462](../../tools/smoke-activate.js#L462) |
+| unscoped | VariableDeclaration |  | [472](../../tools/smoke-activate.js#L472) |
+| before | VariableDeclaration |  | [480](../../tools/smoke-activate.js#L480) |
+| fn | VariableDeclaration |  | [484](../../tools/smoke-activate.js#L484) |
+| after | VariableDeclaration |  | [485](../../tools/smoke-activate.js#L485) |
+| swapped | VariableDeclaration |  | [500](../../tools/smoke-activate.js#L500) |
+| fallback | VariableDeclaration |  | [514](../../tools/smoke-activate.js#L514) |
+| fallbackSettings | VariableDeclaration |  | [519](../../tools/smoke-activate.js#L519) |
+| before | VariableDeclaration |  | [531](../../tools/smoke-activate.js#L531) |
+| after | VariableDeclaration |  | [533](../../tools/smoke-activate.js#L533) |
+| last | VariableDeclaration |  | [539](../../tools/smoke-activate.js#L539) |

@@ -6,7 +6,7 @@ const path = require('path');
 
 const { LogScanner, parseEventLine } = require('./parser');
 const { UsageScanner, parseUsageLine } = require('./usage-events');
-const { summarize, groupByModel, fmtRate, fmtTokens, fmtDur, fmtCost } = require('./stats');
+const { summarize, groupByModel, dayKey, fmtRate, fmtTokens, fmtDur, fmtCost } = require('./stats');
 const { statusBarWanted: statsStatusBarWanted } = require('./stats');
 const { estimateCost } = require('./pricing');
 const {
@@ -803,6 +803,118 @@ function applyStatusBarVisibility() {
   else statusBar.hide();
 }
 
+function escHtml(s) {
+  return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+function relTime(ts, now, t) {
+  if (!ts) return '';
+  const diff = Math.max(0, (now || Date.now()) - ts);
+  if (diff < 60000) return t('ui.time.justNow');
+  if (diff < 3600000) return t('ui.time.minAgo', Math.floor(diff / 60000));
+  if (diff < 86400000) return t('ui.time.hrAgo', Math.floor(diff / 3600000));
+  return t('ui.time.dayAgo', Math.floor(diff / 86400000));
+}
+
+const HOVER_DIM = 'color:var(--vscode-descriptionForeground);';
+const HOVER_BLUE = 'color:var(--vscode-charts-blue);';
+const HOVER_COMMANDS = [`${P}.showDashboard`, `${P}.openTab`, `${P}.refresh`, `${P}.enableLogging`];
+
+/**
+ * Builds the status-bar hover markup using single-row borderless tables and
+ * `<hr>` section rules so VS Code's `.monaco-hover` does not draw stripes
+ * between individual fields. Inline `style` values stay within the strict
+ * whitelist enforced by VS Code's `markdownRenderer.ts` DOMPurify rule.
+ */
+function buildStatusTooltipMarkup({ last, mine, scoping, pOpts, now = Date.now(), t }) {
+  const dim = (s) => `<span style="${HOVER_DIM}">${s}</span>`;
+  const scopeLabel = (!scoping || scoping.mode === 'all' || !scoping.roots || !scoping.roots.length)
+    ? t('ui.scope.all')
+    : t('ui.scope.window');
+  const actions = `<table width="100%"><tbody><tr><td>` +
+    `<a href="command:${P}.showDashboard">$(layout-sidebar-left) ${escHtml(t('status.md.actSidebar'))}</a>` +
+    ` &nbsp;&nbsp;·&nbsp;&nbsp; ` +
+    `<a href="command:${P}.openTab">$(link-external) ${escHtml(t('status.md.actTab'))}</a>` +
+    ` &nbsp;&nbsp;·&nbsp;&nbsp; ` +
+    `<a href="command:${P}.refresh">$(refresh) ${escHtml(t('ui.refresh'))}</a>` +
+    `</td></tr></tbody></table>`;
+
+  if (!last) {
+    return `<table width="100%"><tbody><tr><td><b>$(pulse) Copilot Speedometer</b></td>` +
+      `<td align="right">${dim(escHtml(scopeLabel))}</td></tr></tbody></table>\n\n---\n\n` +
+      `<table width="100%"><tbody><tr><td>${escHtml(t('status.idle.tooltip'))}</td></tr></tbody></table>\n\n---\n\n` +
+      actions;
+  }
+
+  const when = relTime(last.ts, now, t);
+  const headRight = when ? `${escHtml(scopeLabel)} · ${escHtml(when)}` : escHtml(scopeLabel);
+  const lastEst = estimateCost(last, pOpts);
+
+  let speedExtra = '';
+  if (last.decodeRate) {
+    speedExtra = ` &nbsp;·&nbsp; ${dim(escHtml(t('status.md.decodeShort')))} <b>${escHtml(fmtRate(last.decodeRate))} tok/s</b>`;
+  } else if (last.ttftMs && last.durMs > 0 && last.ttftMs / last.durMs >= 0.8) {
+    const pct = Math.min(99, Math.round((last.ttftMs / last.durMs) * 100));
+    speedExtra = ` &nbsp;${dim(escHtml(t('status.md.ttftShare', pct)))}`;
+  }
+
+  const modelLine = `<code>${escHtml(last.model)}</code>` + (last.byok ? ` ${dim('· BYOK')}` : '');
+  const costCell = lastEst
+    ? `<td align="right">${dim(escHtml(t('status.md.cost')))}<br><b>${escHtml(fmtCost(lastEst.costUsd))}</b></td>`
+    : '';
+
+  const durLabel = last.ttftMs ? t('status.md.durTtft') : t('status.md.duration');
+  const durVal = last.ttftMs
+    ? `<b>${escHtml(fmtDur(last.durMs))}</b> ${dim('· ' + escHtml(fmtDur(last.ttftMs)))}`
+    : `<b>${escHtml(fmtDur(last.durMs))}</b>`;
+
+  const cachePct = last.input > 0 ? Math.round(((last.cached || 0) / last.input) * 100) : 0;
+  const cachePart = last.cached > 0
+    ? `${fmtTokens(last.cached)} (${cachePct}%)`
+    : t('status.md.noCache');
+  const ioVal = `<b>${escHtml(fmtTokens(last.input))}</b> ${dim('· ' + escHtml(cachePart))}`;
+
+  const outVal = `<b>${escHtml(fmtTokens(last.output))}</b>` +
+    (last.reasoning > 0 ? ` ${dim('(' + escHtml(t('ui.sessions.reasoning')) + ' ' + escHtml(fmtTokens(last.reasoning)) + ')')}` : '');
+
+  const list = Array.isArray(mine) && mine.length ? mine : [last];
+  const todayStr = dayKey(now);
+  const todayList = list.filter((r) => dayKey(r.ts) === todayStr);
+  const useToday = todayList.length > 0;
+  const bucket = useToday ? todayList : list.slice(-20);
+  const agg = summarize(bucket, pOpts);
+  const bucketLabel = useToday ? t('status.md.todayCount', agg.count) : t('status.md.recentCount', agg.count);
+  const summaryLeft = `${dim(escHtml(bucketLabel))} · ` +
+    `${dim(escHtml(t('status.md.weighted')))} <b>${escHtml(fmtRate(agg.rate))} tok/s</b> · ` +
+    `${dim(escHtml(t('status.md.median')))} <b>${escHtml(fmtRate(agg.medianRate))}</b> · ` +
+    `${dim(escHtml(t('ui.card.out')))} <b>${escHtml(fmtTokens(agg.output))}</b>`;
+  const summaryRight = agg.costUsd !== null && agg.costUsd !== undefined
+    ? `<td align="right"><b>${escHtml(fmtCost(agg.costUsd))}</b></td>`
+    : '';
+
+  return `<table width="100%"><tbody><tr><td><b>$(pulse) Copilot Speedometer</b></td>` +
+    `<td align="right">${dim(headRight)}</td></tr></tbody></table>\n\n---\n\n` +
+    `<table width="100%"><tbody><tr><td><span style="${HOVER_BLUE}"><b>${escHtml(fmtRate(last.rate))} tok/s</b></span>${speedExtra}<br>${modelLine}</td>` +
+    `${costCell}</tr></tbody></table>\n` +
+    `<table width="100%"><tbody><tr>` +
+    `<td>${dim(escHtml(durLabel))}<br>${durVal}</td>` +
+    `<td>${dim(escHtml(t('status.md.io')))}<br>${ioVal}</td>` +
+    `<td align="right">${dim(escHtml(t('status.md.output')))}<br>${outVal}</td>` +
+    `</tr></tbody></table>\n\n---\n\n` +
+    `<table width="100%"><tbody><tr><td>${summaryLeft}</td>${summaryRight}</tr></tbody></table>\n\n---\n\n` +
+    actions;
+}
+
+function makeHoverMarkdown(markup) {
+  const md = new vscode.MarkdownString(markup, true);
+  md.supportThemeIcons = true;
+  md.supportHtml = true;
+  md.isTrusted = { enabledCommands: HOVER_COMMANDS };
+  return md;
+}
+
 function updateStatusBar() {
   if (!statusBar) return;
   if (!statusBarWanted()) {
@@ -812,11 +924,13 @@ function updateStatusBar() {
   statusBar.show();
 
   const t = tr();
+  const scoping = windowScope();
   const mine = scopedRecords();
   const last = mine[mine.length - 1];
+  const pOpts = pricingOptions();
   if (!last) {
     statusBar.text = t('status.idle.text');
-    statusBar.tooltip = t('status.idle.tooltip');
+    statusBar.tooltip = makeHoverMarkdown(buildStatusTooltipMarkup({ last: null, mine: [], scoping, pOpts, t }));
     statusBar.color = undefined;
     return;
   }
@@ -827,26 +941,7 @@ function updateStatusBar() {
   else if (format === 'rate-ttft' && last.ttftMs) text += ` · TTFT ${fmtDur(last.ttftMs)}`;
   statusBar.text = text;
   statusBar.color = undefined;
-
-  const recent = mine.slice(-20);
-  const pOpts = pricingOptions();
-  const agg = summarize(recent, pOpts);
-  const lastEst = estimateCost(last, pOpts);
-  const md = new vscode.MarkdownString();
-  md.appendMarkdown(`**Copilot Speedometer**\n\n`);
-  md.appendMarkdown(`${t('status.md.last')}: **${fmtRate(last.rate)} tok/s**\n\n`);
-  md.appendMarkdown(`| | |\n|:--|--:|\n`);
-  md.appendMarkdown(`| ${t('status.md.model')} | \`${last.model}\` |\n`);
-  md.appendMarkdown(`| ${t('status.md.output')} | ${last.output} |\n`);
-  md.appendMarkdown(`| ${t('status.md.duration')} | ${fmtDur(last.durMs)} |\n`);
-  if (last.ttftMs) md.appendMarkdown(`| ${t('status.md.ttft')} | ${fmtDur(last.ttftMs)} |\n`);
-  if (last.decodeRate) md.appendMarkdown(`| ${t('status.md.decode')} | ${fmtRate(last.decodeRate)} tok/s |\n`);
-  if (lastEst) md.appendMarkdown(`| ${t('ui.th.cost')} | ${fmtCost(lastEst.costUsd)} |\n`);
-  if (last.byok) md.appendMarkdown(`| ${t('status.md.provider')} | ${t('status.md.byok')} |\n`);
-  md.appendMarkdown(`| ${t('status.md.io')} | ${fmtTokens(last.input)} / ${fmtTokens(last.cached)} |\n`);
-  md.appendMarkdown('\n' + t('status.md.recent', agg.count, fmtRate(agg.rate), fmtRate(agg.medianRate), agg.output) + '\n\n');
-  md.appendMarkdown(t('status.md.click'));
-  statusBar.tooltip = md;
+  statusBar.tooltip = makeHoverMarkdown(buildStatusTooltipMarkup({ last, mine, scoping, pOpts, t }));
 }
 
 function loggingState() {
@@ -1514,4 +1609,4 @@ function seedDemo() {
   vscode.window.showInformationMessage(t('msg.demoLoaded'));
 }
 
-module.exports = { activate, deactivate };
+module.exports = { activate, deactivate, _buildStatusTooltipMarkup: buildStatusTooltipMarkup };

@@ -4,10 +4,11 @@
 
 [Module](src.md) · [Source](../../src/extension.js) · page 2/4
 
-Source SHA-256: f20c15ccc11f08883b3b513b7051a7ce584ec5e3af23ed1e6a793eb0e3fe2ffb
+Source SHA-256: 29966a53fc7aac9bd1b781899541a6bb09b502391b35a92ed8f710bd6eeca0c9
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
+| dirCacheInvalidate | FunctionDeclaration |  | [309](../../src/extension.js#L309) |
 | pricingOptions | FunctionDeclaration |  | [322](../../src/extension.js#L322) |
 | mult | VariableDeclaration | pricingOptions | [323](../../src/extension.js#L323) |
 | custom | VariableDeclaration | pricingOptions | [324](../../src/extension.js#L324) |
@@ -98,13 +99,12 @@ Source SHA-256: f20c15ccc11f08883b3b513b7051a7ce584ec5e3af23ed1e6a793eb0e3fe2ffb
 | last | VariableDeclaration | statusBarWanted | [789](../../src/extension.js#L789) |
 | lastTs | VariableDeclaration | statusBarWanted | [790](../../src/extension.js#L790) |
 | applyStatusBarVisibility | FunctionDeclaration |  | [800](../../src/extension.js#L800) |
-| updateStatusBar | FunctionDeclaration |  | [806](../../src/extension.js#L806) |
-| t | VariableDeclaration | updateStatusBar | [814](../../src/extension.js#L814) |
-| mine | VariableDeclaration | updateStatusBar | [815](../../src/extension.js#L815) |
-| last | VariableDeclaration | updateStatusBar | [816](../../src/extension.js#L816) |
-| format | VariableDeclaration | updateStatusBar | [824](../../src/extension.js#L824) |
-| text | VariableDeclaration | updateStatusBar | [825](../../src/extension.js#L825) |
-| recent | VariableDeclaration | updateStatusBar | [831](../../src/extension.js#L831) |
-| pOpts | VariableDeclaration | updateStatusBar | [832](../../src/extension.js#L832) |
-| agg | VariableDeclaration | updateStatusBar | [833](../../src/extension.js#L833) |
-| lastEst | VariableDeclaration | updateStatusBar | [834](../../src/extension.js#L834) |
+| escHtml | FunctionDeclaration |  | [806](../../src/extension.js#L806) |
+| relTime | FunctionDeclaration |  | [812](../../src/extension.js#L812) |
+| diff | VariableDeclaration | relTime | [814](../../src/extension.js#L814) |
+| HOVER_DIM | VariableDeclaration |  | [821](../../src/extension.js#L821) |
+| HOVER_BLUE | VariableDeclaration |  | [822](../../src/extension.js#L822) |
+| HOVER_COMMANDS | VariableDeclaration |  | [823](../../src/extension.js#L823) |
+| buildStatusTooltipMarkup | FunctionDeclaration |  | [831](../../src/extension.js#L831) |
+| last | BindingElement | buildStatusTooltipMarkup | [831](../../src/extension.js#L831) |
+| mine | BindingElement | buildStatusTooltipMarkup | [831](../../src/extension.js#L831) |

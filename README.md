@@ -60,7 +60,7 @@ B 的字段：
 code --install-extension copilot-speedometer.copilot-speedometer
 ```
 
-**方式 B：本地 VSIX**（离线安装）：`dist/copilot-speedometer-0.2.0.vsix`。
+**方式 B：本地 VSIX**（离线安装）：`dist/copilot-speedometer-0.2.1.vsix`。
 
 **方式 C：源码调试**：用 VS Code 打开本目录，按 <kbd>F5</kbd>（Run Extension）。
 

@@ -10,26 +10,27 @@ updated: 2026-11-15
 
 ## 当前阶段
 
-- 创建 / 实现 / 调试 / 优化 / [x] 归档 —— 当前：**0.2.0 已发布提交并推送至 GitHub（含标签 `v0.2.0`），本地已安装 VSIX，待上传 Marketplace 后台**
+- 创建 / 实现 / 调试 / 优化 / [x] 归档 —— 当前：**0.2.1 状态栏悬停卡片重构完成，已提交推送（标签 `v0.2.1`）并安装 VSIX，待上传 Marketplace 后台**
 
 ## 当前目标
 
-- 在 VS Code Marketplace 管理后台上传 `dist/copilot-speedometer-0.2.0.vsix` 完成商店上架。
+- 重载窗口验证 0.2.1 新版状态栏悬停卡片，并在 VS Code Marketplace 管理后台上传 `dist/copilot-speedometer-0.2.1.vsix`。
 
 ## 进行中
 
 | 事项 | 状态 | 阻塞点 | 负责人 |
 | --- | --- | --- | --- |
-| 上传 `dist/copilot-speedometer-0.2.0.vsix` 到 Marketplace | 已推送源码与标签，VSIX 就绪 | 本机未配置 `VSCE_PAT`，需登录 Marketplace 网页后台上传 | 用户 |
+| 上传 `dist/copilot-speedometer-0.2.1.vsix` 到 Marketplace | 已推送源码与标签，VSIX 就绪 | 本机未配置 `VSCE_PAT`，需登录 Marketplace 网页后台上传 | 用户 |
 
 ## 下一步（按优先级）
 
-1. 打开 VS Code Marketplace 发布者后台（`https://marketplace.visualstudio.com/manage/publishers/copilot-speedometer`）上传 `dist/copilot-speedometer-0.2.0.vsix`（判定：商店页面版本显示 `0.2.0`，且 3 张介绍图正常显示）。
-2. 在当前 VS Code 执行 `Developer: Reload Window` 使用正式安装的 `0.2.0`（判定：左侧常驻视图、状态栏唤醒、会话 Hub 与费用估算正常）。
+1. 在当前 VS Code 执行 `Developer: Reload Window`，悬停右下角状态栏项验收 0.2.1 悬停卡片（判定：无多行横线表格条纹；显示窗口范围与相对时间；大上下文/非流式显示 `（首字占 XX%）` 或流式显示解码速度；3 列无边框指标对齐；今日统计 token 带 `k`/`M` 单位；底部「打开侧边栏 / 标签页打开 / 刷新」可直接点击）。
+2. 打开 VS Code Marketplace 发布者后台（`https://marketplace.visualstudio.com/manage/publishers/copilot-speedometer`）上传 `dist/copilot-speedometer-0.2.1.vsix`（判定：商店页面版本显示 `0.2.1`）。
 3. 如后续希望命令行一键发布到商店，可配置 `VSCE_PAT` 或添加 GitHub Actions Release 工作流（判定：`npx @vscode/vsce verify-pat copilot-speedometer` 返回成功）。
 
 ## 已完成（只留最近 10 条，更早的走归档）
 
+- 0.2.1 状态栏悬停卡片重构：移除多行 Markdown 表格条纹，改为 4 段式单行无框表 + `<hr>` 分隔、首字占比提示/流式解码速度并列、3 列指标格、今日汇总 `k`/`M` 格式化与累计费用、可点击 `command:` 快捷操作栏（2026-11-15）。
 - 0.2.0 左侧栏与面板 UI 重构：单行图标顶栏 + 原生 `view/title` 溢出菜单、仪表盘 Hero 主卡 + 2×3 对称指标格 + 均值虚线 + 通栏分组头、会话 Hub 时间分组 + 折叠筛选器 + 窄栏单流钻取（移除双滚动条）+ 结构化详情与分级操作、设置页布尔开关单行右对齐，更新全部中英文预览图（2026-11-15）。
 - 0.2.0 增强：会话详情默认折叠、Agent 会话管理（Fork / 移动工作区 / 归档与取消归档 / 删除，含运行锁保护）与面板 UI 状态按窗口持久化（`workspaceState`）（2026-11-14）。
 - 0.2.0 追加：左侧栏常驻 `WebviewViewProvider`（`media/sidebar-icon.svg` + 窄屏自适应布局）+ 历史对话打开即回填唤醒，仅自动隐藏右下角状态栏（2026-11-14）。
@@ -39,8 +40,7 @@ updated: 2026-11-15
 - 0.1.1：tok/s 按窗口隔离（`src/scope.js` + `sessionScope` 设置 + 面板范围条，2026-11-13）。
 - Marketplace 图片修复：去掉 `--no-rewrite-relative-links`，包装脚本先建 `dist/`；vsix 从 72 文件/670 KB 降到 17 文件/73 KB（2026-11-13）。
 - 0.4.0：状态栏空闲自动隐藏（`autoHideMinutes`）、图标、改名（提交 `e9f3a9a`）。
-- 0.3.1：中英文跟随 VS Code 显示语言（`591d0bb`）。
 
 ## 最后更新
 
-- 2026-11-15 / Gemini（完成左侧栏与面板 UI 重新规划落地、截图更新与重新打包）
+- 2026-11-15 / Gemini（0.2.1 状态栏悬停卡片重构、打包安装与发布推送）

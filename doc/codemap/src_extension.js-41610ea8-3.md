@@ -4,107 +4,107 @@
 
 [Module](src.md) · [Source](../../src/extension.js) · page 3/4
 
-Source SHA-256: f20c15ccc11f08883b3b513b7051a7ce584ec5e3af23ed1e6a793eb0e3fe2ffb
+Source SHA-256: 29966a53fc7aac9bd1b781899541a6bb09b502391b35a92ed8f710bd6eeca0c9
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
-| md | VariableDeclaration | updateStatusBar | [835](../../src/extension.js#L835) |
-| loggingState | FunctionDeclaration |  | [852](../../src/extension.js#L852) |
-| cfg | VariableDeclaration | loggingState | [853](../../src/extension.js#L853) |
-| info | VariableDeclaration | loggingState | [854](../../src/extension.js#L854) |
-| value | VariableDeclaration | loggingState | [856](../../src/extension.js#L856) |
-| buildPayload | FunctionDeclaration |  | [865](../../src/extension.js#L865) |
-| now | VariableDeclaration | buildPayload | [866](../../src/extension.js#L866) |
-| from | VariableDeclaration | buildPayload | [867](../../src/extension.js#L867) |
-| d | VariableDeclaration | buildPayload | [869](../../src/extension.js#L869) |
-| scoping | VariableDeclaration | buildPayload | [876](../../src/extension.js#L876) |
-| visible | VariableDeclaration | buildPayload | [877](../../src/extension.js#L877) |
-| inWindow | VariableDeclaration | buildPayload | [878](../../src/extension.js#L878) |
-| pOpts | VariableDeclaration | buildPayload | [879](../../src/extension.js#L879) |
-| agg | VariableDeclaration | buildPayload | [880](../../src/extension.js#L880) |
-| last | VariableDeclaration | buildPayload | [881](../../src/extension.js#L881) |
-| opts | VariableDeclaration | buildPayload | [882](../../src/extension.js#L882) |
-| roots | VariableDeclaration | buildPayload | [883](../../src/extension.js#L883) |
-| usageRoots | VariableDeclaration | buildPayload | [884](../../src/extension.js#L884) |
-| logState | VariableDeclaration | buildPayload | [885](../../src/extension.js#L885) |
-| fromUsage | VariableDeclaration | buildPayload | [886](../../src/extension.js#L886) |
-| byokCount | VariableDeclaration | buildPayload | [887](../../src/extension.js#L887) |
-| pick | VariableDeclaration | buildPayload | [889](../../src/extension.js#L889) |
-| est | VariableDeclaration | buildPayload.pick | [890](../../src/extension.js#L890) |
-| currentWindow | VariableDeclaration |  | [942](../../src/extension.js#L942) |
-| currentView | VariableDeclaration |  | [943](../../src/extension.js#L943) |
-| DEFAULT_UI_STATE | VariableDeclaration |  | [945](../../src/extension.js#L945) |
-| getUiState | FunctionDeclaration |  | [956](../../src/extension.js#L956) |
-| raw | VariableDeclaration | getUiState | [957](../../src/extension.js#L957) |
-| s | VariableDeclaration | getUiState | [960](../../src/extension.js#L960) |
-| view | VariableDeclaration | getUiState | [961](../../src/extension.js#L961) |
-| filter | VariableDeclaration | getUiState | [962](../../src/extension.js#L962) |
-| dashOpen | VariableDeclaration | getUiState | [963](../../src/extension.js#L963) |
-| hubFilter | VariableDeclaration | getUiState | [968](../../src/extension.js#L968) |
-| saveUiState | FunctionDeclaration |  | [991](../../src/extension.js#L991) |
-| prev | VariableDeclaration | saveUiState | [993](../../src/extension.js#L993) |
-| next | VariableDeclaration | saveUiState | [994](../../src/extension.js#L994) |
-| getArchivedIds | FunctionDeclaration |  | [1028](../../src/extension.js#L1028) |
-| raw | VariableDeclaration | getArchivedIds | [1030](../../src/extension.js#L1030) |
-| setSessionArchivedState | FunctionDeclaration |  | [1034](../../src/extension.js#L1034) |
-| set | VariableDeclaration | setSessionArchivedState | [1036](../../src/extension.js#L1036) |
-| pushData | FunctionDeclaration |  | [1042](../../src/extension.js#L1042) |
-| buildSessionsPayload | FunctionDeclaration |  | [1047](../../src/extension.js#L1047) |
-| scoping | VariableDeclaration | buildSessionsPayload | [1049](../../src/extension.js#L1049) |
-| list | VariableDeclaration | buildSessionsPayload | [1050](../../src/extension.js#L1050) |
-| archivedSet | VariableDeclaration | buildSessionsPayload | [1056](../../src/extension.js#L1056) |
-| projects | VariableDeclaration | buildSessionsPayload | [1057](../../src/extension.js#L1057) |
-| archivedCount | VariableDeclaration | buildSessionsPayload | [1058](../../src/extension.js#L1058) |
-| mapped | VariableDeclaration | buildSessionsPayload | [1059](../../src/extension.js#L1059) |
-| isArchived | VariableDeclaration | buildSessionsPayload.mapped | [1060](../../src/extension.js#L1060) |
-| pushSessions | FunctionDeclaration |  | [1100](../../src/extension.js#L1100) |
-| pushSessionDetail | FunctionDeclaration |  | [1105](../../src/extension.js#L1105) |
-| target | VariableDeclaration | pushSessionDetail | [1109](../../src/extension.js#L1109) |
-| msg | VariableDeclaration | pushSessionDetail | [1110](../../src/extension.js#L1110) |
-| copyResumeCommand | FunctionDeclaration |  | [1117](../../src/extension.js#L1117) |
-| target | VariableDeclaration | copyResumeCommand | [1118](../../src/extension.js#L1118) |
-| cmd | VariableDeclaration | copyResumeCommand | [1120](../../src/extension.js#L1120) |
-| resumeSessionInTerminal | FunctionDeclaration |  | [1127](../../src/extension.js#L1127) |
-| target | VariableDeclaration | resumeSessionInTerminal | [1128](../../src/extension.js#L1128) |
-| cmd | VariableDeclaration | resumeSessionInTerminal | [1130](../../src/extension.js#L1130) |
-| term | VariableDeclaration | resumeSessionInTerminal | [1132](../../src/extension.js#L1132) |
-| openSessionFolder | FunctionDeclaration |  | [1140](../../src/extension.js#L1140) |
-| target | VariableDeclaration | openSessionFolder | [1141](../../src/extension.js#L1141) |
-| findSessionById | FunctionDeclaration |  | [1146](../../src/extension.js#L1146) |
-| forkSessionAction | FunctionDeclaration |  | [1151](../../src/extension.js#L1151) |
-| t | VariableDeclaration | forkSessionAction | [1152](../../src/extension.js#L1152) |
-| target | VariableDeclaration | forkSessionAction | [1153](../../src/extension.js#L1153) |
-| res | VariableDeclaration | forkSessionAction | [1155](../../src/extension.js#L1155) |
-| nextUi | VariableDeclaration | forkSessionAction | [1161](../../src/extension.js#L1161) |
-| moveSessionAction | FunctionDeclaration |  | [1167](../../src/extension.js#L1167) |
-| t | VariableDeclaration | moveSessionAction | [1168](../../src/extension.js#L1168) |
-| target | VariableDeclaration | moveSessionAction | [1169](../../src/extension.js#L1169) |
-| seenDirs | VariableDeclaration | moveSessionAction | [1176](../../src/extension.js#L1176) |
-| picks | VariableDeclaration | moveSessionAction | [1178](../../src/extension.js#L1178) |
-| folder | VariableDeclaration | moveSessionAction | [1180](../../src/extension.js#L1180) |
-| fsPath | VariableDeclaration | moveSessionAction | [1181](../../src/extension.js#L1181) |
-| norm | VariableDeclaration | moveSessionAction | [1183](../../src/extension.js#L1183) |
-| s | VariableDeclaration | moveSessionAction | [1194](../../src/extension.js#L1194) |
-| norm | VariableDeclaration | moveSessionAction | [1196](../../src/extension.js#L1196) |
-| picked | VariableDeclaration | moveSessionAction | [1215](../../src/extension.js#L1215) |
-| chosenDir | VariableDeclaration | moveSessionAction | [1221](../../src/extension.js#L1221) |
-| defaultUri | VariableDeclaration | moveSessionAction | [1223](../../src/extension.js#L1223) |
-| uris | VariableDeclaration | moveSessionAction | [1224](../../src/extension.js#L1224) |
-| res | VariableDeclaration | moveSessionAction | [1235](../../src/extension.js#L1235) |
-| archiveSessionAction | FunctionDeclaration |  | [1250](../../src/extension.js#L1250) |
-| t | VariableDeclaration | archiveSessionAction | [1251](../../src/extension.js#L1251) |
-| target | VariableDeclaration | archiveSessionAction | [1252](../../src/extension.js#L1252) |
-| ui | VariableDeclaration | archiveSessionAction | [1255](../../src/extension.js#L1255) |
-| nextUi | VariableDeclaration | archiveSessionAction | [1257](../../src/extension.js#L1257) |
-| deleteSessionAction | FunctionDeclaration |  | [1264](../../src/extension.js#L1264) |
-| t | VariableDeclaration | deleteSessionAction | [1265](../../src/extension.js#L1265) |
-| target | VariableDeclaration | deleteSessionAction | [1266](../../src/extension.js#L1266) |
-| delLabel | VariableDeclaration | deleteSessionAction | [1272](../../src/extension.js#L1272) |
-| ans | VariableDeclaration | deleteSessionAction | [1273](../../src/extension.js#L1273) |
-| res | VariableDeclaration | deleteSessionAction | [1280](../../src/extension.js#L1280) |
-| nextUi | VariableDeclaration | deleteSessionAction | [1287](../../src/extension.js#L1287) |
-| showSidebar | FunctionDeclaration |  | [1299](../../src/extension.js#L1299) |
-| wireWebview | FunctionDeclaration |  | [1307](../../src/extension.js#L1307) |
-| ui | VariableDeclaration | wireWebview | [1311](../../src/extension.js#L1311) |
-| w | VariableDeclaration | wireWebview | [1326](../../src/extension.js#L1326) |
-| showDashboard | FunctionDeclaration |  | [1380](../../src/extension.js#L1380) |
+| scoping | BindingElement | buildStatusTooltipMarkup | [831](../../src/extension.js#L831) |
+| pOpts | BindingElement | buildStatusTooltipMarkup | [831](../../src/extension.js#L831) |
+| now | BindingElement | buildStatusTooltipMarkup | [831](../../src/extension.js#L831) |
+| t | BindingElement | buildStatusTooltipMarkup | [831](../../src/extension.js#L831) |
+| dim | VariableDeclaration | buildStatusTooltipMarkup | [832](../../src/extension.js#L832) |
+| scopeLabel | VariableDeclaration | buildStatusTooltipMarkup | [833](../../src/extension.js#L833) |
+| actions | VariableDeclaration | buildStatusTooltipMarkup | [836](../../src/extension.js#L836) |
+| when | VariableDeclaration | buildStatusTooltipMarkup | [851](../../src/extension.js#L851) |
+| headRight | VariableDeclaration | buildStatusTooltipMarkup | [852](../../src/extension.js#L852) |
+| lastEst | VariableDeclaration | buildStatusTooltipMarkup | [853](../../src/extension.js#L853) |
+| speedExtra | VariableDeclaration | buildStatusTooltipMarkup | [855](../../src/extension.js#L855) |
+| pct | VariableDeclaration | buildStatusTooltipMarkup | [859](../../src/extension.js#L859) |
+| modelLine | VariableDeclaration | buildStatusTooltipMarkup | [863](../../src/extension.js#L863) |
+| costCell | VariableDeclaration | buildStatusTooltipMarkup | [864](../../src/extension.js#L864) |
+| durLabel | VariableDeclaration | buildStatusTooltipMarkup | [868](../../src/extension.js#L868) |
+| durVal | VariableDeclaration | buildStatusTooltipMarkup | [869](../../src/extension.js#L869) |
+| cachePct | VariableDeclaration | buildStatusTooltipMarkup | [873](../../src/extension.js#L873) |
+| cachePart | VariableDeclaration | buildStatusTooltipMarkup | [874](../../src/extension.js#L874) |
+| ioVal | VariableDeclaration | buildStatusTooltipMarkup | [877](../../src/extension.js#L877) |
+| outVal | VariableDeclaration | buildStatusTooltipMarkup | [879](../../src/extension.js#L879) |
+| list | VariableDeclaration | buildStatusTooltipMarkup | [882](../../src/extension.js#L882) |
+| todayStr | VariableDeclaration | buildStatusTooltipMarkup | [883](../../src/extension.js#L883) |
+| todayList | VariableDeclaration | buildStatusTooltipMarkup | [884](../../src/extension.js#L884) |
+| useToday | VariableDeclaration | buildStatusTooltipMarkup | [885](../../src/extension.js#L885) |
+| bucket | VariableDeclaration | buildStatusTooltipMarkup | [886](../../src/extension.js#L886) |
+| agg | VariableDeclaration | buildStatusTooltipMarkup | [887](../../src/extension.js#L887) |
+| bucketLabel | VariableDeclaration | buildStatusTooltipMarkup | [888](../../src/extension.js#L888) |
+| summaryLeft | VariableDeclaration | buildStatusTooltipMarkup | [889](../../src/extension.js#L889) |
+| summaryRight | VariableDeclaration | buildStatusTooltipMarkup | [893](../../src/extension.js#L893) |
+| makeHoverMarkdown | FunctionDeclaration |  | [910](../../src/extension.js#L910) |
+| md | VariableDeclaration | makeHoverMarkdown | [911](../../src/extension.js#L911) |
+| updateStatusBar | FunctionDeclaration |  | [918](../../src/extension.js#L918) |
+| t | VariableDeclaration | updateStatusBar | [926](../../src/extension.js#L926) |
+| scoping | VariableDeclaration | updateStatusBar | [927](../../src/extension.js#L927) |
+| mine | VariableDeclaration | updateStatusBar | [928](../../src/extension.js#L928) |
+| last | VariableDeclaration | updateStatusBar | [929](../../src/extension.js#L929) |
+| pOpts | VariableDeclaration | updateStatusBar | [930](../../src/extension.js#L930) |
+| format | VariableDeclaration | updateStatusBar | [938](../../src/extension.js#L938) |
+| text | VariableDeclaration | updateStatusBar | [939](../../src/extension.js#L939) |
+| loggingState | FunctionDeclaration |  | [947](../../src/extension.js#L947) |
+| cfg | VariableDeclaration | loggingState | [948](../../src/extension.js#L948) |
+| info | VariableDeclaration | loggingState | [949](../../src/extension.js#L949) |
+| value | VariableDeclaration | loggingState | [951](../../src/extension.js#L951) |
+| buildPayload | FunctionDeclaration |  | [960](../../src/extension.js#L960) |
+| now | VariableDeclaration | buildPayload | [961](../../src/extension.js#L961) |
+| from | VariableDeclaration | buildPayload | [962](../../src/extension.js#L962) |
+| d | VariableDeclaration | buildPayload | [964](../../src/extension.js#L964) |
+| scoping | VariableDeclaration | buildPayload | [971](../../src/extension.js#L971) |
+| visible | VariableDeclaration | buildPayload | [972](../../src/extension.js#L972) |
+| inWindow | VariableDeclaration | buildPayload | [973](../../src/extension.js#L973) |
+| pOpts | VariableDeclaration | buildPayload | [974](../../src/extension.js#L974) |
+| agg | VariableDeclaration | buildPayload | [975](../../src/extension.js#L975) |
+| last | VariableDeclaration | buildPayload | [976](../../src/extension.js#L976) |
+| opts | VariableDeclaration | buildPayload | [977](../../src/extension.js#L977) |
+| roots | VariableDeclaration | buildPayload | [978](../../src/extension.js#L978) |
+| usageRoots | VariableDeclaration | buildPayload | [979](../../src/extension.js#L979) |
+| logState | VariableDeclaration | buildPayload | [980](../../src/extension.js#L980) |
+| fromUsage | VariableDeclaration | buildPayload | [981](../../src/extension.js#L981) |
+| byokCount | VariableDeclaration | buildPayload | [982](../../src/extension.js#L982) |
+| pick | VariableDeclaration | buildPayload | [984](../../src/extension.js#L984) |
+| est | VariableDeclaration | buildPayload.pick | [985](../../src/extension.js#L985) |
+| currentWindow | VariableDeclaration |  | [1037](../../src/extension.js#L1037) |
+| currentView | VariableDeclaration |  | [1038](../../src/extension.js#L1038) |
+| DEFAULT_UI_STATE | VariableDeclaration |  | [1040](../../src/extension.js#L1040) |
+| getUiState | FunctionDeclaration |  | [1051](../../src/extension.js#L1051) |
+| raw | VariableDeclaration | getUiState | [1052](../../src/extension.js#L1052) |
+| s | VariableDeclaration | getUiState | [1055](../../src/extension.js#L1055) |
+| view | VariableDeclaration | getUiState | [1056](../../src/extension.js#L1056) |
+| filter | VariableDeclaration | getUiState | [1057](../../src/extension.js#L1057) |
+| dashOpen | VariableDeclaration | getUiState | [1058](../../src/extension.js#L1058) |
+| hubFilter | VariableDeclaration | getUiState | [1063](../../src/extension.js#L1063) |
+| saveUiState | FunctionDeclaration |  | [1086](../../src/extension.js#L1086) |
+| prev | VariableDeclaration | saveUiState | [1088](../../src/extension.js#L1088) |
+| next | VariableDeclaration | saveUiState | [1089](../../src/extension.js#L1089) |
+| getArchivedIds | FunctionDeclaration |  | [1123](../../src/extension.js#L1123) |
+| raw | VariableDeclaration | getArchivedIds | [1125](../../src/extension.js#L1125) |
+| setSessionArchivedState | FunctionDeclaration |  | [1129](../../src/extension.js#L1129) |
+| set | VariableDeclaration | setSessionArchivedState | [1131](../../src/extension.js#L1131) |
+| pushData | FunctionDeclaration |  | [1137](../../src/extension.js#L1137) |
+| buildSessionsPayload | FunctionDeclaration |  | [1142](../../src/extension.js#L1142) |
+| scoping | VariableDeclaration | buildSessionsPayload | [1144](../../src/extension.js#L1144) |
+| list | VariableDeclaration | buildSessionsPayload | [1145](../../src/extension.js#L1145) |
+| archivedSet | VariableDeclaration | buildSessionsPayload | [1151](../../src/extension.js#L1151) |
+| projects | VariableDeclaration | buildSessionsPayload | [1152](../../src/extension.js#L1152) |
+| archivedCount | VariableDeclaration | buildSessionsPayload | [1153](../../src/extension.js#L1153) |
+| mapped | VariableDeclaration | buildSessionsPayload | [1154](../../src/extension.js#L1154) |
+| isArchived | VariableDeclaration | buildSessionsPayload.mapped | [1155](../../src/extension.js#L1155) |
+| pushSessions | FunctionDeclaration |  | [1195](../../src/extension.js#L1195) |
+| pushSessionDetail | FunctionDeclaration |  | [1200](../../src/extension.js#L1200) |
+| target | VariableDeclaration | pushSessionDetail | [1204](../../src/extension.js#L1204) |
+| msg | VariableDeclaration | pushSessionDetail | [1205](../../src/extension.js#L1205) |
+| copyResumeCommand | FunctionDeclaration |  | [1212](../../src/extension.js#L1212) |
+| target | VariableDeclaration | copyResumeCommand | [1213](../../src/extension.js#L1213) |
+| cmd | VariableDeclaration | copyResumeCommand | [1215](../../src/extension.js#L1215) |
+| resumeSessionInTerminal | FunctionDeclaration |  | [1222](../../src/extension.js#L1222) |
+| target | VariableDeclaration | resumeSessionInTerminal | [1223](../../src/extension.js#L1223) |
+| cmd | VariableDeclaration | resumeSessionInTerminal | [1225](../../src/extension.js#L1225) |
+| term | VariableDeclaration | resumeSessionInTerminal | [1227](../../src/extension.js#L1227) |
+| openSessionFolder | FunctionDeclaration |  | [1235](../../src/extension.js#L1235) |
+| target | VariableDeclaration | openSessionFolder | [1236](../../src/extension.js#L1236) |

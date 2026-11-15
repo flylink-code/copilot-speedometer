@@ -30,7 +30,7 @@ updated: 2026-11-15
 ## 未决项
 
 - 状态栏是否要更严格的“仅本窗口”语义（失焦即隐藏）——需用户拍板，见 `HANDOFF.md` §9 限制 1。
-- Marketplace 上传：publisher `copilot-speedometer`，本机未配置 `VSCE_PAT`，`dist/copilot-speedometer-0.2.0.vsix` 待维护者在 Marketplace 管理后台手动上传。
+- Marketplace 上传：publisher `copilot-speedometer`，本机未配置 `VSCE_PAT`，`dist/copilot-speedometer-0.2.1.vsix` 待维护者在 Marketplace 管理后台手动上传。
 
 ## 最后更新
 

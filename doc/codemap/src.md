@@ -8,7 +8,7 @@
 
 | File | Symbols | Symbol pages |
 | --- | ---: | --- |
-| [src/extension.js](../../src/extension.js) | 331 | [1](src_extension.js-41610ea8-1.md) [2](src_extension.js-41610ea8-2.md) [3](src_extension.js-41610ea8-3.md) [4](src_extension.js-41610ea8-4.md) |
+| [src/extension.js](../../src/extension.js) | 369 | [1](src_extension.js-41610ea8-1.md) [2](src_extension.js-41610ea8-2.md) [3](src_extension.js-41610ea8-3.md) [4](src_extension.js-41610ea8-4.md) |
 | [src/i18n.js](../../src/i18n.js) | 14 | [1](src_i18n.js-247b6ba6-1.md) |
 | [src/parser.js](../../src/parser.js) | 80 | [1](src_parser.js-54c345dc-1.md) |
 | [src/pricing.js](../../src/pricing.js) | 34 | [1](src_pricing.js-12dad449-1.md) |

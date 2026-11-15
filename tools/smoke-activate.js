@@ -15,8 +15,11 @@ const path = require('path');
 const captured = { handlers: new Map(), webviewMessages: [], posted: [], info: [] };
 
 class MarkdownString {
-  constructor() {
-    this.value = '';
+  constructor(value = '', supportThemeIcons = false) {
+    this.value = String(value || '');
+    this.supportThemeIcons = !!supportThemeIcons;
+    this.supportHtml = false;
+    this.isTrusted = false;
   }
   appendMarkdown(s) {
     this.value += s;
@@ -115,7 +118,7 @@ const stub = {
       return new stub.Disposable();
     },
     createStatusBarItem() {
-      return {
+      const item = {
         text: '',
         tooltip: '',
         color: undefined,
@@ -125,6 +128,8 @@ const stub = {
         hide() {},
         dispose() {},
       };
+      captured.statusBar = item;
+      return item;
     },
     createWebviewPanel() {
       const panel = {
@@ -304,6 +309,52 @@ const context = {
 
   check('refresh does not throw', () => {
     send({ type: 'refresh' });
+  });
+
+  check('status bar hover card uses borderless 1-row tables, sanitizer-safe styles, and formatted tokens', () => {
+    const tip = captured.statusBar && captured.statusBar.tooltip;
+    if (!tip || !tip.supportHtml || !tip.supportThemeIcons) throw new Error('hover MarkdownString flags missing');
+    if (!tip.isTrusted || !Array.isArray(tip.isTrusted.enabledCommands)) throw new Error('isTrusted.enabledCommands missing');
+    const styleRe = /^(color\:(#[0-9a-fA-F]+|var\(--vscode(-[a-zA-Z0-9]+)+\));)?(background-color\:(#[0-9a-fA-F]+|var\(--vscode(-[a-zA-Z0-9]+)+\));)?(display\:inline-block;)?(border-radius:[0-9]+px;)?$/;
+    const styles = [...tip.value.matchAll(/style="([^"]*)"/g)].map((m) => m[1]);
+    if (!styles.length) throw new Error('expected themed span styles');
+    for (const st of styles) {
+      if (!styleRe.test(st)) throw new Error(`style rejected by VS Code sanitizer: ${st}`);
+    }
+    if (/<tr>[\s\S]*?<\/tr>\s*<tr>/.test(tip.value)) throw new Error('multi-row table causes tr+tr border stripes');
+    if (!tip.value.includes('command:copilotSpeedometer.showDashboard') || !tip.value.includes('command:copilotSpeedometer.openTab')) {
+      throw new Error('clickable command links missing from hover card');
+    }
+
+    const i18nMod = require('../src/i18n');
+    const zhT = i18nMod.create('zh').t;
+    const nowTs = Date.now();
+    const highTtft = {
+      ts: nowTs - 15000,
+      rawModel: 'customendpoint/magpie/antigravity/gemini-4-carbon',
+      model: 'Gemini 4 Carbon · Antigravity',
+      input: 304000,
+      output: 173,
+      cached: 0,
+      reasoning: 0,
+      durMs: 38500,
+      ttftMs: 38400,
+      rate: 4.5,
+      decodeRate: null,
+      byok: true,
+    };
+    const peer = Object.assign({}, highTtft, { output: 18119, durMs: 440000, ttftMs: 1200, rate: 41.2 });
+    const zhMarkup = ext._buildStatusTooltipMarkup({
+      last: highTtft,
+      mine: [peer, highTtft],
+      scoping: { mode: 'window', roots: ['E:\\workspace\\copilot-speedometer'] },
+      pOpts: {},
+      now: nowTs,
+      t: zhT,
+    });
+    if (!zhMarkup.includes('首字占 99%')) throw new Error('missing TTFT wait percentage hint');
+    if (zhMarkup.includes('18292')) throw new Error('raw unformatted output token count leaked');
+    if (!zhMarkup.includes('18k')) throw new Error('expected compact formatted 18k output total');
   });
 
   check('settings payload describes sources and every field', () => {

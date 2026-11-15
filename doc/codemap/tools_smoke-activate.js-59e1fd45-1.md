@@ -4,7 +4,7 @@
 
 [Module](tools.md) · [Source](../../tools/smoke-activate.js) · page 1/2
 
-Source SHA-256: f823a0cd18193c205ac211f424989853b0e54c7940e7ede5b1c55059205b5e67
+Source SHA-256: ce291b2dfd0b8e781282b24fba8fc018830cf8d6c1a9223f90abb91b7f75b47c
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
@@ -13,98 +13,98 @@ Source SHA-256: f823a0cd18193c205ac211f424989853b0e54c7940e7ede5b1c55059205b5e67
 | captured | VariableDeclaration |  | [15](../../tools/smoke-activate.js#L15) |
 | MarkdownString | ClassDeclaration |  | [17](../../tools/smoke-activate.js#L17) |
 | constructor | Constructor | MarkdownString | [18](../../tools/smoke-activate.js#L18) |
-| appendMarkdown | MethodDeclaration | MarkdownString | [21](../../tools/smoke-activate.js#L21) |
-| settings | VariableDeclaration |  | [27](../../tools/smoke-activate.js#L27) |
-| rejectSessionScopeWrite | VariableDeclaration |  | [44](../../tools/smoke-activate.js#L44) |
-| getConfiguration | FunctionDeclaration |  | [46](../../tools/smoke-activate.js#L46) |
-| get | MethodDeclaration | getConfiguration | [48](../../tools/smoke-activate.js#L48) |
-| bucket | VariableDeclaration | getConfiguration.get | [49](../../tools/smoke-activate.js#L49) |
-| inspect | MethodDeclaration | getConfiguration | [52](../../tools/smoke-activate.js#L52) |
-| bucket | VariableDeclaration | getConfiguration.inspect | [53](../../tools/smoke-activate.js#L53) |
-| update | MethodDeclaration | getConfiguration | [57](../../tools/smoke-activate.js#L57) |
-| stub | VariableDeclaration |  | [66](../../tools/smoke-activate.js#L66) |
-| file | PropertyAssignment | stub | [72](../../tools/smoke-activate.js#L72) |
-| joinPath | PropertyAssignment | stub | [73](../../tools/smoke-activate.js#L73) |
-| constructor | Constructor | stub | [76](../../tools/smoke-activate.js#L76) |
-| dispose | MethodDeclaration | stub | [79](../../tools/smoke-activate.js#L79) |
-| registerCommand | MethodDeclaration | stub | [84](../../tools/smoke-activate.js#L84) |
-| executeCommand | MethodDeclaration | stub | [88](../../tools/smoke-activate.js#L88) |
-| onDidChangeConfiguration | MethodDeclaration | stub | [97](../../tools/smoke-activate.js#L97) |
-| onDidChangeWorkspaceFolders | MethodDeclaration | stub | [100](../../tools/smoke-activate.js#L100) |
-| registerWebviewViewProvider | MethodDeclaration | stub | [107](../../tools/smoke-activate.js#L107) |
-| onDidChangeWindowState | MethodDeclaration | stub | [112](../../tools/smoke-activate.js#L112) |
-| createStatusBarItem | MethodDeclaration | stub | [117](../../tools/smoke-activate.js#L117) |
-| show | MethodDeclaration | stub.createStatusBarItem | [124](../../tools/smoke-activate.js#L124) |
-| hide | MethodDeclaration | stub.createStatusBarItem | [125](../../tools/smoke-activate.js#L125) |
-| dispose | MethodDeclaration | stub.createStatusBarItem | [126](../../tools/smoke-activate.js#L126) |
-| createWebviewPanel | MethodDeclaration | stub | [129](../../tools/smoke-activate.js#L129) |
-| panel | VariableDeclaration | stub.createWebviewPanel | [130](../../tools/smoke-activate.js#L130) |
-| onDidReceiveMessage | MethodDeclaration | stub.createWebviewPanel.panel | [134](../../tools/smoke-activate.js#L134) |
-| postMessage | MethodDeclaration | stub.createWebviewPanel.panel | [138](../../tools/smoke-activate.js#L138) |
-| reveal | MethodDeclaration | stub.createWebviewPanel.panel | [143](../../tools/smoke-activate.js#L143) |
-| dispose | MethodDeclaration | stub.createWebviewPanel.panel | [144](../../tools/smoke-activate.js#L144) |
-| onDidDispose | MethodDeclaration | stub.createWebviewPanel.panel | [145](../../tools/smoke-activate.js#L145) |
-| showInformationMessage | MethodDeclaration | stub | [151](../../tools/smoke-activate.js#L151) |
-| createOutputChannel | MethodDeclaration | stub | [155](../../tools/smoke-activate.js#L155) |
-| appendLine | MethodDeclaration | stub.createOutputChannel | [158](../../tools/smoke-activate.js#L158) |
-| clear | MethodDeclaration | stub.createOutputChannel | [161](../../tools/smoke-activate.js#L161) |
-| show | MethodDeclaration | stub.createOutputChannel | [164](../../tools/smoke-activate.js#L164) |
-| dispose | MethodDeclaration | stub.createOutputChannel | [165](../../tools/smoke-activate.js#L165) |
-| showErrorMessage | MethodDeclaration | stub | [168](../../tools/smoke-activate.js#L168) |
-| showWarningMessage | MethodDeclaration | stub | [171](../../tools/smoke-activate.js#L171) |
-| showOpenDialog | MethodDeclaration | stub | [175](../../tools/smoke-activate.js#L175) |
-| showSaveDialog | MethodDeclaration | stub | [178](../../tools/smoke-activate.js#L178) |
-| originalLoad | VariableDeclaration |  | [184](../../tools/smoke-activate.js#L184) |
-| ext | VariableDeclaration |  | [190](../../tools/smoke-activate.js#L190) |
-| memGlobal | VariableDeclaration |  | [192](../../tools/smoke-activate.js#L192) |
-| memWorkspace | VariableDeclaration |  | [193](../../tools/smoke-activate.js#L193) |
-| context | VariableDeclaration |  | [194](../../tools/smoke-activate.js#L194) |
-| get | PropertyAssignment | context | [197](../../tools/smoke-activate.js#L197) |
-| update | PropertyAssignment | context | [198](../../tools/smoke-activate.js#L198) |
-| get | PropertyAssignment | context | [201](../../tools/smoke-activate.js#L201) |
-| update | PropertyAssignment | context | [202](../../tools/smoke-activate.js#L202) |
-| failures | VariableDeclaration |  | [207](../../tools/smoke-activate.js#L207) |
-| check | VariableDeclaration |  | [208](../../tools/smoke-activate.js#L208) |
-| err | VariableDeclaration | check | [212](../../tools/smoke-activate.js#L212) |
-| checkAsync | VariableDeclaration |  | [218](../../tools/smoke-activate.js#L218) |
-| err | VariableDeclaration | checkAsync | [222](../../tools/smoke-activate.js#L222) |
-| cmd | VariableDeclaration |  | [232](../../tools/smoke-activate.js#L232) |
-| provider | VariableDeclaration |  | [241](../../tools/smoke-activate.js#L241) |
-| fakeView | VariableDeclaration |  | [242](../../tools/smoke-activate.js#L242) |
-| onDidReceiveMessage | MethodDeclaration | fakeView | [247](../../tools/smoke-activate.js#L247) |
-| postMessage | MethodDeclaration | fakeView | [251](../../tools/smoke-activate.js#L251) |
-| onDidDispose | MethodDeclaration | fakeView | [256](../../tools/smoke-activate.js#L256) |
-| onDidChangeVisibility | MethodDeclaration | fakeView | [259](../../tools/smoke-activate.js#L259) |
-| send | VariableDeclaration |  | [279](../../tools/smoke-activate.js#L279) |
-| lastOf | VariableDeclaration |  | [280](../../tools/smoke-activate.js#L280) |
-| uiMsg | VariableDeclaration |  | [284](../../tools/smoke-activate.js#L284) |
-| msg | VariableDeclaration |  | [286](../../tools/smoke-activate.js#L286) |
-| p | VariableDeclaration |  | [288](../../tools/smoke-activate.js#L288) |
-| p | VariableDeclaration |  | [297](../../tools/smoke-activate.js#L297) |
-| bad | VariableDeclaration |  | [301](../../tools/smoke-activate.js#L301) |
-| msg | VariableDeclaration |  | [311](../../tools/smoke-activate.js#L311) |
-| p | VariableDeclaration |  | [313](../../tools/smoke-activate.js#L313) |
-| fmt | VariableDeclaration |  | [317](../../tools/smoke-activate.js#L317) |
-| res | VariableDeclaration |  | [326](../../tools/smoke-activate.js#L326) |
-| res | VariableDeclaration |  | [333](../../tools/smoke-activate.js#L333) |
-| res | VariableDeclaration |  | [341](../../tools/smoke-activate.js#L341) |
-| text | VariableDeclaration |  | [347](../../tools/smoke-activate.js#L347) |
-| msg | VariableDeclaration |  | [356](../../tools/smoke-activate.js#L356) |
-| first | VariableDeclaration |  | [359](../../tools/smoke-activate.js#L359) |
-| det | VariableDeclaration |  | [361](../../tools/smoke-activate.js#L361) |
-| afterArch | VariableDeclaration |  | [366](../../tools/smoke-activate.js#L366) |
-| afterUnarch | VariableDeclaration |  | [370](../../tools/smoke-activate.js#L370) |
-| restored | VariableDeclaration |  | [375](../../tools/smoke-activate.js#L375) |
-| all | VariableDeclaration |  | [391](../../tools/smoke-activate.js#L391) |
-| allCount | VariableDeclaration |  | [392](../../tools/smoke-activate.js#L392) |
-| mine | VariableDeclaration |  | [397](../../tools/smoke-activate.js#L397) |
-| foreign | VariableDeclaration |  | [404](../../tools/smoke-activate.js#L404) |
-| merged | VariableDeclaration |  | [411](../../tools/smoke-activate.js#L411) |
-| unscoped | VariableDeclaration |  | [421](../../tools/smoke-activate.js#L421) |
-| before | VariableDeclaration |  | [429](../../tools/smoke-activate.js#L429) |
-| fn | VariableDeclaration |  | [433](../../tools/smoke-activate.js#L433) |
-| after | VariableDeclaration |  | [434](../../tools/smoke-activate.js#L434) |
-| swapped | VariableDeclaration |  | [449](../../tools/smoke-activate.js#L449) |
-| fallback | VariableDeclaration |  | [463](../../tools/smoke-activate.js#L463) |
-| fallbackSettings | VariableDeclaration |  | [468](../../tools/smoke-activate.js#L468) |
-| before | VariableDeclaration |  | [480](../../tools/smoke-activate.js#L480) |
+| appendMarkdown | MethodDeclaration | MarkdownString | [24](../../tools/smoke-activate.js#L24) |
+| settings | VariableDeclaration |  | [30](../../tools/smoke-activate.js#L30) |
+| rejectSessionScopeWrite | VariableDeclaration |  | [47](../../tools/smoke-activate.js#L47) |
+| getConfiguration | FunctionDeclaration |  | [49](../../tools/smoke-activate.js#L49) |
+| get | MethodDeclaration | getConfiguration | [51](../../tools/smoke-activate.js#L51) |
+| bucket | VariableDeclaration | getConfiguration.get | [52](../../tools/smoke-activate.js#L52) |
+| inspect | MethodDeclaration | getConfiguration | [55](../../tools/smoke-activate.js#L55) |
+| bucket | VariableDeclaration | getConfiguration.inspect | [56](../../tools/smoke-activate.js#L56) |
+| update | MethodDeclaration | getConfiguration | [60](../../tools/smoke-activate.js#L60) |
+| stub | VariableDeclaration |  | [69](../../tools/smoke-activate.js#L69) |
+| file | PropertyAssignment | stub | [75](../../tools/smoke-activate.js#L75) |
+| joinPath | PropertyAssignment | stub | [76](../../tools/smoke-activate.js#L76) |
+| constructor | Constructor | stub | [79](../../tools/smoke-activate.js#L79) |
+| dispose | MethodDeclaration | stub | [82](../../tools/smoke-activate.js#L82) |
+| registerCommand | MethodDeclaration | stub | [87](../../tools/smoke-activate.js#L87) |
+| executeCommand | MethodDeclaration | stub | [91](../../tools/smoke-activate.js#L91) |
+| onDidChangeConfiguration | MethodDeclaration | stub | [100](../../tools/smoke-activate.js#L100) |
+| onDidChangeWorkspaceFolders | MethodDeclaration | stub | [103](../../tools/smoke-activate.js#L103) |
+| registerWebviewViewProvider | MethodDeclaration | stub | [110](../../tools/smoke-activate.js#L110) |
+| onDidChangeWindowState | MethodDeclaration | stub | [115](../../tools/smoke-activate.js#L115) |
+| createStatusBarItem | MethodDeclaration | stub | [120](../../tools/smoke-activate.js#L120) |
+| item | VariableDeclaration | stub.createStatusBarItem | [121](../../tools/smoke-activate.js#L121) |
+| show | MethodDeclaration | stub.createStatusBarItem.item | [127](../../tools/smoke-activate.js#L127) |
+| hide | MethodDeclaration | stub.createStatusBarItem.item | [128](../../tools/smoke-activate.js#L128) |
+| dispose | MethodDeclaration | stub.createStatusBarItem.item | [129](../../tools/smoke-activate.js#L129) |
+| createWebviewPanel | MethodDeclaration | stub | [134](../../tools/smoke-activate.js#L134) |
+| panel | VariableDeclaration | stub.createWebviewPanel | [135](../../tools/smoke-activate.js#L135) |
+| onDidReceiveMessage | MethodDeclaration | stub.createWebviewPanel.panel | [139](../../tools/smoke-activate.js#L139) |
+| postMessage | MethodDeclaration | stub.createWebviewPanel.panel | [143](../../tools/smoke-activate.js#L143) |
+| reveal | MethodDeclaration | stub.createWebviewPanel.panel | [148](../../tools/smoke-activate.js#L148) |
+| dispose | MethodDeclaration | stub.createWebviewPanel.panel | [149](../../tools/smoke-activate.js#L149) |
+| onDidDispose | MethodDeclaration | stub.createWebviewPanel.panel | [150](../../tools/smoke-activate.js#L150) |
+| showInformationMessage | MethodDeclaration | stub | [156](../../tools/smoke-activate.js#L156) |
+| createOutputChannel | MethodDeclaration | stub | [160](../../tools/smoke-activate.js#L160) |
+| appendLine | MethodDeclaration | stub.createOutputChannel | [163](../../tools/smoke-activate.js#L163) |
+| clear | MethodDeclaration | stub.createOutputChannel | [166](../../tools/smoke-activate.js#L166) |
+| show | MethodDeclaration | stub.createOutputChannel | [169](../../tools/smoke-activate.js#L169) |
+| dispose | MethodDeclaration | stub.createOutputChannel | [170](../../tools/smoke-activate.js#L170) |
+| showErrorMessage | MethodDeclaration | stub | [173](../../tools/smoke-activate.js#L173) |
+| showWarningMessage | MethodDeclaration | stub | [176](../../tools/smoke-activate.js#L176) |
+| showOpenDialog | MethodDeclaration | stub | [180](../../tools/smoke-activate.js#L180) |
+| showSaveDialog | MethodDeclaration | stub | [183](../../tools/smoke-activate.js#L183) |
+| originalLoad | VariableDeclaration |  | [189](../../tools/smoke-activate.js#L189) |
+| ext | VariableDeclaration |  | [195](../../tools/smoke-activate.js#L195) |
+| memGlobal | VariableDeclaration |  | [197](../../tools/smoke-activate.js#L197) |
+| memWorkspace | VariableDeclaration |  | [198](../../tools/smoke-activate.js#L198) |
+| context | VariableDeclaration |  | [199](../../tools/smoke-activate.js#L199) |
+| get | PropertyAssignment | context | [202](../../tools/smoke-activate.js#L202) |
+| update | PropertyAssignment | context | [203](../../tools/smoke-activate.js#L203) |
+| get | PropertyAssignment | context | [206](../../tools/smoke-activate.js#L206) |
+| update | PropertyAssignment | context | [207](../../tools/smoke-activate.js#L207) |
+| failures | VariableDeclaration |  | [212](../../tools/smoke-activate.js#L212) |
+| check | VariableDeclaration |  | [213](../../tools/smoke-activate.js#L213) |
+| err | VariableDeclaration | check | [217](../../tools/smoke-activate.js#L217) |
+| checkAsync | VariableDeclaration |  | [223](../../tools/smoke-activate.js#L223) |
+| err | VariableDeclaration | checkAsync | [227](../../tools/smoke-activate.js#L227) |
+| cmd | VariableDeclaration |  | [237](../../tools/smoke-activate.js#L237) |
+| provider | VariableDeclaration |  | [246](../../tools/smoke-activate.js#L246) |
+| fakeView | VariableDeclaration |  | [247](../../tools/smoke-activate.js#L247) |
+| onDidReceiveMessage | MethodDeclaration | fakeView | [252](../../tools/smoke-activate.js#L252) |
+| postMessage | MethodDeclaration | fakeView | [256](../../tools/smoke-activate.js#L256) |
+| onDidDispose | MethodDeclaration | fakeView | [261](../../tools/smoke-activate.js#L261) |
+| onDidChangeVisibility | MethodDeclaration | fakeView | [264](../../tools/smoke-activate.js#L264) |
+| send | VariableDeclaration |  | [284](../../tools/smoke-activate.js#L284) |
+| lastOf | VariableDeclaration |  | [285](../../tools/smoke-activate.js#L285) |
+| uiMsg | VariableDeclaration |  | [289](../../tools/smoke-activate.js#L289) |
+| msg | VariableDeclaration |  | [291](../../tools/smoke-activate.js#L291) |
+| p | VariableDeclaration |  | [293](../../tools/smoke-activate.js#L293) |
+| p | VariableDeclaration |  | [302](../../tools/smoke-activate.js#L302) |
+| bad | VariableDeclaration |  | [306](../../tools/smoke-activate.js#L306) |
+| tip | VariableDeclaration |  | [315](../../tools/smoke-activate.js#L315) |
+| styleRe | VariableDeclaration |  | [318](../../tools/smoke-activate.js#L318) |
+| styles | VariableDeclaration |  | [319](../../tools/smoke-activate.js#L319) |
+| st | VariableDeclaration |  | [321](../../tools/smoke-activate.js#L321) |
+| i18nMod | VariableDeclaration |  | [329](../../tools/smoke-activate.js#L329) |
+| zhT | VariableDeclaration |  | [330](../../tools/smoke-activate.js#L330) |
+| nowTs | VariableDeclaration |  | [331](../../tools/smoke-activate.js#L331) |
+| highTtft | VariableDeclaration |  | [332](../../tools/smoke-activate.js#L332) |
+| peer | VariableDeclaration |  | [346](../../tools/smoke-activate.js#L346) |
+| zhMarkup | VariableDeclaration |  | [347](../../tools/smoke-activate.js#L347) |
+| msg | VariableDeclaration |  | [362](../../tools/smoke-activate.js#L362) |
+| p | VariableDeclaration |  | [364](../../tools/smoke-activate.js#L364) |
+| fmt | VariableDeclaration |  | [368](../../tools/smoke-activate.js#L368) |
+| res | VariableDeclaration |  | [377](../../tools/smoke-activate.js#L377) |
+| res | VariableDeclaration |  | [384](../../tools/smoke-activate.js#L384) |
+| res | VariableDeclaration |  | [392](../../tools/smoke-activate.js#L392) |
+| text | VariableDeclaration |  | [398](../../tools/smoke-activate.js#L398) |
+| msg | VariableDeclaration |  | [407](../../tools/smoke-activate.js#L407) |
+| first | VariableDeclaration |  | [410](../../tools/smoke-activate.js#L410) |
+| det | VariableDeclaration |  | [412](../../tools/smoke-activate.js#L412) |
+| afterArch | VariableDeclaration |  | [417](../../tools/smoke-activate.js#L417) |
+| afterUnarch | VariableDeclaration |  | [421](../../tools/smoke-activate.js#L421) |
+| restored | VariableDeclaration |  | [426](../../tools/smoke-activate.js#L426) |
+| all | VariableDeclaration |  | [442](../../tools/smoke-activate.js#L442) |
+| allCount | VariableDeclaration |  | [443](../../tools/smoke-activate.js#L443) |

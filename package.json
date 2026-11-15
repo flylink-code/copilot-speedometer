@@ -2,7 +2,7 @@
   "name": "copilot-speedometer",
   "displayName": "Copilot Speedometer",
   "description": "Status bar and dashboard showing tokens/second, latency and token usage for every GitHub Copilot Chat request, parsed from the local Copilot debug logs.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "copilot-speedometer",
   "license": "MIT",
   "repository": {

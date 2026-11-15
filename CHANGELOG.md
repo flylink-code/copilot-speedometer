@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.2.1 — redesigned status-bar hover card
+
+- **Status-bar hover tooltip overhaul (`src/extension.js`, `src/i18n.js`)**:
+  - Replaces the stripe-heavy 7-row Markdown table with a structured 4-section
+    hover card using single-row borderless tables, native `<hr>` section rules,
+    and VS Code sanitizer-compliant theme colors (`--vscode-charts-blue`,
+    `--vscode-descriptionForeground`).
+  - Header shows current window scope and relative freshness (`本窗口 · 刚刚`).
+  - Hero row highlights end-to-end `tok/s` alongside streaming **decode rate**
+    when available, or a `({0}% TTFT wait)` / `（首字占 {0}%）` indicator when
+    prefill or a non-streaming endpoint accounts for ≥80% of wall time, paired
+    with right-aligned per-request cost.
+  - Compact 3-column metric row groups **Duration / TTFT**, **Input / cache hit
+    rate**, and **Output tokens** (with reasoning token count when present).
+  - Summary row aggregates **Today's** scoped requests (falling back to the last
+    20 when today has none), formats output token totals with `k`/`M` suffixes
+    instead of raw integers, and displays cumulative USD cost.
+  - Bottom action bar adds clickable `command:` links (**Sidebar**, **Editor
+    tab**, **Refresh**) directly inside the hover popup.
+
 ## 0.2.0 — cost estimation & read-only Sessions Hub
 
 Two major additions built on top of the local session stores (still zero network

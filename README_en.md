@@ -60,7 +60,7 @@ Search for **Copilot Speedometer** in the Extensions view, or:
 code --install-extension copilot-speedometer.copilot-speedometer
 ```
 
-**Option B: local VSIX** (offline): `dist/copilot-speedometer-0.2.0.vsix`.
+**Option B: local VSIX** (offline): `dist/copilot-speedometer-0.2.1.vsix`.
 
 **Option C: from source**: open this folder in VS Code and press <kbd>F5</kbd> (Run Extension).
 

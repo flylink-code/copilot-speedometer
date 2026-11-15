@@ -4,38 +4,76 @@
 
 [Module](src.md) · [Source](../../src/extension.js) · page 4/4
 
-Source SHA-256: f20c15ccc11f08883b3b513b7051a7ce584ec5e3af23ed1e6a793eb0e3fe2ffb
+Source SHA-256: 29966a53fc7aac9bd1b781899541a6bb09b502391b35a92ed8f710bd6eeca0c9
 
 | Symbol | Kind | Scope | Line |
 | --- | --- | --- | ---: |
-| nonce | VariableDeclaration | showDashboard | [1394](../../src/extension.js#L1394) |
-| makeNonce | FunctionDeclaration |  | [1405](../../src/extension.js#L1405) |
-| chars | VariableDeclaration | makeNonce | [1406](../../src/extension.js#L1406) |
-| out | VariableDeclaration | makeNonce | [1407](../../src/extension.js#L1407) |
-| i | VariableDeclaration | makeNonce | [1408](../../src/extension.js#L1408) |
-| enableLogging | FunctionDeclaration |  | [1412](../../src/extension.js#L1412) |
-| t | VariableDeclaration | enableLogging | [1413](../../src/extension.js#L1413) |
-| cfg | VariableDeclaration | enableLogging | [1414](../../src/extension.js#L1414) |
-| err | VariableDeclaration | enableLogging | [1418](../../src/extension.js#L1418) |
-| maybeWarnSetup | FunctionDeclaration |  | [1428](../../src/extension.js#L1428) |
-| state | VariableDeclaration | maybeWarnSetup | [1432](../../src/extension.js#L1432) |
-| t | VariableDeclaration | maybeWarnSetup | [1436](../../src/extension.js#L1436) |
-| enableLabel | VariableDeclaration | maybeWarnSetup | [1437](../../src/extension.js#L1437) |
-| pick | VariableDeclaration | maybeWarnSetup | [1438](../../src/extension.js#L1438) |
-| exportJson | FunctionDeclaration |  | [1448](../../src/extension.js#L1448) |
-| t | VariableDeclaration | exportJson | [1449](../../src/extension.js#L1449) |
-| visible | VariableDeclaration | exportJson | [1450](../../src/extension.js#L1450) |
-| stamp | VariableDeclaration | exportJson | [1455](../../src/extension.js#L1455) |
-| target | VariableDeclaration | exportJson | [1456](../../src/extension.js#L1456) |
-| pOpts | VariableDeclaration | exportJson | [1467](../../src/extension.js#L1467) |
-| payload | VariableDeclaration | exportJson | [1468](../../src/extension.js#L1468) |
-| seedDemo | FunctionDeclaration |  | [1479](../../src/extension.js#L1479) |
-| t | VariableDeclaration | seedDemo | [1480](../../src/extension.js#L1480) |
-| models | VariableDeclaration | seedDemo | [1485](../../src/extension.js#L1485) |
-| now | VariableDeclaration | seedDemo | [1486](../../src/extension.js#L1486) |
-| i | VariableDeclaration | seedDemo | [1487](../../src/extension.js#L1487) |
-| model | VariableDeclaration | seedDemo | [1488](../../src/extension.js#L1488) |
-| output | VariableDeclaration | seedDemo | [1489](../../src/extension.js#L1489) |
-| ttft | VariableDeclaration | seedDemo | [1490](../../src/extension.js#L1490) |
-| decodeMs | VariableDeclaration | seedDemo | [1491](../../src/extension.js#L1491) |
-| rec | VariableDeclaration | seedDemo | [1492](../../src/extension.js#L1492) |
+| findSessionById | FunctionDeclaration |  | [1241](../../src/extension.js#L1241) |
+| forkSessionAction | FunctionDeclaration |  | [1246](../../src/extension.js#L1246) |
+| t | VariableDeclaration | forkSessionAction | [1247](../../src/extension.js#L1247) |
+| target | VariableDeclaration | forkSessionAction | [1248](../../src/extension.js#L1248) |
+| res | VariableDeclaration | forkSessionAction | [1250](../../src/extension.js#L1250) |
+| nextUi | VariableDeclaration | forkSessionAction | [1256](../../src/extension.js#L1256) |
+| moveSessionAction | FunctionDeclaration |  | [1262](../../src/extension.js#L1262) |
+| t | VariableDeclaration | moveSessionAction | [1263](../../src/extension.js#L1263) |
+| target | VariableDeclaration | moveSessionAction | [1264](../../src/extension.js#L1264) |
+| seenDirs | VariableDeclaration | moveSessionAction | [1271](../../src/extension.js#L1271) |
+| picks | VariableDeclaration | moveSessionAction | [1273](../../src/extension.js#L1273) |
+| folder | VariableDeclaration | moveSessionAction | [1275](../../src/extension.js#L1275) |
+| fsPath | VariableDeclaration | moveSessionAction | [1276](../../src/extension.js#L1276) |
+| norm | VariableDeclaration | moveSessionAction | [1278](../../src/extension.js#L1278) |
+| s | VariableDeclaration | moveSessionAction | [1289](../../src/extension.js#L1289) |
+| norm | VariableDeclaration | moveSessionAction | [1291](../../src/extension.js#L1291) |
+| picked | VariableDeclaration | moveSessionAction | [1310](../../src/extension.js#L1310) |
+| chosenDir | VariableDeclaration | moveSessionAction | [1316](../../src/extension.js#L1316) |
+| defaultUri | VariableDeclaration | moveSessionAction | [1318](../../src/extension.js#L1318) |
+| uris | VariableDeclaration | moveSessionAction | [1319](../../src/extension.js#L1319) |
+| res | VariableDeclaration | moveSessionAction | [1330](../../src/extension.js#L1330) |
+| archiveSessionAction | FunctionDeclaration |  | [1345](../../src/extension.js#L1345) |
+| t | VariableDeclaration | archiveSessionAction | [1346](../../src/extension.js#L1346) |
+| target | VariableDeclaration | archiveSessionAction | [1347](../../src/extension.js#L1347) |
+| ui | VariableDeclaration | archiveSessionAction | [1350](../../src/extension.js#L1350) |
+| nextUi | VariableDeclaration | archiveSessionAction | [1352](../../src/extension.js#L1352) |
+| deleteSessionAction | FunctionDeclaration |  | [1359](../../src/extension.js#L1359) |
+| t | VariableDeclaration | deleteSessionAction | [1360](../../src/extension.js#L1360) |
+| target | VariableDeclaration | deleteSessionAction | [1361](../../src/extension.js#L1361) |
+| delLabel | VariableDeclaration | deleteSessionAction | [1367](../../src/extension.js#L1367) |
+| ans | VariableDeclaration | deleteSessionAction | [1368](../../src/extension.js#L1368) |
+| res | VariableDeclaration | deleteSessionAction | [1375](../../src/extension.js#L1375) |
+| nextUi | VariableDeclaration | deleteSessionAction | [1382](../../src/extension.js#L1382) |
+| showSidebar | FunctionDeclaration |  | [1394](../../src/extension.js#L1394) |
+| wireWebview | FunctionDeclaration |  | [1402](../../src/extension.js#L1402) |
+| ui | VariableDeclaration | wireWebview | [1406](../../src/extension.js#L1406) |
+| w | VariableDeclaration | wireWebview | [1421](../../src/extension.js#L1421) |
+| showDashboard | FunctionDeclaration |  | [1475](../../src/extension.js#L1475) |
+| nonce | VariableDeclaration | showDashboard | [1489](../../src/extension.js#L1489) |
+| makeNonce | FunctionDeclaration |  | [1500](../../src/extension.js#L1500) |
+| chars | VariableDeclaration | makeNonce | [1501](../../src/extension.js#L1501) |
+| out | VariableDeclaration | makeNonce | [1502](../../src/extension.js#L1502) |
+| i | VariableDeclaration | makeNonce | [1503](../../src/extension.js#L1503) |
+| enableLogging | FunctionDeclaration |  | [1507](../../src/extension.js#L1507) |
+| t | VariableDeclaration | enableLogging | [1508](../../src/extension.js#L1508) |
+| cfg | VariableDeclaration | enableLogging | [1509](../../src/extension.js#L1509) |
+| err | VariableDeclaration | enableLogging | [1513](../../src/extension.js#L1513) |
+| maybeWarnSetup | FunctionDeclaration |  | [1523](../../src/extension.js#L1523) |
+| state | VariableDeclaration | maybeWarnSetup | [1527](../../src/extension.js#L1527) |
+| t | VariableDeclaration | maybeWarnSetup | [1531](../../src/extension.js#L1531) |
+| enableLabel | VariableDeclaration | maybeWarnSetup | [1532](../../src/extension.js#L1532) |
+| pick | VariableDeclaration | maybeWarnSetup | [1533](../../src/extension.js#L1533) |
+| exportJson | FunctionDeclaration |  | [1543](../../src/extension.js#L1543) |
+| t | VariableDeclaration | exportJson | [1544](../../src/extension.js#L1544) |
+| visible | VariableDeclaration | exportJson | [1545](../../src/extension.js#L1545) |
+| stamp | VariableDeclaration | exportJson | [1550](../../src/extension.js#L1550) |
+| target | VariableDeclaration | exportJson | [1551](../../src/extension.js#L1551) |
+| pOpts | VariableDeclaration | exportJson | [1562](../../src/extension.js#L1562) |
+| payload | VariableDeclaration | exportJson | [1563](../../src/extension.js#L1563) |
+| seedDemo | FunctionDeclaration |  | [1574](../../src/extension.js#L1574) |
+| t | VariableDeclaration | seedDemo | [1575](../../src/extension.js#L1575) |
+| models | VariableDeclaration | seedDemo | [1580](../../src/extension.js#L1580) |
+| now | VariableDeclaration | seedDemo | [1581](../../src/extension.js#L1581) |
+| i | VariableDeclaration | seedDemo | [1582](../../src/extension.js#L1582) |
+| model | VariableDeclaration | seedDemo | [1583](../../src/extension.js#L1583) |
+| output | VariableDeclaration | seedDemo | [1584](../../src/extension.js#L1584) |
+| ttft | VariableDeclaration | seedDemo | [1585](../../src/extension.js#L1585) |
+| decodeMs | VariableDeclaration | seedDemo | [1586](../../src/extension.js#L1586) |
+| rec | VariableDeclaration | seedDemo | [1587](../../src/extension.js#L1587) |
