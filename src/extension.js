@@ -35,6 +35,7 @@ let seen = new Set();
 let deepLoaded = false;
 let windowBackfillDone = false;
 let windowActivityTs = 0;
+let windowStartTs = Date.now();
 let scanner = null;
 let usageScanner = null;
 let hubScanner = null;
@@ -571,6 +572,7 @@ function restartLoop() {
   deepLoaded = false;
   windowBackfillDone = false;
   windowActivityTs = 0;
+  windowStartTs = Date.now();
   demoMode = false;
   scopeCacheInvalidate();
   tick(true);
@@ -810,11 +812,22 @@ function autoHideMinutes() {
   return Number.isFinite(raw) && raw > 0 ? raw : 0;
 }
 
-function statusBarWanted() {
+/**
+ * The status bar follows what this window does *now*. History that was already
+ * on disk when the window opened never makes it appear; it shows up once this
+ * window sends a request (a new record) or opens/resumes a conversation.
+ */
+function statusActivityTs() {
+  if (demoMode) return Date.now();
   const list = statusRecords();
   const last = list[list.length - 1];
-  const lastTs = Math.max(last ? last.ts : 0, windowActivityTs);
-  // No conversation of this window at all: nothing to measure, so no item.
+  const fresh = last && last.ts >= windowStartTs ? last.ts : 0;
+  return Math.max(fresh, windowActivityTs);
+}
+
+function statusBarWanted() {
+  const lastTs = statusActivityTs();
+  // This window has not used Copilot since it opened: stay hidden.
   if (!lastTs) return false;
   return statsStatusBarWanted({
     enabled: config().get('enabled', true),

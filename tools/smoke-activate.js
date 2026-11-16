@@ -124,8 +124,9 @@ const stub = {
         color: undefined,
         command: '',
         name: '',
-        show() {},
-        hide() {},
+        visible: false,
+        show() { this.visible = true; },
+        hide() { this.visible = false; },
         dispose() {},
       };
       captured.statusBar = item;
@@ -529,6 +530,14 @@ const context = {
     await new Promise((r) => setTimeout(r, 40));
     settings.copilotSpeedometer.sessionScope = 'window';
     stub.workspace.workspaceFolders = undefined;
+  });
+
+  await checkAsync('a window that has not chatted since it opened keeps the status bar hidden despite history', async () => {
+    settings.copilotSpeedometer.sessionScope = 'all';
+    send({ type: 'refresh' });
+    await new Promise((r) => setTimeout(r, 80));
+    if (!(lastOf('data').payload.totalCaptured > 0)) throw new Error('precondition: window has history');
+    if (captured.statusBar.visible) throw new Error('status bar shows historical speed in a window with no new activity');
   });
 
   check('enableLogging writes the Copilot setting', () => {

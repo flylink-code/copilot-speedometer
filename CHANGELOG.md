@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.4 — Status bar hidden until this window chats
+
+- **No historical speed on a fresh window (`src/extension.js`)**: the status bar
+  item now stays hidden until this window itself uses Copilot after it opened
+  (a new request of its own, or opening/resuming a conversation). Records that
+  were already on disk at startup, including the startup backfill, no longer
+  make it appear. The dashboard and the Sessions hub still list that history.
+
 ## 0.2.3 — Slim side bar layout & window-accurate status bar
 
 - **Status bar only shows this window's own conversation (`src/scope.js`, `src/extension.js`)**:

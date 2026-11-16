@@ -10,26 +10,27 @@ updated: 2026-11-15
 
 ## 当前阶段
 
-- 创建 / 实现 / 调试 / 优化 / [x] 归档 —— 当前：**0.2.3 极窄侧栏自适应 + 状态栏仅显示本窗口对话，已提交推送（标签 `v0.2.3`）并安装 VSIX，待上传 Marketplace 后台**
+- 创建 / 实现 / 调试 / 优化 / [x] 归档 —— 当前：**0.2.4 状态栏在新窗口无本窗口新对话前保持隐藏（不显示历史速率），已安装 VSIX并安装 VSIX，待上传 Marketplace 后台**
 
 ## 当前目标
 
-- 重载窗口核验扩展详情页（默认英文 + 4 张清晰全幅截图），并在 VS Code Marketplace 管理后台上传 `dist/copilot-speedometer-0.2.3.vsix`。
+- 重载窗口核验扩展详情页（默认英文 + 4 张清晰全幅截图），并在 VS Code Marketplace 管理后台上传 `dist/copilot-speedometer-0.2.4.vsix`。
 
 ## 进行中
 
 | 事项 | 状态 | 阻塞点 | 负责人 |
 | --- | --- | --- | --- |
-| 上传 `dist/copilot-speedometer-0.2.3.vsix` 到 Marketplace | 已推送源码与标签，VSIX 就绪 | 本机未配置 `VSCE_PAT`，需登录 Marketplace 网页后台上传 | 用户 |
+| 上传 `dist/copilot-speedometer-0.2.4.vsix` 到 Marketplace | 已推送源码与标签，VSIX 就绪 | 本机未配置 `VSCE_PAT`，需登录 Marketplace 网页后台上传 | 用户 |
 
 ## 下一步（按优先级）
 
 1. 在当前 VS Code 执行 `Developer: Reload Window`，打开已安装扩展的「细节」页验收（判定：默认显示英文说明，顶部提供 `简体中文` 跳转；4 张截图全幅铺满、无黑框余白与亮白滚动条）。
-2. 打开 VS Code Marketplace 发布者后台（`https://marketplace.visualstudio.com/manage/publishers/copilot-speedometer`）上传 `dist/copilot-speedometer-0.2.3.vsix`（判定：商店页面版本显示 `0.2.3`，默认英文且图片完整加载）。
+2. 打开 VS Code Marketplace 发布者后台（`https://marketplace.visualstudio.com/manage/publishers/copilot-speedometer`）上传 `dist/copilot-speedometer-0.2.4.vsix`（判定：商店页面版本显示 `0.2.4`，默认英文且图片完整加载）。
 3. 如后续希望命令行一键发布到商店，可配置 `VSCE_PAT` 或添加 GitHub Actions Release 工作流（判定：`npx @vscode/vsce verify-pat copilot-speedometer` 返回成功）。
 
 ## 已完成（只留最近 10 条，更早的走归档）
 
+- 0.2.4 状态栏仅在本窗口启动后产生新对话/打开恢复对话时显示（`windowStartTs`），历史记录不再触发显示（2026-11-16）。
 - 0.2.3 极窄侧栏自适应（`ResizeObserver` + xs/xxs 两档、指标卡/按钮/标签自适应）、侧栏顶栏去重复品牌行；状态栏改为只认本窗口会话（`scope.recordStrictlyInWindow`），无本窗口对话时隐藏（2026-11-16）。
 - 0.2.2 默认英文 README 与截图修复：将 `README.md` 切为默认英文并配 `README_zh.md` 简体中文版（移除冗余 `README_en.md`）；改用独立 headless Chrome 按精确画幅重拍全部 8 张中英文截图，修复半幅黑边与亮白滚动条，同时调整宽屏 KPI 6 卡单行对称与滚动条主题色（2026-11-15）。
 - 0.2.1 状态栏悬停卡片重构：移除多行 Markdown 表格条纹，改为 4 段式单行无框表 + `<hr>` 分隔、首字占比提示/流式解码速度并列、3 列指标格、今日汇总 `k`/`M` 格式化与累计费用、可点击 `command:` 快捷操作栏（2026-11-15）。
