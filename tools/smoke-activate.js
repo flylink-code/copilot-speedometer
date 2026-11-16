@@ -312,7 +312,11 @@ const context = {
   });
 
   check('status bar hover card uses borderless 1-row tables, sanitizer-safe styles, and formatted tokens', () => {
-    const tip = captured.statusBar && captured.statusBar.tooltip;
+    // A window with no conversation of its own hides the item, so build the card directly.
+    const sample = { ts: Date.now() - 5000, model: 'Demo', input: 1000, output: 100, cached: 0, durMs: 2000, ttftMs: 500, rate: 50 };
+    const tip = ext._makeHoverMarkdown(ext._buildStatusTooltipMarkup({
+      last: sample, mine: [sample], scoping: { mode: 'window', roots: ['E:\\w'] }, pOpts: {}, t: require('../src/i18n').create('en').t,
+    }));
     if (!tip || !tip.supportHtml || !tip.supportThemeIcons) throw new Error('hover MarkdownString flags missing');
     if (!tip.isTrusted || !Array.isArray(tip.isTrusted.enabledCommands)) throw new Error('isTrusted.enabledCommands missing');
     const styleRe = /^(color\:(#[0-9a-fA-F]+|var\(--vscode(-[a-zA-Z0-9]+)+\));)?(background-color\:(#[0-9a-fA-F]+|var\(--vscode(-[a-zA-Z0-9]+)+\));)?(display\:inline-block;)?(border-radius:[0-9]+px;)?$/;

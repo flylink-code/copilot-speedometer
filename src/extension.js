@@ -103,8 +103,27 @@ function scopedRecords() {
   return list;
 }
 
+/**
+ * What the status bar may show: records positively attributed to this window.
+ * Stricter than `scopedRecords()`, which keeps unattributable records so the
+ * panel is never mysteriously empty.
+ */
+let statusCache = null;
+
+function statusRecords() {
+  const scoping = windowScope();
+  const key = `${recordsRevision}|${scoping.mode}|${scoping.roots.join('|')}|${scoping.workspaceFile}`;
+  if (statusCache && statusCache.key === key) return statusCache.list;
+  const list = scoping.mode === 'window'
+    ? records.filter((r) => scope.recordStrictlyInWindow(r, scoping))
+    : records.slice();
+  statusCache = { key, list };
+  return list;
+}
+
 function scopeCacheInvalidate() {
   scopeCache = null;
+  statusCache = null;
   recordsRevision += 1;
 }
 
@@ -567,6 +586,13 @@ function callKey(rec) {
   return `${rec.rawModel || rec.model}|${rec.output}|${Math.round(rec.ts / 5000)}`;
 }
 
+/** A session of this window by its working directory; no folder open means none. */
+function entryStrictlyInWindow(entry, scoping) {
+  if (!scoping || scoping.mode !== 'window') return true;
+  if (!entry || !entry.cwd || !scoping.roots.length) return false;
+  return scope.matchesRoots(entry.cwd, scoping.roots);
+}
+
 function entryMatchesWindow(entry, scoping) {
   if (!scoping || scoping.mode !== 'window' || !scoping.roots.length) return true;
   if (!entry || !entry.cwd) return false;
@@ -640,7 +666,7 @@ function tick(force) {
       } catch {
         continue;
       }
-      const mine = entryMatchesWindow(entry, scoping);
+      const mine = entryStrictlyInWindow(entry, scoping);
       for (const line of lines) {
         if (
           mine &&
@@ -785,9 +811,11 @@ function autoHideMinutes() {
 }
 
 function statusBarWanted() {
-  const list = scopedRecords();
+  const list = statusRecords();
   const last = list[list.length - 1];
   const lastTs = Math.max(last ? last.ts : 0, windowActivityTs);
+  // No conversation of this window at all: nothing to measure, so no item.
+  if (!lastTs) return false;
   return statsStatusBarWanted({
     enabled: config().get('enabled', true),
     statusBar: config().get('statusBar', true),
@@ -925,7 +953,7 @@ function updateStatusBar() {
 
   const t = tr();
   const scoping = windowScope();
-  const mine = scopedRecords();
+  const mine = statusRecords();
   const last = mine[mine.length - 1];
   const pOpts = pricingOptions();
   if (!last) {
@@ -1609,4 +1637,9 @@ function seedDemo() {
   vscode.window.showInformationMessage(t('msg.demoLoaded'));
 }
 
-module.exports = { activate, deactivate, _buildStatusTooltipMarkup: buildStatusTooltipMarkup };
+module.exports = {
+  activate,
+  deactivate,
+  _buildStatusTooltipMarkup: buildStatusTooltipMarkup,
+  _makeHoverMarkdown: makeHoverMarkdown,
+};

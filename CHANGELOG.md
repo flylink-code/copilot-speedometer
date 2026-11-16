@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.3 — Slim side bar layout & window-accurate status bar
+
+- **Status bar only shows this window's own conversation (`src/scope.js`, `src/extension.js`)**:
+  - A window with no Copilot conversation of its own no longer shows another
+    window's tok/s: the item stays hidden until a session whose working
+    directory belongs to this window has records or activity. Records with an
+    unknown origin, and folder-less windows, no longer count for the status bar
+    (the panel keeps its lenient scoping so it is never mysteriously empty).
+- **Side bar header (`src/webview.js`)**: removed the duplicated brand row (the
+  native view title already names the view); tabs now fill the header height
+  and line up with the action icons.
+- **Side bar follows its width (`src/webview.js`)**:
+  - Layout is recomputed with a `ResizeObserver`, so dragging the side bar
+    edge updates the view immediately.
+  - Two extra-slim tiers (< 260 px, < 190 px) tighten padding, hide the brand
+    text and the "open in editor" button, and make the tabs scrollable instead
+    of overlapping.
+  - KPI cards pick their column count from the available width; the time
+    window buttons fill the row (stacked when extremely slim); scope text,
+    hero subtitle and chart legend wrap; long section titles and buttons
+    truncate with an ellipsis. KPI cards gained hover titles.
 ## 0.2.2 — English default README & crisp README screenshots
 
 - **Bilingual README defaults (`README.md`, `README_zh.md`)**:

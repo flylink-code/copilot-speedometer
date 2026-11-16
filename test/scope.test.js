@@ -162,4 +162,14 @@ test('a folder-less window still narrows records that name a workspace file', ()
   assert.strictEqual(scope.filterToWindow(records, { mode: 'window', roots: [], workspaceFile: '' }).length, 3);
 });
 
+test('status bar scope: only records positively attributed to this window count', () => {
+  const win = { mode: 'window', roots: ['E:\\work\\mine'], workspaceFile: '' };
+  assert.strictEqual(scope.recordStrictlyInWindow({ cwd: 'E:\\work\\mine\\sub' }, win), true);
+  assert.strictEqual(scope.recordStrictlyInWindow({ cwd: 'E:\\work\\other' }, win), false);
+  assert.strictEqual(scope.recordStrictlyInWindow({}, win), false);
+  const empty = { mode: 'window', roots: [], workspaceFile: '' };
+  assert.strictEqual(scope.recordStrictlyInWindow({ cwd: 'E:\\work\\other' }, empty), false);
+  assert.strictEqual(scope.recordStrictlyInWindow({}, { mode: 'all', roots: [], workspaceFile: '' }), true);
+});
+
 console.log(`\n${passed} scope tests passed`);

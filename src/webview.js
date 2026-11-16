@@ -76,22 +76,23 @@ function html(nonce, cspSource, locale, isSidebar) {
     /* ── Header: one row, tabs left, icon actions right ──────────────────── */
     header {
       position: sticky; top: 0; z-index: 5;
-      display: flex; align-items: center; gap: 8px;
-      margin: 0 calc(var(--pad) * -1); padding: 8px var(--pad) 0;
+      display: flex; align-items: stretch; gap: 8px;
+      margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad);
       background: var(--bg);
       border-bottom: 1px solid var(--border);
     }
-    .brand { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; white-space: nowrap; padding-bottom: 7px; }
+    .brand { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; white-space: nowrap; align-self: center; flex-shrink: 0; }
     .brand svg { width: 14px; height: 14px; fill: var(--blue); }
     .tabs { display: flex; gap: 2px; min-width: 0; }
     .tab {
       background: none; border: none; border-bottom: 2px solid transparent;
-      padding: 6px 10px 7px; margin-bottom: -1px; cursor: pointer;
+      padding: 10px 10px 9px; margin-bottom: -1px; cursor: pointer;
       color: var(--fg-dim); font-size: 12px; white-space: nowrap;
+      min-width: 0; overflow: hidden; text-overflow: ellipsis;
     }
     .tab:hover { color: var(--fg); }
     .tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); font-weight: 600; }
-    .head-actions { display: flex; align-items: center; gap: 2px; padding-bottom: 5px; }
+    .head-actions { display: flex; align-items: center; align-self: center; gap: 2px; flex-shrink: 0; }
     .icon-btn {
       display: inline-flex; align-items: center; justify-content: center;
       width: 24px; height: 24px; border: none; border-radius: 5px; padding: 0;
@@ -134,6 +135,7 @@ function html(nonce, cspSource, locale, isSidebar) {
       color: var(--fg-dim); font-size: 11.5px; border-right: 1px solid var(--border); white-space: nowrap;
     }
     .seg:last-child { border-right: none; }
+    .seg { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .seg:hover { background: var(--hover); color: var(--fg); }
     .seg[aria-pressed="true"] { background: var(--selected); color: var(--fg); font-weight: 600; }
     .seg[disabled] { opacity: .45; cursor: default; }
@@ -170,6 +172,7 @@ function html(nonce, cspSource, locale, isSidebar) {
       display: inline-flex; align-items: center; gap: 6px; background: none; border: none; padding: 0;
       cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: .06em; color: var(--fg-section); height: 100%;
+      min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
     }
     .block-toggle:hover { color: var(--fg); }
     .chevron { display: inline-block; width: 10px; text-align: center; font-size: 10px; color: var(--fg-dim); }
@@ -178,7 +181,7 @@ function html(nonce, cspSource, locale, isSidebar) {
 
     /* ── Dashboard ───────────────────────────────────────────────────────── */
     .dash-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; }
-    .scope-meta { font-size: 11px; color: var(--fg-dim); white-space: nowrap; }
+    .scope-meta { font-size: 11px; color: var(--fg-dim); white-space: nowrap; min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
     .hero {
       margin-top: 12px; padding: 12px 14px; border-radius: var(--radius);
       border: 1px solid var(--border); border-left: 3px solid var(--blue); background: var(--surface);
@@ -199,7 +202,7 @@ function html(nonce, cspSource, locale, isSidebar) {
     .chart rect:hover { opacity: 1; }
     .chart .axis { stroke: var(--border); stroke-width: 1; }
     .chart .avg { stroke: var(--fg-dim); stroke-width: 1; stroke-dasharray: 4 3; opacity: .8; }
-    .chart-legend { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--fg-dim); margin-top: 4px; }
+    .chart-legend { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; font-size: 11px; color: var(--fg-dim); margin-top: 4px; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
     th { text-align: left; font-weight: 600; color: var(--fg-dim); padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
     td { padding: 6px 8px; border-bottom: 1px solid var(--border-soft); }
@@ -391,13 +394,20 @@ function html(nonce, cspSource, locale, isSidebar) {
     /* ── Narrow layout (side bar, or a slim editor column) ───────────────────
        The class is set from script so the side bar and a narrow editor tab
        share one rule set instead of two duplicated copies. */
+    /* The side bar already titles itself in the native view header. */
+    body.sidebar .brand { display: none; }
     body.narrow .brand-text { display: none; }
     body.narrow .tabs { flex: 1; }
-    body.narrow .tab { flex: 1; padding: 6px 4px 7px; }
+    body.narrow .tab { flex: 1 1 auto; padding: 10px 4px 9px; }
     body.narrow .wide-only { display: none; }
     body.narrow .narrow-only { display: block; }
     body.narrow .hero-value { font-size: 26px; }
-    body.narrow .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+    /* Column count follows the width: one card per row until two 120px cards fit. */
+    body.narrow .kpis { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-top: 8px; }
+    body.narrow .hero-sub { white-space: normal; overflow-wrap: anywhere; }
+    body.narrow .dash-toolbar .segmented { display: flex; width: 100%; flex-wrap: nowrap; }
+    body.narrow .dash-toolbar .seg { flex: 1 1 auto; padding: 0 6px; }
+    body.narrow .dash-toolbar .spacer { display: none; }
     body.narrow .kpi { padding: 9px 10px; }
     body.narrow .kpi-value { font-size: 16px; }
     body.narrow .chart { height: 88px; }
@@ -424,6 +434,28 @@ function html(nonce, cspSource, locale, isSidebar) {
     body.narrow .kv { background: var(--surface); }
     body.narrow .reader-kpis .kpi { background: var(--surface); }
     body.narrow .back-btn { display: inline-flex; margin: 0 0 12px 0; gap: 4px; width: auto; padding: 0 10px; font-size: 12px; color: var(--vscode-textLink-foreground, #3794ff); }
+    /* Extra-slim side bar: drop what is not needed to keep the header on one row. */
+    body.xs { --pad: 8px; }
+    body.xs header { gap: 4px; }
+    body.xs .brand { display: none; }
+    body.xs .tab { padding: 10px 3px 9px; }
+    body.xs .hero { padding: 10px; }
+    body.xs .hero-value { font-size: 24px; }
+    body.xs .kpi { padding: 8px; }
+    body.xxs #open-tab { display: none; }
+    body.xs header .spacer { display: none; }
+    body.xs .tabs { flex: 1 1 auto; overflow-x: auto; scrollbar-width: none; }
+    body.xs .tabs::-webkit-scrollbar { display: none; }
+    body.xs .tab { flex: 1 0 auto; overflow: visible; text-overflow: clip; }
+    body.xs .kpi-sub, body.xs .hero-sub { white-space: normal; overflow-wrap: anywhere; }
+    body.xs .hero-top { flex-wrap: wrap; gap: 0 8px; }
+    body.xs .scope-meta { white-space: normal; }
+    body.xxs .dash-toolbar .segmented { flex-direction: column; }
+    body.xxs .dash-toolbar .seg { border-right: none; border-bottom: 1px solid var(--border); text-align: left; padding: 0 8px; }
+    body.xxs .dash-toolbar .seg:last-child { border-bottom: none; }
+    body.xxs .hero-value { font-size: 22px; }
+    body.xxs .tab { font-size: 11px; padding: 10px 2px 9px; }
+    body.xxs header { padding-left: 6px; padding-right: 6px; }
     body:not(.narrow) .filter-btn { display: none; }
     body:not(.narrow) .hub-filters { display: grid !important; }
   `;
@@ -462,7 +494,10 @@ function html(nonce, cspSource, locale, isSidebar) {
        fitting; below it the side bar layout is used even in an editor tab. */
     var NARROW_PX = 600;
     function applyNarrow() {
-      var narrow = IS_SIDEBAR || window.innerWidth < NARROW_PX;
+      var w = document.documentElement.clientWidth || window.innerWidth;
+      document.body.classList.toggle('xs', w < 260);
+      document.body.classList.toggle('xxs', w < 190);
+      var narrow = IS_SIDEBAR || w < NARROW_PX;
       if (document.body.classList.contains('narrow') === narrow) return;
       document.body.classList.toggle('narrow', narrow);
       if (!narrow) state.hubMode = 'list';
@@ -545,7 +580,8 @@ function html(nonce, cspSource, locale, isSidebar) {
     }
 
     function kpi(label, value, sub, title) {
-      return '<div class="kpi"' + (title ? ' title="' + esc(title) + '"' : '') + '>' +
+      var tip = title || [label, value, sub].join(' ').replace(/<[^>]*>/g, '').replace(/\\s+/g, ' ').trim();
+      return '<div class="kpi" title="' + esc(tip) + '">' +
         '<div class="kpi-label">' + label + '</div>' +
         '<div class="kpi-value">' + value + '</div>' +
         (sub ? '<div class="kpi-sub">' + sub + '</div>' : '') + '</div>';
@@ -713,7 +749,7 @@ function html(nonce, cspSource, locale, isSidebar) {
        one toolbar row instead of a dropdown in the header plus a banner. */
     function dashToolbar(a) {
       var segs = [['today', 'ui.filter.today'], ['7d', 'ui.filter.7d'], ['all', 'ui.filter.all']].map(function (o) {
-        return '<button class="seg" data-window="' + o[0] + '" aria-pressed="' + (state.filter === o[0]) + '">' + t(o[1]) + '</button>';
+        return '<button class="seg" data-window="' + o[0] + '" title="' + esc(t(o[1])) + '" aria-pressed="' + (state.filter === o[0]) + '">' + t(o[1]) + '</button>';
       }).join('');
       var s = a.scope || {};
       var label, tip, link;
@@ -1368,6 +1404,7 @@ function html(nonce, cspSource, locale, isSidebar) {
       t.addEventListener('click', function () { setView(t.getAttribute('data-view')); });
     });
     window.addEventListener('resize', applyNarrow);
+    if (window.ResizeObserver) new ResizeObserver(applyNarrow).observe(document.documentElement);
     applyNarrow();
     document.getElementById('refresh').addEventListener('click', function () {
       vscode.postMessage({ type: 'refresh' });

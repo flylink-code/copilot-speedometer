@@ -226,6 +226,21 @@ function recordInWindow(record, scope) {
   return true;
 }
 
+/**
+ * Strict variant for the status bar: only positive evidence counts. A window
+ * with no folder, or a record whose origin is unknown, must not borrow another
+ * window's speed, so "unknown" means "not mine" here.
+ */
+function recordStrictlyInWindow(record, scope) {
+  if (!scope || scope.mode !== 'window') return true;
+  if (!record) return false;
+  const hasRoots = !!(scope.roots && scope.roots.length);
+  if (record.workspacePath && scope.workspaceFile &&
+    normalizePath(record.workspacePath) === normalizePath(scope.workspaceFile)) return true;
+  if (record.cwd && hasRoots) return matchesRoots(record.cwd, scope.roots);
+  return false;
+}
+
 function filterToWindow(records, scope) {
   if (!scope || scope.mode !== 'window') return records.slice();
   return records.filter((r) => recordInWindow(r, scope));
@@ -242,6 +257,7 @@ module.exports = {
   sessionCwd,
   workspaceStorageId,
   recordInWindow,
+  recordStrictlyInWindow,
   filterToWindow,
   DirMetadataCache,
 };
